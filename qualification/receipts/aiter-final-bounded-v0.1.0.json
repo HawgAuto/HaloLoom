@@ -1,0 +1,137 @@
+{
+  "attempts": [
+    {
+      "id": "attempt-001",
+      "reason": "treated absent decorated modules as direct loader inputs",
+      "status": "HARNESS_INVALID"
+    },
+    {
+      "id": "attempt-002",
+      "reason": "sample operation failed argmax oracle before receipt write",
+      "status": "PARTIAL_RAW"
+    },
+    {
+      "id": "attempt-003",
+      "reason": "treated ctypes gemm library as Python extension",
+      "status": "PARTIAL_RAW"
+    },
+    {
+      "id": "attempt-004",
+      "status": "PASS_BOUNDED"
+    }
+  ],
+  "canaries": {
+    "gemm_common": {
+      "operation_qualified": true,
+      "padded_m": 32
+    },
+    "rmsnorm_quant": {
+      "atol": 0.03125,
+      "operation_qualified": true,
+      "rtol": 0.03125,
+      "shape": [
+        4,
+        128
+      ]
+    },
+    "sample": {
+      "dtype": "bfloat16",
+      "expected": [
+        41,
+        22,
+        30,
+        29
+      ],
+      "module_jit_qualified": true,
+      "operation_qualified": false,
+      "sampled": [
+        -9054,
+        -12731,
+        -4655,
+        -4704
+      ],
+      "shape": [
+        4,
+        64
+      ]
+    }
+  },
+  "claim_boundary": {
+    "aiter_attention_qualified": false,
+    "device_import_qualified": true,
+    "module_aiter_core_jit_qualified": true,
+    "module_gemm_common_operation_qualified": true,
+    "module_rmsnorm_quant_operation_qualified": true,
+    "module_sample_jit_qualified": true,
+    "module_sample_operation_qualified": false,
+    "performance_qualified": false,
+    "production_activated": false,
+    "production_ready": false
+  },
+  "cleanup": {
+    "container_absent": true,
+    "kfd_clear": true,
+    "lock_released": true
+  },
+  "image": {
+    "golden_id": "sha256:e9647f36b4659b3272c1689fcbb85fee17002a7ead9516c09f3e310ec9e719e6",
+    "golden_identity_equal": true,
+    "golden_identity_sha256": "1415b52a0ae3ad4d400fe767995d10b4a15d888ab00d0935278101f7d7983bf6",
+    "id": "sha256:a66c94bdbb877205fa125788be1e1d7ae5b03bd1e18b3c846298ddc97af3850c",
+    "size_bytes": 5796045091,
+    "tag": "haloloom-aiter-tools-full-gfx1151:v0.1.0-rc1"
+  },
+  "modules": [
+    {
+      "bytes": 669040,
+      "interface": "python-extension",
+      "jit_load_qualified": true,
+      "name": "module_aiter_core",
+      "path": "/opt/venv/lib/python3.14/site-packages/aiter/jit/module_aiter_core.so",
+      "sha256": "186a773fff410b9e5fa55b95ea1a37361d290d1e686329a9219ce557c8c92dfc"
+    },
+    {
+      "bytes": 15336,
+      "interface": "ctypes-shared-library",
+      "jit_load_qualified": true,
+      "name": "module_gemm_common",
+      "path": "/opt/venv/lib/python3.14/site-packages/aiter/jit/module_gemm_common.so",
+      "python_extension_import_expected": false,
+      "sha256": "95029a135b35657aea63792446f21c7c99a5cad9444873fabf6041de0d4da8fb"
+    },
+    {
+      "bytes": 1878320,
+      "interface": "python-extension",
+      "jit_load_qualified": true,
+      "name": "module_rmsnorm_quant",
+      "path": "/opt/venv/lib/python3.14/site-packages/aiter/jit/module_rmsnorm_quant.so",
+      "sha256": "17d6507ecb9b9cefd399d50942517055de9679441b0149e98557d274c062f88d"
+    },
+    {
+      "bytes": 878376,
+      "interface": "python-extension",
+      "jit_load_qualified": true,
+      "name": "module_sample",
+      "path": "/opt/venv/lib/python3.14/site-packages/aiter/jit/module_sample.so",
+      "sha256": "ffbeb07d992d2b1ccc42f32c6d7f4b86edf61d2417301374a924e11fee339d3d"
+    }
+  ],
+  "promotion_authority": false,
+  "raw_artifact_hashes": {
+    "runner": "174adc6f9916fe5ed6a7906a811ff2c95d918688d43df66fd043fc4c799eb755",
+    "runtime": "9721e3294f405e73fe4e8daa193eab4720b71ea65baeeea944ded47fce50bbdc",
+    "stderr": "6e8aef9430973d5fff33c2bffd42eedd3719fe01485bd9ee3d03e73bc176c4aa",
+    "stdout": "91b0244aff81e0117e0ad31a2e1da40a9e912bfa1f4019542878fcb4952aa011"
+  },
+  "runtime": {
+    "aiter": "0.1.22.dev0+gfx1151.rocm10",
+    "arch": "gfx1151",
+    "architecture_spoof": null,
+    "gpu": "AMD Radeon 8060S Graphics",
+    "hip": "7.15.26333",
+    "rocm_path": "/opt/rocm/core-10.0",
+    "torch": "2.13.0+rocm10.0.0"
+  },
+  "schema": "haloloom.aiter-final-bounded-physical.v1",
+  "status": "PASS_BOUNDED_SAMPLE_AND_ATTENTION_UNAVAILABLE"
+}

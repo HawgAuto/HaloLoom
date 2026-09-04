@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+cd "$ROOT"
+
+backend="${1:-}"
+case "$backend" in
+  vllm|sglang)
+    shift
+    ;;
+  *)
+    cat >&2 <<'EOF'
+Usage: ./scripts/haloloom <vllm|sglang> <command-or-options...>
+
+Examples:
+  ./scripts/haloloom vllm verify
+  ./scripts/haloloom vllm --help
+  ./scripts/haloloom vllm optimize --help
+  ./scripts/haloloom sglang shell
+EOF
+    exit 2
+    ;;
+esac
+
+if [[ ! -f .env ]]; then
+  echo "HaloLoom is not installed yet; run ./scripts/install.sh first." >&2
+  exit 1
+fi
+
+exec docker compose run --rm \
+  -e FRAMEWORK="$backend" \
+  --entrypoint /opt/haloloom/workbench-entrypoint \
+  "$backend" "$@"

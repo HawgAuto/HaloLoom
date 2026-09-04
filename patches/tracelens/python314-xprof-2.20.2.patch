@@ -1,0 +1,15 @@
+diff --git a/setup.py b/setup.py
+index 3a924c4..32c4213 100755
+--- a/setup.py
++++ b/setup.py
+@@ -56,8 +56,8 @@ setup(
+         "orjson",
+         "PyYAML",
+         "matplotlib",
+-        "xprof==2.20.1",  # Last version with HLO sidecar generation; supports JAX 0.8+ (with benign INT_MAX warnings)
+-        "protobuf>=6.31.1,<7.0.0",  # Required by xprof's grpcio-status dependency
++        "xprof==2.20.2",  # Python 3.14-compatible patch release retaining HLO sidecar generation
++        "protobuf>=6.31.1,<8.0.0",  # xprof 2.20.2 needs only protobuf>=3.19.6; allow the host framework protobuf major
+         # 'openpyxl',
+         # 'tensorflow',
+     ],

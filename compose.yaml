@@ -1,0 +1,86 @@
+name: haloloom
+
+x-rocm-runtime: &rocm-runtime
+  PYTORCH_ROCM_ARCH: gfx1151
+  HSA_ENABLE_SDMA: "0"
+  ROCM_PATH: /opt/rocm/core-10.0
+  ROCM_HOME: /opt/rocm/core-10.0
+  HIP_PATH: /opt/rocm/core-10.0
+  LD_LIBRARY_PATH: /opt/rocm/core-10.0/lib:/opt/rocm/core-10.0/lib/llvm/lib:/opt/venv/lib
+  HOME: /home/haloloom
+  USER_DATA_PATH: /workspace
+  HF_HOME: /home/haloloom/.cache/huggingface
+  HERMES_HOME: /home/haloloom/.hermes
+  CODEX_HOME: /home/haloloom/.codex
+  HALOLOOM_AGENT_PROFILE: ${HALOLOOM_AGENT_PROFILE}
+  HALOLOOM_CLAUDE_BIN_HOST: ${HALOLOOM_CLAUDE_BIN_HOST}
+  HALOLOOM_CODEX_BIN_HOST: ${HALOLOOM_CODEX_BIN_HOST}
+  HALOLOOM_HERMES_BIN_HOST: ${HALOLOOM_HERMES_BIN_HOST}
+
+x-gpu-common: &gpu-common
+  devices:
+    - /dev/kfd:/dev/kfd
+    - /dev/dri:/dev/dri
+  group_add:
+    - ${VIDEO_GID}
+    - ${RENDER_GID}
+  ipc: host
+  shm_size: 16gb
+  init: true
+  security_opt:
+    - no-new-privileges:true
+  working_dir: /workspace
+  environment:
+    <<: *rocm-runtime
+  volumes:
+    - ${HF_HOME}:/home/haloloom/.cache/huggingface
+    - ${HALOLOOM_WORKSPACE}:/workspace
+    - ${CLAUDE_HOME_HOST}:/home/haloloom/.claude
+    - ${CODEX_HOME_HOST}:/home/haloloom/.codex
+    - ${HERMES_HOME_HOST}:/home/haloloom/.hermes
+    - ${HALOLOOM_CLAUDE_ROOT_HOST}:${HALOLOOM_CLAUDE_ROOT_HOST}:ro
+    - ${HALOLOOM_CODEX_ROOT_HOST}:${HALOLOOM_CODEX_ROOT_HOST}:ro
+    - ${HALOLOOM_HERMES_ROOT_HOST}:${HALOLOOM_HERMES_ROOT_HOST}:ro
+    - /run/lock:/run/lock
+
+services:
+  vllm:
+    <<: *gpu-common
+    image: ghcr.io/hawgauto/haloloom-vllm-full-gfx1151:${HALOLOOM_VERSION}
+    user: ${HOST_UID}:${HOST_GID}
+    entrypoint: ["/opt/venv/bin/python3", "-m", "vllm.entrypoints.openai.api_server"]
+    ports:
+      - 8000:8000
+
+  sglang:
+    <<: *gpu-common
+    image: ghcr.io/hawgauto/haloloom-sglang-full-gfx1151:${HALOLOOM_VERSION}
+    user: ${HOST_UID}:${HOST_GID}
+    entrypoint: ["/opt/venv/bin/python3", "-m", "sglang.launch_server"]
+    ports:
+      - 8000:8000
+    environment:
+      <<: *rocm-runtime
+      AMDGPU_TARGET: gfx1151
+      SGLANG_USE_AITER: "0"
+      HYPERLOOM_GFX1151_LOWBIT_BRIDGE: "0"
+
+  quark:
+    <<: *gpu-common
+    image: ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151:${HALOLOOM_VERSION}
+    user: ${HOST_UID}:${HOST_GID}
+    environment:
+      <<: *rocm-runtime
+      QUARK_ACCELERATOR: rocm
+
+  aiter-tools:
+    <<: *gpu-common
+    image: ghcr.io/hawgauto/haloloom-aiter-tools-full-gfx1151:${HALOLOOM_VERSION}
+    ports:
+      - 8000:8000
+    environment:
+      <<: *rocm-runtime
+      AMDGPU_TARGET: gfx1151
+      AITER_ROCM_ARCH: gfx1151
+      GPU_ARCHS: gfx1151
+      SGLANG_USE_AITER: "0"

@@ -1,0 +1,57 @@
+{
+  "cleanup": {
+    "container_absent": true,
+    "kfd_clear": true,
+    "lock_released": true,
+    "port_18888_clear": true
+  },
+  "completed_at": "2026-09-03T03:56:15.973243+00:00",
+  "exact_text_oracle": false,
+  "framework": "vllm",
+  "image": {
+    "golden_id": "sha256:0f2ef33105e11e60c11a3fce55a06860369329dcfc68d7627ad47f04a3c113ab",
+    "local_id": "sha256:7d5d5ad60610493a79c6ee1070f01821249f4d2f6b4f399554e2232b6a5197d1",
+    "runtime_identity_sha256": "95234445de1b481fdeca2a89b99a965b64eca719104ec9c78f42512fe24a7e11",
+    "size_bytes": 5520044273
+  },
+  "model": {
+    "config_sha256": "660db3b73d788119c04535e48cf9be5f55bc3100841a718637ae695b442f27dd",
+    "name": "Qwen/Qwen3-0.6B",
+    "revision": "c1899de289a04d12100db370d81485cdf75e47ca"
+  },
+  "platform": {
+    "arch": "gfx1151",
+    "count": 1,
+    "hip": "7.15.26333",
+    "name": "AMD Radeon 8060S Graphics",
+    "torch": "2.13.0+rocm10.0.0"
+  },
+  "production_activated": false,
+  "promotion_authority": false,
+  "raw_artifact_hashes": {
+    "bench_serving.json": "7a2328d57d80ee96bc8ce9b9d8fff0304729d55620477ea568d047a37cff6738",
+    "runner.stderr.log": "9da07f9dfbbf2e3882bf27cbf9969f287a8e9c12f83f4ea22395d552dc82bb8d",
+    "runner.stdout.log": "faea9f18cc39f7ad0a20432d6e314d521e5883a850eb2dfd0d1b9dfa873a9cc9",
+    "server.log": "109f618b64bdf5160b7cfdfb2de536f9e6451c217ea41b247ff604cc1e6436d0"
+  },
+  "request": {
+    "completed": 2,
+    "input_lens": [
+      64,
+      64
+    ],
+    "max_concurrency": 1,
+    "mean_e2el_ms": 119.85415895469487,
+    "mean_tpot_ms": 6.598156861340006,
+    "mean_ttft_ms": 20.881806034594774,
+    "output_lens": [
+      16,
+      16
+    ],
+    "output_throughput": 132.9358082682106,
+    "total_input_tokens": 128,
+    "total_output_tokens": 32
+  },
+  "schema": "haloloom.full-golden-model-request-replay.v1",
+  "status": "PASS_MODEL_REQUEST_REPLAY_EXACT_ROUTE_PENDING"
+}

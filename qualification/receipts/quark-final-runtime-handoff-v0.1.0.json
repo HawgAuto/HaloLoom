@@ -1,0 +1,101 @@
+{
+  "claim_boundary": {
+    "candidate_quality_accepted": false,
+    "final_image_physical_runtime": true,
+    "fresh_plan_generation": false,
+    "fresh_provider_run": false,
+    "fresh_ptq_export": false,
+    "prior_ptq_carried_by_exact_golden_runtime_identity": true,
+    "production_activated": false
+  },
+  "cleanup": {
+    "container_absent": true,
+    "kfd_clear": true,
+    "lock_released": true
+  },
+  "final_image": {
+    "compact_golden_base_id": "sha256:ec7ded040c18e0a3bfc24c24bcddcd7b80c9149825616627d497cb496fbab418",
+    "id": "sha256:4ca08c4223ec45b4f4efcddf19c32cc111caf5a765c8562ffa721bae9218d694",
+    "original_golden_id": "sha256:4e01a1bb36eb72eea6e5c36da43901cb0bab56b8d32e3ab61a369ef66dca6774",
+    "size_bytes": 6025119916,
+    "tag": "haloloom-quark-rocm10-gfx1151:v0.1.0-rc2"
+  },
+  "physical_canary": {
+    "expected": 32640.0,
+    "operation": "torch.arange(256, device=cuda, dtype=float32).sum()",
+    "passed": true,
+    "result": 32640.0
+  },
+  "prior_ptq_lifecycle": {
+    "artifact": {
+      "input_dtype": "int8",
+      "int8_weight_tensors": 196,
+      "lm_head_excluded": true,
+      "model_safetensors_bytes": 1062982792,
+      "model_safetensors_sha256": "fe35f23ba094efa55a578a6fc27085b3773b3e4d049a3632ed99ea1fb0b71ccb",
+      "pack_method": "reorder",
+      "quant_method": "quark",
+      "weight_dtype": "int8",
+      "weight_format": "real_quantized",
+      "weight_scale_tensors": 196
+    },
+    "closeout_sha256": "6b2b3fffdf087007927a1af79f455e208c63198bc60de6cac1d7f14207f5ae2a",
+    "fallback_used": false,
+    "plan": {
+      "batch_size": 1,
+      "calibration_samples": 16,
+      "exclude_layers": [
+        "lm_head"
+      ],
+      "export": "hf_format",
+      "scheme": "int8",
+      "sequence_length": 128
+    },
+    "production_mutated": false,
+    "promotion_authority": false,
+    "quality": {
+      "decision": "candidate_reject",
+      "finite_logits": true,
+      "maximum_relative_nll_gap": 0.05,
+      "minimum_top1_agreement": 0.9,
+      "quantized_nll": 5.445645963990843,
+      "relative_nll_gap": 0.23359603684724894,
+      "source_nll": 4.414448329380581,
+      "status": "REJECT",
+      "top1_agreement": 0.5714285714285714
+    },
+    "runtime": {
+      "device": "gfx1151",
+      "image_id": "sha256:4e01a1bb36eb72eea6e5c36da43901cb0bab56b8d32e3ab61a369ef66dca6774",
+      "image_source_commit": "92235e093a1f9920f6a55f2aa534b7ad609dec03",
+      "quark": "0.12.post1",
+      "torch": "2.13.0+rocm10.0.0",
+      "torch_hip": "7.15.26333"
+    },
+    "source_model": {
+      "dtype": "bfloat16",
+      "manifest": "SOURCE-MODEL-MANIFEST.json",
+      "manifest_sha256": "0858fe8bca36c6b891dd3d18c9ed94b08b52cc13ba1d7f0eaa7d7baa557b1e08",
+      "repository": "Qwen/Qwen3-0.6B",
+      "revision": "c1899de289a04d12100db370d81485cdf75e47ca"
+    },
+    "status": "PASS_FUNCTIONAL_LIFECYCLE_CANDIDATE_REJECTED"
+  },
+  "promotion_authority": false,
+  "raw_runtime_sha256": "73a7a9481fcbbf076616eb62b71eb8b63a4e85e653d0149b97903895a7367b55",
+  "runtime": {
+    "arch": "gfx1151",
+    "architecture_spoof": null,
+    "entrypoint": "/opt/haloloom-agent/bin/quantization-agent",
+    "golden_identity_equal": true,
+    "golden_identity_sha256": "ff76dd7b1a844d95bd07d1e73cf201e4f9c7550298fcfd77be7cf6271ef327d6",
+    "gpu": "AMD Radeon 8060S Graphics",
+    "hip": "7.15.26333",
+    "hyperloom": "1.0.0",
+    "quark": "0.12.post1",
+    "rocm_path": "/opt/rocm/core-10.0",
+    "torch": "2.13.0+rocm10.0.0"
+  },
+  "schema": "haloloom.quark-final-runtime-handoff.v1",
+  "status": "PASS_FINAL_RUNTIME_PRIOR_PTQ_BOUND"
+}

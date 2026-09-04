@@ -1,0 +1,11 @@
+# Direct LLM/PTQ dependencies not declared by Quark core.
+transformers==5.2.0
+accelerate==1.14.0
+datasets==5.0.1
+compressed-tensors==0.18.0
+safetensors==0.8.0
+huggingface-hub==1.29.0
+sentencepiece==0.2.1
+addict==2.4.0
+easydict==1.13
+einops==0.8.2

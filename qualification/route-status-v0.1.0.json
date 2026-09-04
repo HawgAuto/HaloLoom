@@ -1,0 +1,68 @@
+{
+  "immutable_inputs": {
+    "lowbit_release": {
+      "commit": "4d68f75aba28caf2a9005677c706d831afe0aee5",
+      "direct_receipt_sha256": "cc7049d189083a6599bb6527640c36fa548325e3c846819bf4ea4e70fdf1c40a",
+      "url": "https://github.com/HawgAuto/Strix-Halo-Lowbit-Kernel-Pack/releases/tag/v0.1.0"
+    },
+    "sglang_final_receipt": {
+      "path": "qualification/receipts/sglang-full-w4a8-final-v0.1.0.json",
+      "sha256": "1bb645b362c2ff302236b671676042def5904b540c4db6e4c6b684a49c56da56"
+    },
+    "sglang_route_spec": {
+      "path": "qualification/compact-lowbit-route-sglang-final-v1.json",
+      "sha256": "beb4393fabd1120a8ea69c12cb47ae6ff0ec9e838311b5003318ec36f73c9ebf"
+    },
+    "vllm_final_receipt": {
+      "path": "qualification/receipts/vllm-full-w4a8-final-v0.1.0.json",
+      "sha256": "3e7b39dc69e0137a6b70042d55c0781393412682247bd0d1552b1de211877833"
+    },
+    "vllm_route_spec": {
+      "path": "qualification/compact-lowbit-route-vllm-final-v1.json",
+      "sha256": "f2accf8d3b39604b6b78e4b141354e1410fbd5877d51ee1d5aeb545c2f012234"
+    }
+  },
+  "interpretation": "Historical status strings inside immutable route specs describe their pre-run state. This sidecar is current post-run status authority and does not alter those executed inputs.",
+  "production_activated": false,
+  "promotion_authority": false,
+  "routes": {
+    "gfx1151-fp8-e4m3fnuz": {
+      "direct_physical": "PASS",
+      "performance_qualified": false,
+      "sglang_final_image": "DIRECT_ONLY_FRAMEWORK_PENDING",
+      "vllm_final_image": "DIRECT_ONLY_FRAMEWORK_PENDING"
+    },
+    "gfx1151-mxfp4-e2m1-e8m0": {
+      "direct_physical": "PASS",
+      "performance_qualified": false,
+      "sglang_final_image": "DIRECT_ONLY_FRAMEWORK_PENDING",
+      "vllm_final_image": "DIRECT_ONLY_FRAMEWORK_PENDING"
+    },
+    "gfx1151-w4a16": {
+      "direct_physical": "PASS",
+      "performance_qualified": false,
+      "sglang_final_image": "DIRECT_ONLY_FRAMEWORK_PENDING",
+      "vllm_final_image": "DIRECT_ONLY_FRAMEWORK_PENDING"
+    },
+    "gfx1151-w4a4": {
+      "direct_physical": "PASS",
+      "performance_qualified": false,
+      "sglang_final_image": "DIRECT_ONLY_FRAMEWORK_PENDING",
+      "vllm_final_image": "DIRECT_ONLY_FRAMEWORK_PENDING"
+    },
+    "gfx1151-w4a8": {
+      "direct_physical": "PASS",
+      "performance_qualified": false,
+      "sglang_final_image": "PASS",
+      "vllm_final_image": "PASS"
+    },
+    "gfx1151-w8a8": {
+      "direct_physical": "PASS",
+      "performance_qualified": false,
+      "sglang_final_image": "DIRECT_ONLY_FRAMEWORK_PENDING",
+      "vllm_final_image": "DIRECT_ONLY_FRAMEWORK_PENDING"
+    }
+  },
+  "schema": "haloloom.gfx1151-lowbit-route-status.v1",
+  "status": "W4A8_FINAL_FRAMEWORK_PASS_OTHER_ROUTES_DIRECT_ONLY"
+}

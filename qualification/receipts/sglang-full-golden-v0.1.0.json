@@ -1,0 +1,62 @@
+{
+  "cleanup": {
+    "container_absent": true,
+    "kfd_clear": true,
+    "lock_released": true,
+    "port_18889_clear": true
+  },
+  "completed_at": "2026-09-03T04:11:46.459711+00:00",
+  "exact_text_oracle": false,
+  "framework": "sglang",
+  "image": {
+    "golden_id": "sha256:869e23eec020047c4dc57f6ee42fd33107ea53f0ec202f9fd2b1d795235c7e50",
+    "local_id": "sha256:c14326489fcaf00aae97d53e805b2de44bf67f010b925801c86c2dd5cc00ade2",
+    "runtime_identity_sha256": "b6a60951983ee648462e82088e86a20cb25569e49ba20c83c27a2946b89ca86d",
+    "size_bytes": 5611236505
+  },
+  "model": {
+    "config_sha256": "660db3b73d788119c04535e48cf9be5f55bc3100841a718637ae695b442f27dd",
+    "name": "Qwen/Qwen3-0.6B",
+    "revision": "c1899de289a04d12100db370d81485cdf75e47ca"
+  },
+  "platform": {
+    "arch": "gfx1151",
+    "count": 1,
+    "hip": "7.15.26333",
+    "name": "AMD Radeon 8060S Graphics",
+    "torch": "2.13.0+rocm10.0.0"
+  },
+  "production_activated": false,
+  "promotion_authority": false,
+  "raw_artifact_hashes": {
+    "bench_serving.json": "4e96cb0ccd1a3d5d7e3ccbe85e658fd5af5fe32fb56ea08f284e9f30d8b387d3",
+    "runner.stderr.log": "82f30347cfa90ba74c5eea46ee9d75b633bdf4024eacae50aa7c00ea03c84c18",
+    "runner.stdout.log": "163c9aef56a10982892ceebaad87dfe6f0183d1268605c84e4b8719834af922d",
+    "server.log": "176a9473cde358398452b919df25ec371d0b809e0ec2310212088595761f59fe"
+  },
+  "request": {
+    "completed": 2,
+    "input_lens": [
+      64,
+      64
+    ],
+    "max_concurrency": 1,
+    "mean_e2el_ms": 199.4845336303115,
+    "mean_tpot_ms": 11.157856074472269,
+    "mean_ttft_ms": 32.11669251322746,
+    "output_lens": [
+      16,
+      16
+    ],
+    "output_throughput": 79.99190163829871,
+    "total_input_tokens": 128,
+    "total_output_tokens": 32
+  },
+  "route": {
+    "aiter_attention": false,
+    "attention_backend": "triton",
+    "cuda_graphs": false
+  },
+  "schema": "haloloom.full-golden-model-request-replay.v1",
+  "status": "PASS_MODEL_REQUEST_REPLAY_EXACT_ROUTE_PENDING"
+}

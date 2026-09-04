@@ -1,0 +1,114 @@
+{
+  "base_pins_preserved": {
+    "grpcio": "1.83.1",
+    "protobuf": "7.36.0",
+    "torch": "2.13.0+rocm10.0.0"
+  },
+  "build_time_verify": "PASS",
+  "claim_boundary": "Ecosystem layer over the exact physically-qualified golden base. Framework model-serving qualification is the golden base receipt; this receipt proves the layer did not alter the base runtime identity, low-bit runtime or device path.",
+  "component_refs": {
+    "GEAK": {
+      "commit": "b4dea3fa33ef438d4233aae0ed2c2f425c4e419a",
+      "intentional_dirty_paths": []
+    },
+    "Hyperloom": {
+      "commit": "a94191bfe0b548a44113e0d28c432d1bff0e3f9f",
+      "intentional_dirty_paths": []
+    },
+    "InferenceX": {
+      "commit": "3d5581562f643f9bdeb8410cd924e2c70906c966",
+      "intentional_dirty_paths": [
+        "benchmarks/benchmark_lib.sh"
+      ]
+    },
+    "IntelliKit": {
+      "commit": "2f61453a779980b00504ea3b772ff4a1a1c3f4ad",
+      "intentional_dirty_paths": []
+    },
+    "Magpie": {
+      "commit": "f25176b855aad86e38ac06442f2a5d2b8e4da21f",
+      "intentional_dirty_paths": [
+        "agpie/scripts/benchmark/sglang_mi300x.sh"
+      ]
+    },
+    "TraceLens": {
+      "commit": "a59a9c165bb64c7c416fd7cf79149803d552e43c",
+      "intentional_dirty_paths": [
+        "setup.py"
+      ]
+    },
+    "src:sglang": {
+      "commit": "cb9e016cb33b98bc804a57bc70b8272d8e8d134c",
+      "intentional_dirty_paths": []
+    },
+    "src:vllm": {
+      "commit": "6ddd7a77a256e90f86c108eeed4ce46602cf9657",
+      "intentional_dirty_paths": []
+    }
+  },
+  "entrypoint_verify": {
+    "root": "PASS",
+    "uid_4242": "PASS"
+  },
+  "evidence_retention": "raw build logs, static/entrypoint verification, GPU smoke and GPU build-smoke transcripts are retained by the maintainer outside the repository; this receipt binds their outcomes and the exact image ID",
+  "external_agent_clis_bundled": false,
+  "framework": "sglang",
+  "gpu_build_smoke": {
+    "hipcc": "hipcc -O2 --offload-arch=gfx1151 -std=c++17 compiled a HIP kernel; llvm-objdump --offloading shows gfx1151; executed, exact oracle",
+    "lock": "/run/lock/hermes-vllm-gfx1151.lock",
+    "scope": "proves the shipped image can build HIP/Torch-extension/Triton kernels for gfx1151 without any host toolchain. No optimizer campaign or performance claim.",
+    "toolchain_present": [
+      "hipcc",
+      "hipconfig",
+      "clang++",
+      "ld.lld",
+      "llvm-objdump",
+      "rocminfo",
+      "rocprofv3",
+      "amd-smi",
+      "hip/rocwmma/hipblaslt/hipblas/rocblas/rocprim/hipcub/hiprand headers",
+      "amdgcn/bitcode ockl+ocml",
+      "gcc/g++/cmake/ninja/git/pip/Python.h",
+      "node"
+    ],
+    "torch_cpp_extension": "torch.utils.cpp_extension.load_inline(with_cuda=True) built and loaded a HIP extension against ROCM_HOME=/opt/rocm/core-10.0; exact oracle",
+    "triton_jit": "triton 3.8.0 @triton.jit kernel compiled via AMD backend and executed on gfx1151; exact oracle",
+    "user": "non-root uid 4242"
+  },
+  "gpu_smoke": {
+    "framework_parser_on_rocm": true,
+    "kfd_clear_post": true,
+    "kfd_clear_pre": true,
+    "lock": "/run/lock/hermes-vllm-gfx1151.lock",
+    "platform": "rocm 7.15.26333",
+    "readiness_controller": true,
+    "scope": "device visibility, one tensor op, framework parser, readiness controller. No model load; no serving or performance claim.",
+    "torch_device": "AMD Radeon 8060S Graphics gfx1151 hip 7.15.26333 matmul 255.0"
+  },
+  "hsa_override_gfx_version_unset": true,
+  "hyperloom_wheel_sha256": "9cc9884911db814c8d72d7e1219fe580f94f98849674f3b468f16caf3a8e09de",
+  "image": {
+    "golden_base_image_id": "sha256:dbd3b9e61e8df98346ecc33877a9126d2b9854e8d0630ad6be308253b72e97ce",
+    "golden_base_reference": "haloloom-sglang-full-gfx1151:v0.1.0-rc3",
+    "image_id": "sha256:cd66db5627fa5fab16fe276cf2804c7eaa2a6a1310f48e3963321d7a34ba1259",
+    "local_reference": "haloloom-sglang-full-gfx1151:v0.1.0-ecosystem-rc2",
+    "size_bytes": 7634557184
+  },
+  "lowbit_runtime_digest_unchanged_vs_golden": true,
+  "packages": {
+    "TraceLens": "0.1.0.dev20260903+ga59a9c1",
+    "click": "8.5.0",
+    "geak": "4.0.0",
+    "grpcio": "1.83.1",
+    "hyperloom-inference-optimizer": "1.0.0",
+    "metrix": "0.1.1",
+    "protobuf": "7.36.0",
+    "ray": "2.55.0",
+    "sglang": "0.5.15",
+    "torch": "2.13.0+rocm10.0.0",
+    "vllm": "-",
+    "xprof": "2.20.2"
+  },
+  "schema": "haloloom.ecosystem-layer-receipt.v1",
+  "sealed_readiness_byte_identical_to_repo": true
+}

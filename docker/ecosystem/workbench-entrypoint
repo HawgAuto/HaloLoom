@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export HOME="${HOME:-/home/haloloom}"
+if [[ -f /workspace/.env ]]; then
+  set -a
+  # shellcheck disable=SC1091
+  source /workspace/.env
+  set +a
+fi
+
+export USER_DATA_PATH="${USER_DATA_PATH:-/workspace}"
+export HYPERLOOM_RUNTIME_DIR="${HYPERLOOM_RUNTIME_DIR:-${USER_DATA_PATH}/runtime}"
+export KERNEL_AGENT_ENV="${KERNEL_AGENT_ENV:-${HYPERLOOM_RUNTIME_DIR}/kernel-agent.env.sh}"
+export HYPERLOOM_CACHE_DIR=/opt/haloloom/components
+export HYPERLOOM_DEPS_ROOT=/opt/haloloom/components
+export HYPERLOOM_ROOT=/opt/haloloom/components/Hyperloom
+export HYPERLOOM_KERNEL_AGENT_ROOT=/opt/haloloom/components/Hyperloom/src/hyperloom/agents/kernel
+export KERNEL_AGENT_ROOT="$HYPERLOOM_KERNEL_AGENT_ROOT"
+export FRAMEWORK_AGENT_ROOT=/opt/haloloom/components/Hyperloom/src/hyperloom/agents/framework
+export MAGPIE_PATH=/opt/haloloom/components/Magpie
+export MAGPIE_PYTHON=/opt/venv/bin/python3
+export INFERENCEX_PATH=/opt/haloloom/components/InferenceX
+export TRACELENS_ROOT=/opt/haloloom/components/TraceLens
+export GEAK_ROOT=/opt/haloloom/components/GEAK
+export GEAK_E2E_RUNNER=/opt/haloloom/components/GEAK/interface/run_e2e.py
+export INFERENCE_OPTIMIZER_FRAMEWORK_SOURCE_ROOTS=/opt/haloloom/framework-source/vllm:/opt/haloloom/framework-source/sglang
+export HALOLOOM_AGENT_BIN_DIR="${HALOLOOM_AGENT_BIN_DIR:-/opt/haloloom/agent-bin}"
+export PYTHONPATH="/opt/haloloom/components/Magpie:${PYTHONPATH:-}"
+export PATH="/opt/venv/bin:${HALOLOOM_AGENT_BIN_DIR}:/usr/local/bin:${PATH:-/usr/bin:/bin}"
+unset HSA_OVERRIDE_GFX_VERSION 2>/dev/null || true
+
+case "${1:-}" in
+  verify)
+    shift
+    exec /opt/venv/bin/python3 /opt/haloloom/verify_ecosystem.py "$@"
+    ;;
+  readiness)
+    shift
+    exec /opt/venv/bin/python3 -m hyperloom.orchestrator.production_readiness \
+      --root "$USER_DATA_PATH/readiness-control" \
+      --registry /opt/haloloom/components/Hyperloom/src/hyperloom/orchestrator/kernel-targets-gfx1151-v1.json \
+      --vllm-root /opt/haloloom/framework-source/vllm \
+      --sglang-root /opt/haloloom/framework-source/sglang \
+      --providers /opt/haloloom/components/Hyperloom/src/hyperloom/orchestrator/production-providers-gfx1151-v1.json \
+      --functional-proof /opt/haloloom/readiness/FUNCTIONAL-TARGET-MATRIX.json \
+      "$@"
+    ;;
+  ""|help|--help|-h)
+    exec /opt/venv/bin/inference_optimizer --help
+    ;;
+esac
+
+agent="${HALOLOOM_AGENT_PROFILE:-}"
+case "$agent" in
+  claude)
+    agent_bin="${HALOLOOM_CLAUDE_BIN_HOST:-}"
+    export GEAK_CLAUDE_BIN="$agent_bin"
+    ;;
+  codex)
+    agent_bin="${HALOLOOM_CODEX_BIN_HOST:-}"
+    export GEAK_CODEX_BIN="$agent_bin"
+    ;;
+  hermes)
+    agent_bin="${HALOLOOM_HERMES_BIN_HOST:-}"
+    export GEAK_HERMES_BIN="$agent_bin"
+    export HYPERLOOM_HERMES_BIN="$agent_bin"
+    export HYPERLOOM_HERMES_EXTERNAL_SANDBOX=1
+    export GEAK_HERMES_EXTERNAL_SANDBOX=1
+    ;;
+  *)
+    echo "HaloLoom agent plug-in is not selected; rerun ./scripts/install.sh --agent auto." >&2
+    exit 1
+    ;;
+esac
+if [[ ! -x "$agent_bin" ]]; then
+  echo "Selected $agent agent CLI is not executable inside the container: $agent_bin" >&2
+  echo "Rerun ./scripts/install.sh --agent $agent after checking the host CLI." >&2
+  exit 1
+fi
+export PATH="$(dirname "$agent_bin"):$PATH"
+export GEAK_AGENT_PROFILE="$agent"
+export FORGE_AGENT_BACKEND="$agent"
+export FORGE_AGENT_CLI="$agent_bin"
+
+if [[ "${1:-}" == agent-check ]]; then
+  shift
+  exec "$agent_bin" --version "$@"
+fi
+
+mkdir -p "$HYPERLOOM_RUNTIME_DIR" "$USER_DATA_PATH/optimizer_runs"
+
+# Hyperloom's Ray/subprocess workers source this file. It contains non-secret
+# paths and provider selection only; credentials stay in the runtime process.
+tmp="${KERNEL_AGENT_ENV}.tmp.$$"
+{
+  printf '%s\n' '#!/usr/bin/env bash'
+  for name in \
+    USER_DATA_PATH HYPERLOOM_RUNTIME_DIR HYPERLOOM_CACHE_DIR \
+    HYPERLOOM_DEPS_ROOT HYPERLOOM_ROOT HYPERLOOM_KERNEL_AGENT_ROOT \
+    KERNEL_AGENT_ROOT FRAMEWORK_AGENT_ROOT MAGPIE_PATH MAGPIE_PYTHON \
+    INFERENCEX_PATH TRACELENS_ROOT GEAK_ROOT GEAK_E2E_RUNNER \
+    INFERENCE_OPTIMIZER_FRAMEWORK_SOURCE_ROOTS \
+    GEAK_AGENT_PROFILE FORGE_AGENT_BACKEND FORGE_AGENT_CLI PYTHONPATH PATH; do
+    printf 'export %s=%q\n' "$name" "${!name}"
+  done
+  if [[ "$agent" == hermes ]]; then
+    printf 'export HYPERLOOM_HERMES_BIN=%q\n' "$HYPERLOOM_HERMES_BIN"
+    printf 'export HYPERLOOM_HERMES_EXTERNAL_SANDBOX=1\n'
+    printf 'export GEAK_HERMES_BIN=%q\n' "$GEAK_HERMES_BIN"
+    printf 'export GEAK_HERMES_EXTERNAL_SANDBOX=1\n'
+  elif [[ "$agent" == codex ]]; then
+    printf 'export GEAK_CODEX_BIN=%q\n' "$GEAK_CODEX_BIN"
+  else
+    printf 'export GEAK_CLAUDE_BIN=%q\n' "$GEAK_CLAUDE_BIN"
+  fi
+} > "$tmp"
+chmod 600 "$tmp"
+mv -f "$tmp" "$KERNEL_AGENT_ENV"
+
+if [[ "${1:-}" == shell ]]; then
+  shift
+  exec /bin/bash "$@"
+fi
+
+# One outer lease covers the optimizer driver and every child it launches.
+# GEAK's own per-lane locks use separate sentinels and do not re-lock this file.
+exec flock -x /run/lock/hermes-vllm-gfx1151.lock \
+  /opt/venv/bin/inference_optimizer "$@"

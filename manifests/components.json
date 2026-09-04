@@ -1,0 +1,257 @@
+{
+  "components": {
+    "aiter": {
+      "claim": "optional tools/JIT image; AITER attention unavailable for qualified BF16 GQA2 geometry",
+      "commit": "a343a1054383b2d192e70345224d6ed5b6eec482",
+      "default_sglang_attention": false,
+      "repository": "https://github.com/ROCm/aiter",
+      "wheel": "amd_aiter-0.1.22.dev0+gfx1151.rocm10-cp314-cp314-linux_x86_64.whl",
+      "wheel_sha256": "6b665e7dc08364ca2aa240acf75bee180ef4ea16d929333a48513c71d24e392c"
+    },
+    "geak": {
+      "commit": "b4dea3fa33ef438d4233aae0ed2c2f425c4e419a",
+      "repository": "https://github.com/HawgAuto/GEAK",
+      "tree": "560d7555afa3452dc19ab51a1d3475826ac74fbf",
+      "upstream_base_commit": "0e1ef546356052e15ae10e2cf7abe9841d1693e8",
+      "upstream_repository": "https://github.com/AMD-AGI/GEAK"
+    },
+    "hyperloom": {
+      "commit": "a94191bfe0b548a44113e0d28c432d1bff0e3f9f",
+      "final_closeout_sha256": "593ac3978c40bf0c2612e1ddd9a20cf77ed9bd0801a5e7292d6a283b94cff3db",
+      "public_functional_proof_sha256": "e9dbe7ba739ee3a610d4237cba5a16943a70a7ffaf3259d4d6bd7645a119616d",
+      "public_lineage_handoff_sha256": "8fd30231ae61820339779e0afedf2e4fbeda3f3c050eb3e42adeddcc7aaa087c",
+      "public_registry_sha256": "987bab827d8d8cca082cb00d9320c2d4d401d85673ca771fec280c0a73950f09",
+      "qualified_parent_commit": "6f67fbef5b3d7cb647aee0cc0a5f67f10d13ef4d",
+      "qualified_parent_tree": "b83fd214ebe204c2eb0bfb25df219232851537e3",
+      "repository": "https://github.com/hstolte11-collab/Hyperloom",
+      "sealed_functional_proof_sha256": "189d3f37808efd2d07e019802f8e8983c283bbbce66f79889a0dac3152840a4e",
+      "tree": "a776fa0fdcb7702ea560f431bf9db12017c3effa",
+      "wheel": "hyperloom_inference_optimizer-1.0.0-py3-none-any.whl",
+      "wheel_sha256": "9cc9884911db814c8d72d7e1219fe580f94f98849674f3b468f16caf3a8e09de"
+    },
+    "inferencex": {
+      "commit": "3d5581562f643f9bdeb8410cd924e2c70906c966",
+      "repository": "https://github.com/SemiAnalysisAI/InferenceX",
+      "role": "required_benchmark_and_accuracy_harness"
+    },
+    "intellikit": {
+      "commit": "2f61453a779980b00504ea3b772ff4a1a1c3f4ad",
+      "gfx1151_support": "metrix_native",
+      "optional_source_packages": [
+        "accordo",
+        "kerncap",
+        "linex",
+        "nexus",
+        "rocm_mcp",
+        "uprof_mcp"
+      ],
+      "repository": "https://github.com/AMDResearch/intellikit",
+      "required_packages": [
+        "metrix"
+      ],
+      "rocm10_support": true,
+      "role": "required_transitive_profiler",
+      "scope": "Metrix is the native gfx1151 profiler used by Magpie and GEAK. The full IntelliKit source is included; other packages are optional and are not required by the default Hyperloom loop."
+    },
+    "lowbit_kernel_pack": {
+      "bundled_in_deferred_core": false,
+      "bundled_in_full": true,
+      "commit": "4d68f75aba28caf2a9005677c706d831afe0aee5",
+      "overlay_wheel_sha256": "e06d773292cb05c45fc61fffb251fcace49ef387c284c00208fb1827248ed8ad",
+      "release_assets": 4,
+      "release_url": "https://github.com/HawgAuto/Strix-Halo-Lowbit-Kernel-Pack/releases/tag/v0.1.0",
+      "repository": "https://github.com/HawgAuto/Strix-Halo-Lowbit-Kernel-Pack",
+      "reviewed_index_sha256": "9b67c842981313bea305f409b8cfcf5d92995174dfc28fdb9d5e0be71e6c2db8",
+      "status": "public_release_verified",
+      "tag": "v0.1.0"
+    },
+    "magpie": {
+      "commit": "f25176b855aad86e38ac06442f2a5d2b8e4da21f",
+      "repository": "https://github.com/HawgAuto/Magpie",
+      "upstream_pr": "https://github.com/AMD-AGI/Magpie/pull/90"
+    },
+    "quark": {
+      "commit": "f7d8cefc7a6c973ff90cb87a6b154cbe3cc9aef2",
+      "repository": "https://github.com/amd/Quark",
+      "wheel": "amd_quark-0.12.post1-py3-none-any.whl",
+      "wheel_sha256": "00a786f59259ce4412d3183b861cbc4eb8535b152bf0f1dc7080adfd9e6b5ad6"
+    },
+    "sglang": {
+      "code_object_targets": [
+        "gfx1151"
+      ],
+      "commit": "cb9e016cb33b98bc804a57bc70b8272d8e8d134c",
+      "kernel_wheel": "sglang_kernel-0.4.4-cp39-abi3-linux_x86_64.whl",
+      "kernel_wheel_bytes": 1745573,
+      "kernel_wheel_sha256": "24f60729ab0dd647972486904fd69023eecba233608b1d3a45c3b6d647ac1749",
+      "lowbit_pack_bundled": false,
+      "patch": "patches/sglang/gfx1151-core.patch",
+      "patch_sha256": "f9b4223335ff0e64d6b4a10e701c87bf648e35a296a7f248c10e2e4a63230f8a",
+      "repository": "https://github.com/HawgAuto/sglang",
+      "source_root_sha256": "ab51324f7777120d251525252019812d3fe97136bb53f45eab4ad6cd57b54d2f",
+      "tree": "62dd11c8803981efd9989ccf8daff2612ace0a84",
+      "upstream_base_commit": "f63458b5beaceabbd9d749b9fc956370e1b649e6",
+      "upstream_repository": "https://github.com/sgl-project/sglang",
+      "wheel": "sglang-0.5.15-py3-none-any.whl",
+      "wheel_bytes": 9788424,
+      "wheel_sha256": "cd5b18b1b249917aa5406dfcb9d7013e92c58d785906cf3d1f5306b97fd625df"
+    },
+    "tracelens": {
+      "commit": "a59a9c165bb64c7c416fd7cf79149803d552e43c",
+      "protobuf_bound": ">=6.31.1,<8.0.0",
+      "protobuf_bound_reason": "xprof 2.20.2 requires only protobuf>=3.19.6; the stale <7 bound would downgrade the qualified SGLang base (protobuf 7.36.0). Each golden base keeps its own constraint-pinned protobuf.",
+      "python314_compatibility_patch": "patches/tracelens/python314-xprof-2.20.2.patch",
+      "python314_compatibility_patch_sha256": "27483aa4507ff611ab4baac5258d0fe0b4811fedb359199d342794c4116f9b77",
+      "python314_compatibility_tests": "186 passed, 3 skipped",
+      "python314_new_pip_conflicts": 0,
+      "repository": "https://github.com/AMD-AGI/TraceLens",
+      "role": "required_trace_analysis",
+      "xprof": "2.20.2",
+      "xprof_reason": "TraceLens pin 2.20.1 has no Python 3.14 distribution"
+    },
+    "vllm": {
+      "code_object_targets": [
+        "gfx1151"
+      ],
+      "commit": "6ddd7a77a256e90f86c108eeed4ce46602cf9657",
+      "lowbit_pack_bundled": false,
+      "repository": "https://github.com/HawgAuto/vllm",
+      "source_root_sha256": "f28c74e384dd243f6310211fa668752c07c829759c5de289e71403f3878c81dc",
+      "tree": "f43b2d6d7fc32c656ea37abd28fc3de01e4228ba",
+      "upstream_base_commit": "4bdc8a788d2e2ce9165d552b3d4d8b72604626bf",
+      "upstream_repository": "https://github.com/vllm-project/vllm",
+      "wheel": "vllm-0.27.0+haloloom.gfx1151.rocm10.rocm100-cp314-cp314-linux_x86_64.whl",
+      "wheel_bytes": 59004148,
+      "wheel_sha256": "a62e0198069cf42583a500091b5d85c18c0ebdabc195d2878934ddc4dcda59b9"
+    }
+  },
+  "images": {
+    "aiter_tools": {
+      "amd64_manifest_digest": "sha256:def2605ea8ebe7b4da5f3a612ef56debfa110815f3352b6c7a0c90044cbf83ef",
+      "digest": "sha256:a66c94bdbb877205fa125788be1e1d7ae5b03bd1e18b3c846298ddc97af3850c",
+      "digest_media_type": "application/vnd.oci.image.index.v1+json",
+      "golden_image_id": "sha256:e9647f36b4659b3272c1689fcbb85fee17002a7ead9516c09f3e310ec9e719e6",
+      "local_image_id": "sha256:a66c94bdbb877205fa125788be1e1d7ae5b03bd1e18b3c846298ddc97af3850c",
+      "local_reference": "haloloom-aiter-tools-full-gfx1151:v0.1.0-rc1",
+      "physical_arch": "gfx1151",
+      "pinned_reference": "ghcr.io/hawgauto/haloloom-aiter-tools-full-gfx1151@sha256:a66c94bdbb877205fa125788be1e1d7ae5b03bd1e18b3c846298ddc97af3850c",
+      "production_activated": false,
+      "qualification_receipt": "qualification/receipts/aiter-final-bounded-v0.1.0.json",
+      "qualification_receipt_sha256": "dd3455b424eb5461a415b686db34c99eeee0331935fe066827ef1d135f942d67",
+      "reference": "ghcr.io/hawgauto/haloloom-aiter-tools-full-gfx1151:v0.1.0",
+      "registry_readback": "authenticated_tag_resolves_to_pushed_index_digest",
+      "size_bytes": 5796045091,
+      "status": "physical_bounded_pass_sample_and_attention_unavailable"
+    },
+    "full_sglang": {
+      "amd64_manifest_digest": "sha256:36c4ce8d1086c261f7ef0358fae845e4be96a3a04b42db6afc3a663d61beb7e3",
+      "compact_base_image_id": "sha256:c14326489fcaf00aae97d53e805b2de44bf67f010b925801c86c2dd5cc00ade2",
+      "compact_base_model_replay_receipt": "qualification/receipts/sglang-full-golden-v0.1.0.json",
+      "compact_base_model_replay_receipt_sha256": "4f235c2bb25d74032c5c215c11d7cf6de4c3617c9beb3b4c9d77d177a8d1a2ad",
+      "compact_base_runtime_identity_sha256": "b6a60951983ee648462e82088e86a20cb25569e49ba20c83c27a2946b89ca86d",
+      "digest": "sha256:cd66db5627fa5fab16fe276cf2804c7eaa2a6a1310f48e3963321d7a34ba1259",
+      "digest_media_type": "application/vnd.oci.image.index.v1+json",
+      "ecosystem_layer_receipt": "qualification/receipts/sglang-ecosystem-layer-v0.1.0.json",
+      "ecosystem_layer_receipt_sha256": "ef6762ac5744ae64d3dff8e8b487a9addf81718ec86f4ea15b260f50c112a97e",
+      "external_agent_clis_bundled": false,
+      "golden_base_image_id": "sha256:dbd3b9e61e8df98346ecc33877a9126d2b9854e8d0630ad6be308253b72e97ce",
+      "golden_base_reference": "haloloom-sglang-full-gfx1151:v0.1.0-rc3",
+      "golden_image_id": "sha256:869e23eec020047c4dc57f6ee42fd33107ea53f0ec202f9fd2b1d795235c7e50",
+      "hyperloom_wheel_sha256": "9cc9884911db814c8d72d7e1219fe580f94f98849674f3b468f16caf3a8e09de",
+      "local_image_id": "sha256:cd66db5627fa5fab16fe276cf2804c7eaa2a6a1310f48e3963321d7a34ba1259",
+      "local_reference": "haloloom-sglang-full-gfx1151:v0.1.0-ecosystem-rc2",
+      "lowbit_overlay_wheel_sha256": "e06d773292cb05c45fc61fffb251fcace49ef387c284c00208fb1827248ed8ad",
+      "physical_arch": "gfx1151",
+      "pinned_reference": "ghcr.io/hawgauto/haloloom-sglang-full-gfx1151@sha256:cd66db5627fa5fab16fe276cf2804c7eaa2a6a1310f48e3963321d7a34ba1259",
+      "reference": "ghcr.io/hawgauto/haloloom-sglang-full-gfx1151:v0.1.0",
+      "registry_readback": "authenticated_tag_resolves_to_pushed_index_digest",
+      "route_qualification_receipt": "qualification/receipts/sglang-full-w4a8-final-v0.1.0.json",
+      "route_qualification_receipt_sha256": "1bb645b362c2ff302236b671676042def5904b540c4db6e4c6b684a49c56da56",
+      "size_bytes": 7634557184,
+      "status": "locally_physically_qualified_with_ecosystem_layer",
+      "superseded_lowbit_overlay_wheel_sha256": "dbf280ff04b677dc1f6686478d1ff7f36879effccbb10e4cfb8c52766db349e5"
+    },
+    "full_vllm": {
+      "active_lowbit_runtime_sha256": "7d082d7adb59c0afd51c63790410e03d40adf31b1dc03c0611ab62629055c1a3",
+      "amd64_manifest_digest": "sha256:86089fcf006d91c1c4f95b91371abb419668bbdb3aa4954f7aaaad7aae53e336",
+      "compact_base_image_id": "sha256:7d5d5ad60610493a79c6ee1070f01821249f4d2f6b4f399554e2232b6a5197d1",
+      "compact_base_model_replay_receipt": "qualification/receipts/vllm-full-golden-v0.1.0.json",
+      "compact_base_model_replay_receipt_sha256": "a173130455860bae03c10f28de4a7d2c728ea1874a872d3b3e208541aa84eb0b",
+      "compact_base_runtime_identity_sha256": "95234445de1b481fdeca2a89b99a965b64eca719104ec9c78f42512fe24a7e11",
+      "digest": "sha256:0835d9d2782edc480dbbcb5ddb4dbd1d696d6e3038f4b23c761855bd5f1fa30c",
+      "digest_media_type": "application/vnd.oci.image.index.v1+json",
+      "ecosystem_layer_receipt": "qualification/receipts/vllm-ecosystem-layer-v0.1.0.json",
+      "ecosystem_layer_receipt_sha256": "c2c99606733a729731a4ae5f30bfa3d4f6e62081159abf28bc51aa0b1d63420e",
+      "external_agent_clis_bundled": false,
+      "framework_wheel_sha256": "e5f65076a2a5144e36cd78f89e5e61133fa13660574b014424a7dffdd890b831",
+      "golden_base_image_id": "sha256:38f60f0b5368eada461c8248fe3b00abdd690565942077e7e1fd9ee0f4b5eb4d",
+      "golden_base_reference": "haloloom-vllm-full-gfx1151:v0.1.0-rc4",
+      "golden_image_id": "sha256:0f2ef33105e11e60c11a3fce55a06860369329dcfc68d7627ad47f04a3c113ab",
+      "hyperloom_wheel_sha256": "9cc9884911db814c8d72d7e1219fe580f94f98849674f3b468f16caf3a8e09de",
+      "local_image_id": "sha256:0835d9d2782edc480dbbcb5ddb4dbd1d696d6e3038f4b23c761855bd5f1fa30c",
+      "local_reference": "haloloom-vllm-full-gfx1151:v0.1.0-ecosystem-rc9",
+      "lowbit_overlay_wheel_sha256": "e06d773292cb05c45fc61fffb251fcace49ef387c284c00208fb1827248ed8ad",
+      "physical_arch": "gfx1151",
+      "pinned_reference": "ghcr.io/hawgauto/haloloom-vllm-full-gfx1151@sha256:0835d9d2782edc480dbbcb5ddb4dbd1d696d6e3038f4b23c761855bd5f1fa30c",
+      "reference": "ghcr.io/hawgauto/haloloom-vllm-full-gfx1151:v0.1.0",
+      "registry_readback": "authenticated_tag_resolves_to_pushed_index_digest",
+      "request_contract": {
+        "completed": 2,
+        "input_lens": [
+          64,
+          64
+        ],
+        "output_lens": [
+          16,
+          16
+        ],
+        "total_output_tokens": 32
+      },
+      "route_qualification_receipt": "qualification/receipts/vllm-full-w4a8-final-v0.1.0.json",
+      "route_qualification_receipt_sha256": "3e7b39dc69e0137a6b70042d55c0781393412682247bd0d1552b1de211877833",
+      "size_bytes": 7722304859,
+      "status": "locally_physically_qualified_with_ecosystem_layer",
+      "superseded_lowbit_overlay_wheel_sha256": "dbf280ff04b677dc1f6686478d1ff7f36879effccbb10e4cfb8c52766db349e5",
+      "superseded_rc2_image_id": "sha256:9d14e8002c016fe9d681dc89b9afbe9a87222061f26b11c6ae1313a5bd642dc5"
+    },
+    "quark": {
+      "amd64_manifest_digest": "sha256:522e01d5ea9e2370f605f117082be927b3bebaa61128b423d6d5699499cc12e8",
+      "compact_golden_base_id": "sha256:ec7ded040c18e0a3bfc24c24bcddcd7b80c9149825616627d497cb496fbab418",
+      "digest": "sha256:99dbc478ca7d8a2af6eb973f625e62d5b477f9261efc7d1896aba1596cb9b1d3",
+      "digest_media_type": "application/vnd.oci.image.index.v1+json",
+      "external_agent_clis_bundled": false,
+      "golden_image_id": "sha256:4e01a1bb36eb72eea6e5c36da43901cb0bab56b8d32e3ab61a369ef66dca6774",
+      "local_image_id": "sha256:99dbc478ca7d8a2af6eb973f625e62d5b477f9261efc7d1896aba1596cb9b1d3",
+      "local_reference": "haloloom-quark-rocm10-gfx1151:v0.1.0-plugin-rc2",
+      "physical_arch": "gfx1151",
+      "pinned_reference": "ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151@sha256:99dbc478ca7d8a2af6eb973f625e62d5b477f9261efc7d1896aba1596cb9b1d3",
+      "production_activated": false,
+      "qualification_receipt": "qualification/receipts/quark-final-public-wheel-runtime-handoff-v0.1.0.json",
+      "qualification_receipt_sha256": "6d89ce7e3c711a94bf876e15157042761c760172555beca502aff3b24afe2abd",
+      "reference": "ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151:v0.1.0",
+      "registry_readback": "authenticated_tag_resolves_to_pushed_index_digest",
+      "size_bytes": 5699432077,
+      "status": "physical_public_wheel_runtime_pass_prior_ptq_quality_rejected",
+      "superseded_agent_bundled_image_id": "sha256:4ca08c4223ec45b4f4efcddf19c32cc111caf5a765c8562ffa721bae9218d694"
+    }
+  },
+  "release": "v0.1.0",
+  "runtime_dependencies": {
+    "click": ">=8.4.2,<9",
+    "ray": "2.55.0",
+    "ray_compatibility": {
+      "focused_tests": "137 passed",
+      "head_lifecycle": "start_status_stop_pass",
+      "new_pip_conflicts": 0,
+      "reason": "Ray 2.44.1 has no Python 3.14 wheel"
+    }
+  },
+  "schema_version": 1,
+  "target": {
+    "arch": "gfx1151",
+    "gpu": "AMD Radeon 8060S",
+    "hip": "7.15.26333",
+    "rocm": "10.0.0",
+    "torch": "2.13.0+rocm10.0.0"
+  }
+}

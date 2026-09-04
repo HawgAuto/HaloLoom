@@ -1,0 +1,18 @@
+{
+  "assets": [
+    {
+      "bytes": 119,
+      "name": "SHA256SUMS",
+      "sha256": "fd760de7c846437b53d101d5d1e9a08cb5bb4549b6134d6fbe4817402427b850",
+      "source": "release/SHA256SUMS"
+    },
+    {
+      "bytes": 5491892,
+      "name": "hyperloom_inference_optimizer-1.0.0-py3-none-any.whl",
+      "sha256": "9cc9884911db814c8d72d7e1219fe580f94f98849674f3b468f16caf3a8e09de",
+      "source": "dist/hyperloom/hyperloom_inference_optimizer-1.0.0-py3-none-any.whl"
+    }
+  ],
+  "schema": "haloloom.release-assets.v1",
+  "tag": "v0.1.0"
+}

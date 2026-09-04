@@ -1,0 +1,139 @@
+{
+  "claim_limits": {
+    "performance": false,
+    "physical_route_qualified": false,
+    "production_promotion": false
+  },
+  "compact_validator_sha256": "b89bd703ff4d9684f79c91d6e33de97233e31d2f4a68d4e077019db2d1379a3e",
+  "promotion_authority": false,
+  "routes": [
+    {
+      "capability": "quant.fp8_rdna35",
+      "kernel_symbol": "hyperloom_fp8_e4m3fnuz_fused_fma_f32",
+      "module_sha256": "404cc2c0c49669cadb2be43326b7a3208c1e3e832ff77c6fd614238bbb9b0983",
+      "quantization_method": "gfx1151-fp8-e4m3fnuz",
+      "sglang_status": "immutable ROCm 10 v15 singleton-admission image CPU-qualified; fresh native matrix pending",
+      "status": "HOLD",
+      "vllm_status": "immutable ROCm 10 v12 singleton-admission image CPU-qualified; fresh native matrix pending",
+      "wire_id": "gfx1151.fp8_e4m3fnuz.per_channel_f32"
+    },
+    {
+      "capability": "quant.mxfp4_rdna35",
+      "kernel_symbol": "hyperloom_mxfp4_e2m1_e8m0_fused_fma_f32",
+      "module_sha256": "404cc2c0c49669cadb2be43326b7a3208c1e3e832ff77c6fd614238bbb9b0983",
+      "quantization_method": "gfx1151-mxfp4-e2m1-e8m0",
+      "sglang_status": "immutable ROCm 10 v15 singleton-admission image CPU-qualified; fresh native matrix pending",
+      "status": "HOLD",
+      "vllm_status": "immutable ROCm 10 v12 singleton-admission image CPU-qualified; fresh native matrix pending",
+      "wire_id": "gfx1151.mxfp4_e2m1_e8m0.block32"
+    },
+    {
+      "capability": "quant.int8_rdna35",
+      "kernel_symbol": "hyperloom_w8a8_dot4_i32_iu8",
+      "module_sha256": "404cc2c0c49669cadb2be43326b7a3208c1e3e832ff77c6fd614238bbb9b0983",
+      "quantization_method": "gfx1151-w8a8",
+      "sglang_status": "immutable ROCm 10 v15 singleton-admission image CPU-qualified; fresh native matrix pending",
+      "status": "HOLD",
+      "vllm_status": "immutable ROCm 10 v12 singleton-admission image CPU-qualified; fresh native matrix pending",
+      "wire_id": "gfx1151.w8a8.signed_per_channel_per_token"
+    },
+    {
+      "capability": "quant.int4_w4a8_rdna35",
+      "kernel_symbol": "hyperloom_w4a8_dot4_i32_iu8",
+      "module_sha256": "404cc2c0c49669cadb2be43326b7a3208c1e3e832ff77c6fd614238bbb9b0983",
+      "quantization_method": "gfx1151-w4a8",
+      "sglang_status": "immutable ROCm 10 v15 singleton-admission image CPU-qualified; fresh native matrix pending",
+      "status": "HOLD",
+      "vllm_status": "immutable ROCm 10 v12 singleton-admission image CPU-qualified; fresh native matrix pending",
+      "wire_id": "gfx1151.w4a8.signed_per_channel_per_token"
+    },
+    {
+      "capability": "quant.int4_rdna35",
+      "kernel_symbol": "hyperloom_w4a4_dot8_i32_iu4",
+      "module_sha256": "404cc2c0c49669cadb2be43326b7a3208c1e3e832ff77c6fd614238bbb9b0983",
+      "quantization_method": "gfx1151-w4a4",
+      "sglang_status": "immutable ROCm 10 v15 singleton-admission image CPU-qualified; fresh native matrix pending",
+      "status": "HOLD",
+      "vllm_status": "immutable ROCm 10 v12 singleton-admission image CPU-qualified; fresh native matrix pending",
+      "wire_id": "gfx1151.w4a4.signed_per_channel_per_token"
+    },
+    {
+      "capability": "quant.int4_w4a16_rdna35",
+      "kernel_symbol": "hyperloom_w4a16_fused_fma_f32",
+      "module_sha256": "404cc2c0c49669cadb2be43326b7a3208c1e3e832ff77c6fd614238bbb9b0983",
+      "quantization_method": "gfx1151-w4a16",
+      "sglang_status": "immutable ROCm 10 v15 singleton-admission image CPU-qualified; fresh native matrix pending",
+      "status": "HOLD",
+      "vllm_status": "immutable ROCm 10 v12 singleton-admission image CPU-qualified; fresh native matrix pending",
+      "wire_id": "gfx1151.w4a16.signed_per_channel"
+    }
+  ],
+  "runtime_closure": {
+    "sglang": {
+      "compact_base_image_id": "sha256:c14326489fcaf00aae97d53e805b2de44bf67f010b925801c86c2dd5cc00ade2",
+      "golden_image_id": "sha256:869e23eec020047c4dc57f6ee42fd33107ea53f0ec202f9fd2b1d795235c7e50",
+      "image_bindings": [
+        {
+          "bytes": 49588,
+          "path": "/opt/hyperloom-runtime/hyperloom_rdna35_runtime.py",
+          "sha256": "a21a9e6f2ea50247740f44a8c846b34221dddac57491cfb652cb2c16d2dfaf0b"
+        },
+        {
+          "bytes": 837,
+          "path": "/opt/venv/lib/python3.14/site-packages/hyperloom/inference_optimizer/assets/gfx1151/rdna35_lowbit/module-manifest.json",
+          "sha256": "48ad3555f0f83a2b898a6f441b06c626a6c9ec4a778fd787606f1a98c1929d06"
+        },
+        {
+          "bytes": 20040,
+          "path": "/opt/venv/lib/python3.14/site-packages/hyperloom/inference_optimizer/assets/gfx1151/rdna35_lowbit/rdna35_lowbit.hsaco",
+          "sha256": "404cc2c0c49669cadb2be43326b7a3208c1e3e832ff77c6fd614238bbb9b0983"
+        },
+        {
+          "bytes": 23935,
+          "path": "/opt/venv/lib/python3.14/site-packages/hyperloom/inference_optimizer/assets/gfx1151/rdna35_lowbit/qualification.json",
+          "sha256": "da7b2092176f108548e8d421c76026083da05d5b9df278837d3490af17f1a2e3"
+        },
+        {
+          "bytes": 39479,
+          "path": "/opt/venv/lib/python3.14/site-packages/hyperloom/inference_optimizer/rdna35_lowbit_hip.py",
+          "sha256": "13bfe42a1455b1d83922e9e91c65ecc3a77f82de5c9b417d6c427a2b7d5dfffa"
+        },
+        {
+          "bytes": 17765,
+          "path": "/opt/venv/lib/python3.14/site-packages/sglang/srt/layers/quantization/gfx1151_lowbit.py",
+          "sha256": "25e14787c19f878163b765cb49ecd32d24dec3f94a27bf85edf259b8005d0c7f"
+        },
+        {
+          "bytes": 24874,
+          "path": "/opt/venv/lib/python3.14/site-packages/sglang/srt/managers/tp_worker.py",
+          "sha256": "76d7bbcabb42ca84aa89918f2ee6feead9a8f3c937c36622e4d752e6344be791"
+        },
+        {
+          "bytes": 46717,
+          "path": "/opt/haloloom/wheels/strix_halo_lowbit_kernel_pack-0.1.0-py3-none-any.whl",
+          "sha256": "e06d773292cb05c45fc61fffb251fcace49ef387c284c00208fb1827248ed8ad"
+        }
+      ],
+      "image_id": "sha256:dbd3b9e61e8df98346ecc33877a9126d2b9854e8d0630ad6be308253b72e97ce",
+      "image_tag": "haloloom-sglang-full-gfx1151:v0.1.0-rc3",
+      "prune_manifest": {
+        "bytes": 1751513,
+        "path": "/opt/haloloom/prune-manifest.json",
+        "sha256": "653c9e7a7a1d7fcf7a356d337850586496a4ddd20f3424cd4708d6767a188557"
+      },
+      "runtime_identity_after": {
+        "bytes": 11485,
+        "path": "/opt/haloloom/runtime-identity-after.json",
+        "sha256": "b6a60951983ee648462e82088e86a20cb25569e49ba20c83c27a2946b89ca86d"
+      },
+      "runtime_identity_before": {
+        "bytes": 11485,
+        "path": "/opt/haloloom/runtime-identity-before.json",
+        "sha256": "b6a60951983ee648462e82088e86a20cb25569e49ba20c83c27a2946b89ca86d"
+      }
+    }
+  },
+  "schema": "haloloom.gfx1151-lowbit-compact-route.v1",
+  "status": "STATIC_RUNTIME_IDENTITY_MATCH",
+  "v7_validator_sha256": "921d027685de8c754dc81c0df7535208bb81b94ddaa25244b987cecc0b012cdd"
+}

@@ -1,0 +1,60 @@
+{
+  "schema": "hyperloom.gfx1151-full-readiness.closeout.v1",
+  "status": "PASS_FUNCTIONALLY_COMPLETE_PRODUCTION_READY_NOT_ACTIVATED",
+  "source": {
+    "hyperloom_commit": "6f67fbef5b3d7cb647aee0cc0a5f67f10d13ef4d",
+    "hyperloom_tree": "b83fd214ebe204c2eb0bfb25df219232851537e3",
+    "geak_commit": "506b579622bc177bf0f972331b0bd9f60330af8d",
+    "all_source_worktrees_clean": true
+  },
+  "registry": {
+    "id": "gfx1151-rocm10-kernel-targets-v3",
+    "sha256": "0524ca6d69216c7aabe51f27ad04c46fcbe11a4b010313fe1d84008a27d724f1",
+    "target_count": 23,
+    "editable_count": 22,
+    "control_only_count": 1
+  },
+  "final_authorities": {
+    "readiness_contract_sha256": "6f259453d6c32276b8a8f62c24a2c5f51fdf3817b5dbcec818b666e9589bab34",
+    "provider_seal_sha256": "633da3b87e72b6532cde55c78d9a84e671df86173cea299bbbbe291d8064fc2d",
+    "geak_gpu_seal_sha256": "e8ccea6d5e80226f1c367f729b4188e82beb6e167a79f5e9379fbafa093c4cd5",
+    "sglang_seal_sha256": "4412eeded0b635698557f45cebbf7995a824bea53c7a3b219bd00740bf8a946e",
+    "functional_target_seal_sha256": "eea5b28376b567dafcf5c9443bd4c4b2d4bdebd0995e789d460374daa111e611",
+    "production_readiness_seal_sha256": "240dad5c3f2d20a17e319007fb444a0c4215c1bb7b0660cf0badb5d24111dfd2"
+  },
+  "local_artifacts": {
+    "inventory_sha256": "d19f5421b0df82cddff0b412ad2cef103410206a9edcff9c2c9d9fe0d17912d7",
+    "evidence_map_sha256": "8d2d115aff14d744c64305db5fb1fef94a5533a19718daefa0c3656e7c371238",
+    "support_matrix_sha256": "6d06a5228882f47b7d7dcd880010e61641e64f30e81c8bfe99802dde4f0fb858"
+  },
+  "readiness": {
+    "all_targets_functionally_closed": true,
+    "geak_gpu_operational": true,
+    "vllm_usable": true,
+    "sglang_usable": true,
+    "qualified_provider_arms": 2,
+    "provider_model_kernel_fallback": "none",
+    "durable_resume_cleanup_status": true,
+    "manual_activation_boundary": true
+  },
+  "tests": {
+    "orchestrator": "21 passed",
+    "kernelforge_dependency_available": "3580 passed, 7 skipped, 8 xfailed",
+    "geak": "451 passed, 8 subtests passed",
+    "sglang_lowbit": "18 passed",
+    "hybrid_w4a16": "63 passed",
+    "w4a4_forced_routes": "7 passed, 0 mismatches"
+  },
+  "cleanup": {
+    "kfd_clear": true,
+    "campaign_containers_absent": true,
+    "campaign_listeners_clear": true,
+    "global_gpu_lock_free": true
+  },
+  "performance_win_required": false,
+  "candidate_adoption_required": false,
+  "production_ready": true,
+  "production_activated": false,
+  "production_mutated": false,
+  "promotion_authority": false
+}

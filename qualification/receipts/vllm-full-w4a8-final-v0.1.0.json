@@ -1,0 +1,133 @@
+{
+  "active_runtime_sha256": "7d082d7adb59c0afd51c63790410e03d40adf31b1dc03c0611ab62629055c1a3",
+  "cleanup": {
+    "container_absent": true,
+    "kfd_clear": true,
+    "lock_released": true,
+    "port_clear": true
+  },
+  "completed_at_epoch": 1788429895.969859,
+  "framework": "vllm",
+  "framework_version": "0.27.0+haloloom.full.gfx1151.rocm10.rocm100",
+  "framework_wheel_sha256": "e5f65076a2a5144e36cd78f89e5e61133fa13660574b014424a7dffdd890b831",
+  "hip_module": {
+    "code_object_targets": [
+      "gfx1151"
+    ],
+    "kernel_symbols": [
+      "hyperloom_fp8_e4m3fnuz_fused_fma_f32",
+      "hyperloom_mxfp4_e2m1_e8m0_fused_fma_f32",
+      "hyperloom_w8a8_dot4_i32_iu8",
+      "hyperloom_w4a8_dot4_i32_iu8",
+      "hyperloom_w4a4_dot8_i32_iu4",
+      "hyperloom_w4a16_fused_fma_f32"
+    ],
+    "module_sha256": "404cc2c0c49669cadb2be43326b7a3208c1e3e832ff77c6fd614238bbb9b0983",
+    "qualification_sha256": "da7b2092176f108548e8d421c76026083da05d5b9df278837d3490af17f1a2e3"
+  },
+  "image": {
+    "compact_base_id": "sha256:7d5d5ad60610493a79c6ee1070f01821249f4d2f6b4f399554e2232b6a5197d1",
+    "golden_id": "sha256:0f2ef33105e11e60c11a3fce55a06860369329dcfc68d7627ad47f04a3c113ab",
+    "id": "sha256:38f60f0b5368eada461c8248fe3b00abdd690565942077e7e1fd9ee0f4b5eb4d",
+    "runtime_identity_equal": true,
+    "tag": "haloloom-vllm-full-gfx1151:v0.1.0-rc4"
+  },
+  "model": {
+    "name": "Qwen/Qwen3.5-0.8B",
+    "revision": "2fc06364715b967f1860aea9cf38778875588b17",
+    "served_name": "qwen35-08b-gfx1151-w4a8"
+  },
+  "overlay_wheel_sha256": "e06d773292cb05c45fc61fffb251fcace49ef387c284c00208fb1827248ed8ad",
+  "performance_qualified": false,
+  "production_activated": false,
+  "promotion_authority": false,
+  "raw_artifact_hashes": {
+    "raw_receipt": "206fc789a23d8582c45311d82c7c2cacce8383d3651551f25fb11f3348e4ecb7",
+    "route_log": "d149500ad658c54197f10b805ac26308536e9d902a310a70d553a381f8750073",
+    "server_log": "e2fafd6ab0fbbff1382c6c57ef02901e6d57c84d299e400449d67d786098f048"
+  },
+  "response": {
+    "content": "RDNA35_OK",
+    "finish_reason": "stop",
+    "id": "chatcmpl-hyperloom-vllm-gfx1151-lowbit",
+    "model": "qwen35-08b-gfx1151-w4a8",
+    "usage": {
+      "completion_tokens": 6,
+      "prompt_tokens": 21,
+      "prompt_tokens_details": null,
+      "total_tokens": 27
+    }
+  },
+  "route": {
+    "capability": "quant.int4_w4a8_rdna35",
+    "kernel_symbol": "hyperloom_w4a8_dot4_i32_iu8",
+    "module_sha256": "404cc2c0c49669cadb2be43326b7a3208c1e3e832ff77c6fd614238bbb9b0983",
+    "quantization_method": "gfx1151-w4a8",
+    "wire_id": "gfx1151.w4a8.signed_per_channel_per_token"
+  },
+  "route_spec_sha256": "f2accf8d3b39604b6b78e4b141354e1410fbd5877d51ee1d5aeb545c2f012234",
+  "route_validation": {
+    "asynchronous": true,
+    "completion_api": "hipEventRecord+hipEventSynchronize",
+    "completion_events": 7,
+    "dispatch_index_max": 144,
+    "dispatch_index_min": 33,
+    "first_trace_sequence": 33,
+    "foreign_suffix_request_ids": [],
+    "foreign_suffix_rows": 0,
+    "last_trace_sequence": 39,
+    "layer_invocations": {
+      "language_model.model.layers.10.mlp.down_proj": 7,
+      "language_model.model.layers.10.mlp.gate_up_proj": 7,
+      "language_model.model.layers.11.mlp.down_proj": 7,
+      "language_model.model.layers.11.mlp.gate_up_proj": 7,
+      "language_model.model.layers.12.mlp.down_proj": 7,
+      "language_model.model.layers.12.mlp.gate_up_proj": 7,
+      "language_model.model.layers.13.mlp.down_proj": 7,
+      "language_model.model.layers.13.mlp.gate_up_proj": 7,
+      "language_model.model.layers.6.mlp.down_proj": 7,
+      "language_model.model.layers.6.mlp.gate_up_proj": 7,
+      "language_model.model.layers.7.mlp.down_proj": 7,
+      "language_model.model.layers.7.mlp.gate_up_proj": 7,
+      "language_model.model.layers.8.mlp.down_proj": 7,
+      "language_model.model.layers.8.mlp.gate_up_proj": 7,
+      "language_model.model.layers.9.mlp.down_proj": 7,
+      "language_model.model.layers.9.mlp.gate_up_proj": 7
+    },
+    "module_sha256": "404cc2c0c49669cadb2be43326b7a3208c1e3e832ff77c6fd614238bbb9b0983",
+    "physical_dispatches": 112,
+    "physical_receipt_schema_version": 3,
+    "request_id": "chatcmpl-hyperloom-vllm-gfx1151-lowbit-84f59b33",
+    "route_delta_rows": 7,
+    "rows": 7,
+    "unique_layers": 16,
+    "unique_shapes": [
+      [
+        1,
+        1024,
+        3584
+      ],
+      [
+        1,
+        7168,
+        1024
+      ],
+      [
+        21,
+        1024,
+        3584
+      ],
+      [
+        21,
+        7168,
+        1024
+      ]
+    ]
+  },
+  "runtime": {
+    "architecture_spoof": false,
+    "rocm_root": "/opt/rocm/core-10.0"
+  },
+  "schema": "haloloom.compact-lowbit-framework-route.v1",
+  "status": "PASS"
+}

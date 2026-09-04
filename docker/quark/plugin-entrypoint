@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export PATH="/opt/haloloom-agent/bin:/opt/venv/bin:/usr/local/bin:${PATH:-/usr/bin:/bin}"
+unset HSA_OVERRIDE_GFX_VERSION 2>/dev/null || true
+
+case "${1:-}" in
+  ""|help|--help|-h)
+    exec /opt/haloloom-agent/bin/quantization-agent --help
+    ;;
+esac
+
+agent="${HALOLOOM_AGENT_PROFILE:-}"
+case "$agent" in
+  claude)
+    agent_bin="${HALOLOOM_CLAUDE_BIN_HOST:-}"
+    ;;
+  codex)
+    agent_bin="${HALOLOOM_CODEX_BIN_HOST:-}"
+    ;;
+  hermes)
+    agent_bin="${HALOLOOM_HERMES_BIN_HOST:-}"
+    export HYPERLOOM_HERMES_BIN="$agent_bin"
+    export HYPERLOOM_HERMES_EXTERNAL_SANDBOX=1
+    ;;
+  *)
+    echo "HaloLoom agent plug-in is not selected; rerun ./scripts/install.sh --agent auto." >&2
+    exit 1
+    ;;
+esac
+if [[ ! -x "$agent_bin" ]]; then
+  echo "Selected $agent agent CLI is not executable inside the container: $agent_bin" >&2
+  exit 1
+fi
+export PATH="$(dirname "$agent_bin"):$PATH"
+export FORGE_AGENT_BACKEND="$agent"
+export FORGE_AGENT_CLI="$agent_bin"
+
+if [[ "${HALOLOOM_PARENT_GPU_LOCK:-0}" == 1 ]]; then
+  exec 9>/run/lock/hermes-vllm-gfx1151.lock
+  if flock -n 9; then
+    flock -u 9
+    echo "HALOLOOM_PARENT_GPU_LOCK=1 but the shared GPU lock is free; refusing." >&2
+    exit 1
+  fi
+  exec /opt/haloloom-agent/bin/quantization-agent "$@"
+fi
+
+exec flock -x /run/lock/hermes-vllm-gfx1151.lock \
+  /opt/haloloom-agent/bin/quantization-agent "$@"

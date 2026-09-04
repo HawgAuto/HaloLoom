@@ -1,0 +1,134 @@
+{
+  "cleanup": {
+    "container_absent": true,
+    "kfd_clear": true,
+    "lock_released": true,
+    "port_clear": true
+  },
+  "completed_at_epoch": 1788422289.3443685,
+  "framework": "sglang",
+  "framework_version": "0.5.15",
+  "hip_module": {
+    "code_object_targets": [
+      "gfx1151"
+    ],
+    "kernel_symbols": [
+      "hyperloom_fp8_e4m3fnuz_fused_fma_f32",
+      "hyperloom_mxfp4_e2m1_e8m0_fused_fma_f32",
+      "hyperloom_w8a8_dot4_i32_iu8",
+      "hyperloom_w4a8_dot4_i32_iu8",
+      "hyperloom_w4a4_dot8_i32_iu4",
+      "hyperloom_w4a16_fused_fma_f32"
+    ],
+    "module_sha256": "404cc2c0c49669cadb2be43326b7a3208c1e3e832ff77c6fd614238bbb9b0983",
+    "qualification_sha256": "da7b2092176f108548e8d421c76026083da05d5b9df278837d3490af17f1a2e3"
+  },
+  "image": {
+    "compact_base_id": "sha256:c14326489fcaf00aae97d53e805b2de44bf67f010b925801c86c2dd5cc00ade2",
+    "golden_id": "sha256:869e23eec020047c4dc57f6ee42fd33107ea53f0ec202f9fd2b1d795235c7e50",
+    "id": "sha256:63978a3338d5c7ec7aab38a9b480c5e588835fcb314bd69a4eb01dfb0990248e",
+    "runtime_identity_equal": true,
+    "tag": "haloloom-sglang-full-gfx1151:v0.1.0-rc2"
+  },
+  "model": {
+    "name": "Qwen/Qwen3.5-0.8B",
+    "revision": "2fc06364715b967f1860aea9cf38778875588b17",
+    "served_name": "qwen35-08b-gfx1151-w4a8"
+  },
+  "performance_qualified": false,
+  "production_activated": false,
+  "promotion_authority": false,
+  "raw_artifact_hashes": {
+    "raw_receipt": "c024af3e667d163a4aa769456fb531377ff657a885c4a9d86900ac5b54445563",
+    "route_log": "7c1bde62ef8154337a63715b254f571bf64efaf33aef9c3a8a2e1aee233fee07",
+    "server_log": "e2293ff014a68245e667c5326512787b88b2bf522585ed5c88085bb4545a4010"
+  },
+  "response": {
+    "content": "RDNA35_OK",
+    "finish_reason": "stop",
+    "id": "hyperloom-sglang-gfx1151-lowbit",
+    "model": "qwen35-08b-gfx1151-w4a8",
+    "usage": {
+      "completion_tokens": 6,
+      "prompt_tokens": 21,
+      "prompt_tokens_details": null,
+      "reasoning_tokens": 0,
+      "total_tokens": 27
+    }
+  },
+  "route": {
+    "capability": "quant.int4_w4a8_rdna35",
+    "kernel_symbol": "hyperloom_w4a8_dot4_i32_iu8",
+    "module_sha256": "404cc2c0c49669cadb2be43326b7a3208c1e3e832ff77c6fd614238bbb9b0983",
+    "quantization_method": "gfx1151-w4a8",
+    "wire_id": "gfx1151.w4a8.signed_per_channel_per_token"
+  },
+  "route_spec_sha256": "7be32b551c0c3ecd5d934c3058250fbd42d52c650b508d7abcd6eef843ec4303",
+  "route_validation": {
+    "asynchronous": true,
+    "completion_api": "hipEventRecord+hipEventSynchronize",
+    "completion_events": 6,
+    "dispatch_index_max": 240,
+    "dispatch_index_min": 145,
+    "first_trace_sequence": 10,
+    "foreign_suffix_request_ids": [],
+    "foreign_suffix_rows": 0,
+    "last_trace_sequence": 15,
+    "layer_invocations": {
+      "model.language_model.layers.10.mlp.down_proj": 6,
+      "model.language_model.layers.10.mlp.gate_up_proj": 6,
+      "model.language_model.layers.11.mlp.down_proj": 6,
+      "model.language_model.layers.11.mlp.gate_up_proj": 6,
+      "model.language_model.layers.12.mlp.down_proj": 6,
+      "model.language_model.layers.12.mlp.gate_up_proj": 6,
+      "model.language_model.layers.13.mlp.down_proj": 6,
+      "model.language_model.layers.13.mlp.gate_up_proj": 6,
+      "model.language_model.layers.6.mlp.down_proj": 6,
+      "model.language_model.layers.6.mlp.gate_up_proj": 6,
+      "model.language_model.layers.7.mlp.down_proj": 6,
+      "model.language_model.layers.7.mlp.gate_up_proj": 6,
+      "model.language_model.layers.8.mlp.down_proj": 6,
+      "model.language_model.layers.8.mlp.gate_up_proj": 6,
+      "model.language_model.layers.9.mlp.down_proj": 6,
+      "model.language_model.layers.9.mlp.gate_up_proj": 6
+    },
+    "module_sha256": "404cc2c0c49669cadb2be43326b7a3208c1e3e832ff77c6fd614238bbb9b0983",
+    "physical_dispatches": 96,
+    "physical_receipt_schema_version": 3,
+    "request_id": "hyperloom-sglang-gfx1151-lowbit",
+    "route_delta_rows": 6,
+    "rows": 6,
+    "unique_layers": 16,
+    "unique_shapes": [
+      [
+        1,
+        1024,
+        3584
+      ],
+      [
+        1,
+        7168,
+        1024
+      ],
+      [
+        21,
+        1024,
+        3584
+      ],
+      [
+        21,
+        7168,
+        1024
+      ]
+    ]
+  },
+  "runtime": {
+    "aiter_attention": false,
+    "architecture_spoof": false,
+    "attention_backend": "triton",
+    "cuda_graphs": false,
+    "rocm_root": "/opt/rocm/core-10.0"
+  },
+  "schema": "haloloom.compact-lowbit-framework-route.v1",
+  "status": "PASS"
+}
