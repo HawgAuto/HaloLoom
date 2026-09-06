@@ -7,14 +7,13 @@ import importlib.util
 import json
 import shutil
 import subprocess
-import sys
-from importlib.metadata import version
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
 COMPONENT_ROOT = Path("/opt/haloloom/components")
 EXPECTED_REFS = {
-    "Hyperloom": "a94191bfe0b548a44113e0d28c432d1bff0e3f9f",
-    "Magpie": "f25176b855aad86e38ac06442f2a5d2b8e4da21f",
+    "Hyperloom": "eaca6d848babfe0bf969e7bc442bcffcec829e85",
+    "Magpie": "25681df93ba21a1a6b0bdd4151884f42eead1063",
     "TraceLens": "a59a9c165bb64c7c416fd7cf79149803d552e43c",
     "GEAK": "b4dea3fa33ef438d4233aae0ed2c2f425c4e419a",
     "IntelliKit": "2f61453a779980b00504ea3b772ff4a1a1c3f4ad",
@@ -100,7 +99,7 @@ def verify() -> dict[str, object]:
 
     try:
         hyperloom_version = version("hyperloom-inference-optimizer")
-    except Exception as exc:  # pragma: no cover - verifier failure path
+    except PackageNotFoundError as exc:  # pragma: no cover - verifier failure path
         hyperloom_version = None
         errors.append(f"missing Hyperloom distribution metadata: {exc}")
     if hyperloom_version != "1.0.0":

@@ -77,7 +77,7 @@ def render_env(probe: dict[str, Any]) -> str:
     home = str(probe["home"])
     cwd = str(probe["cwd"])
     values = {
-        "HALOLOOM_VERSION": "v0.1.0",
+        "HALOLOOM_VERSION": "v0.1.1",
         "HOST_UID": int(probe["uid"]),
         "HOST_GID": int(probe["gid"]),
         "VIDEO_GID": int(probe["video_gid"]),

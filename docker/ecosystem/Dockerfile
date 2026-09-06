@@ -5,8 +5,8 @@ FROM ${BASE_IMAGE}
 USER root
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-ARG HYPERLOOM_REF=a94191bfe0b548a44113e0d28c432d1bff0e3f9f
-ARG MAGPIE_REF=f25176b855aad86e38ac06442f2a5d2b8e4da21f
+ARG HYPERLOOM_REF=eaca6d848babfe0bf969e7bc442bcffcec829e85
+ARG MAGPIE_REF=25681df93ba21a1a6b0bdd4151884f42eead1063
 ARG TRACELENS_REF=a59a9c165bb64c7c416fd7cf79149803d552e43c
 ARG GEAK_REF=b4dea3fa33ef438d4233aae0ed2c2f425c4e419a
 ARG INTELLIKIT_REF=2f61453a779980b00504ea3b772ff4a1a1c3f4ad
@@ -37,9 +37,20 @@ RUN set -euo pipefail; \
     root=/opt/haloloom/components; mkdir -p "$root"; \
     fetch_exact() { \
       local name="$1" repo="$2" ref="$3"; \
-      git init -q "$root/$name"; \
-      git -C "$root/$name" remote add origin "$repo"; \
-      git -C "$root/$name" fetch --depth 1 origin "$ref"; \
+      local attempt fetched=0; \
+      for attempt in 1 2 3; do \
+        rm -rf "$root/$name"; \
+        git init -q "$root/$name"; \
+        git -C "$root/$name" remote add origin "$repo"; \
+        if timeout 300 git -C "$root/$name" \
+          -c http.version=HTTP/1.1 -c http.lowSpeedLimit=1024 -c http.lowSpeedTime=60 \
+          fetch --depth 1 origin "$ref"; then \
+          fetched=1; break; \
+        fi; \
+        echo "fetch_exact: $name attempt $attempt/3 failed; retrying from a fresh repository" >&2; \
+        sleep $((attempt * 5)); \
+      done; \
+      test "$fetched" = 1; \
       git -C "$root/$name" checkout -q --detach FETCH_HEAD; \
       test "$(git -C "$root/$name" rev-parse HEAD)" = "$ref"; \
     }; \
@@ -58,14 +69,18 @@ RUN set -euo pipefail; \
 
 COPY dist/hyperloom/hyperloom_inference_optimizer-1.0.0-py3-none-any.whl /opt/haloloom/wheels/hyperloom_inference_optimizer-1.0.0-py3-none-any.whl
 COPY scripts/verify_ecosystem.py /opt/haloloom/verify_ecosystem.py
+COPY scripts/verify_quantization_contract.py /opt/haloloom/verify_quantization_contract.py
 COPY scripts/magpie_patch_gate.py /opt/haloloom/magpie_patch_gate.py
 COPY docker/ecosystem/workbench-entrypoint /opt/haloloom/workbench-entrypoint
 COPY qualification/readiness /opt/haloloom/readiness
 
 RUN set -euo pipefail; \
     wheel=/opt/haloloom/wheels/hyperloom_inference_optimizer-1.0.0-py3-none-any.whl; \
+    lowbit=/opt/haloloom/wheels/strix_halo_lowbit_kernel_pack-0.1.0-py3-none-any.whl; \
+    test -f "$lowbit"; \
     /opt/venv/bin/python3 -m pip check >/tmp/pip-check-before 2>&1 || true; \
-    echo "9cc9884911db814c8d72d7e1219fe580f94f98849674f3b468f16caf3a8e09de  $wheel" | sha256sum --check --strict; \
+    echo "c4e6ea5ec78fccbddddcff380842a14304e76d50b3c56369dd6025d65c502e7e  $wheel" | sha256sum --check --strict; \
+    echo "e06d773292cb05c45fc61fffb251fcace49ef387c284c00208fb1827248ed8ad  $lowbit" | sha256sum --check --strict; \
     /opt/venv/bin/python3 -m pip install --no-index --no-deps --force-reinstall "$wheel"; \
     constraints=/tmp/haloloom-core-constraints.txt; : > "$constraints"; \
     for package in torch torchvision torchaudio triton grpcio protobuf; do \
@@ -85,12 +100,15 @@ RUN set -euo pipefail; \
     MAGPIE_PATH=/opt/haloloom/components/Magpie \
       INFERENCEX_PATH=/opt/haloloom/components/InferenceX \
       /opt/venv/bin/python3 /opt/haloloom/magpie_patch_gate.py /opt/haloloom/components/Magpie /opt/haloloom/components/InferenceX; \
+    /opt/venv/bin/python3 -m pip install --no-index --no-deps --force-reinstall "$lowbit"; \
     /opt/venv/bin/python3 -m pip check >/tmp/pip-check-after 2>&1 || true; \
     /opt/venv/bin/python3 -c 'from pathlib import Path; before=set(Path("/tmp/pip-check-before").read_text().splitlines()); after=set(Path("/tmp/pip-check-after").read_text().splitlines()); new=sorted(after-before); assert not new,new; print("PIP_CHECK_NO_NEW_CONFLICTS",len(before),len(after))'; \
     /opt/venv/bin/python3 -c 'import ray; assert ray.__version__ == "2.55.0"'; \
+    /opt/venv/bin/python3 -c 'import importlib.util as u; assert u.find_spec("hyperloom.inference_optimizer.rdna35_lowbit_adapter"); assert u.find_spec("hyperloom.inference_optimizer.rdna35_lowbit_hip")'; \
     chmod 0755 /opt/haloloom/workbench-entrypoint /opt/haloloom/verify_ecosystem.py; \
     /opt/venv/bin/inference_optimizer --help >/dev/null; \
     /opt/venv/bin/quantization-agent --help >/dev/null; \
+    /opt/venv/bin/python3 /opt/haloloom/verify_quantization_contract.py; \
     /opt/venv/bin/kernelforge gemm-tune --help >/dev/null; \
     /opt/venv/bin/magpie --help >/dev/null; \
     /opt/venv/bin/metrix --help >/dev/null; \
@@ -112,6 +130,8 @@ RUN set -euo pipefail; \
 
 ENV PATH=/opt/venv/bin:/opt/haloloom/agent-bin:/usr/local/bin:/opt/rocm/core-10.0/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin \
     HOME=/home/haloloom \
+    RAY_VERSION=2.55.0 \
+    RAY_CLI_CLICK_MAX_VERSION=9.0.0 \
     USER_DATA_PATH=/workspace \
     HYPERLOOM_RUNTIME_DIR=/workspace/runtime \
     KERNEL_AGENT_ENV=/workspace/runtime/kernel-agent.env.sh \
@@ -129,8 +149,8 @@ ENV PATH=/opt/venv/bin:/opt/haloloom/agent-bin:/usr/local/bin:/opt/rocm/core-10.
 
 LABEL org.opencontainers.image.source="https://github.com/HawgAuto/HaloLoom" \
       haloloom.ecosystem_complete="true" \
-      haloloom.hyperloom_ref="a94191bfe0b548a44113e0d28c432d1bff0e3f9f" \
-      haloloom.magpie_ref="f25176b855aad86e38ac06442f2a5d2b8e4da21f" \
+      haloloom.hyperloom_ref="eaca6d848babfe0bf969e7bc442bcffcec829e85" \
+      haloloom.magpie_ref="25681df93ba21a1a6b0bdd4151884f42eead1063" \
       haloloom.tracelens_ref="a59a9c165bb64c7c416fd7cf79149803d552e43c" \
       haloloom.geak_ref="b4dea3fa33ef438d4233aae0ed2c2f425c4e419a" \
       haloloom.intellikit_ref="2f61453a779980b00504ea3b772ff4a1a1c3f4ad" \

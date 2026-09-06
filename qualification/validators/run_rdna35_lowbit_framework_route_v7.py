@@ -5,14 +5,17 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import importlib.metadata
 import json
 import os
 import re
+import secrets
 import signal
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.error
 import urllib.request
@@ -284,8 +287,11 @@ def _server_command(
     quantization: str,
     port: int,
     profile_selected_regions: bool = False,
+    admin_config: Path | None = None,
 ) -> list[str]:
     if framework == "vllm":
+        if admin_config is not None:
+            raise FrameworkRouteError("vLLM does not accept SGLang admin config")
         server_entrypoint = os.environ.get("VLLM_GFX1151_SERVER_ENTRYPOINT")
         if server_entrypoint:
             entrypoint_path = Path(server_entrypoint)
@@ -333,6 +339,10 @@ def _server_command(
             str(port),
         ]
     if framework == "sglang":
+        if (admin_config is None) == profile_selected_regions:
+            raise FrameworkRouteError(
+                "SGLang selected-region admin config scope is invalid"
+            )
         command = [
             sys.executable,
             "-m",
@@ -352,6 +362,9 @@ def _server_command(
             "--mem-fraction-static",
             "0.10",
             "--disable-cuda-graph",
+            "--weight-loader-disable-mmap",
+            "--model-loader-extra-config",
+            '{"enable_multithread_load":false}',
             "--disable-overlap-schedule",
             "--disable-radix-cache",
             "--attention-backend",
@@ -363,9 +376,63 @@ def _server_command(
             # unrelated child. Selected-region route captures issue their own
             # exact request, so skip only that startup warmup in this lane.
             command.append("--skip-server-warmup")
+            command.extend(["--config", str(admin_config)])
         command.extend(["--host", "0.0.0.0", "--port", str(port)])
         return command
     raise FrameworkRouteError(f"unsupported framework: {framework}")
+
+
+@contextlib.contextmanager
+def _private_sglang_admin_config(
+    admin_token: str, *, directory: Path | None = None
+):
+    """Create a native SGLang YAML config without exposing its secret in argv."""
+
+    if not isinstance(admin_token, str) or not admin_token:
+        raise FrameworkRouteError("SGLang admin token is invalid")
+    if directory is not None and (
+        not directory.is_absolute()
+        or directory.is_symlink()
+        or not directory.is_dir()
+    ):
+        raise FrameworkRouteError("SGLang admin config directory is invalid")
+    fd, raw_path = tempfile.mkstemp(
+        prefix=".haloloom-sglang-admin-",
+        suffix=".yaml",
+        dir=str(directory) if directory is not None else None,
+        text=True,
+    )
+    path = Path(raw_path)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            json.dump({"admin-api-key": admin_token}, stream)
+            stream.write("\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        yield path
+    finally:
+        try:
+            path.unlink()
+        except FileNotFoundError:
+            pass
+
+
+def _verify_sglang_admin_config_redaction(admin_token: str, model: Path) -> None:
+    """Fail closed unless SGLang's public config representations redact the key."""
+
+    from sglang.srt.server_args import ServerArgs  # pyright: ignore[reportMissingImports]
+
+    server_args = ServerArgs(model_path=str(model), admin_api_key=admin_token)
+    public_dict = getattr(server_args, "public_dict", None)
+    if not callable(public_dict):
+        raise FrameworkRouteError("SGLang public config redaction API is unavailable")
+    if server_args.resolved_dict().get("admin_api_key") != admin_token:
+        raise FrameworkRouteError("SGLang internal admin credential was altered")
+    public_representations = (repr(server_args), repr(public_dict()))
+    if any(admin_token in representation for representation in public_representations):
+        raise FrameworkRouteError(
+            "SGLang admin config representation does not redact credentials"
+        )
 
 
 def _get_json(url: str, timeout: float = 5.0) -> dict[str, Any]:
@@ -389,8 +456,13 @@ def _post_json(url: str, payload: Mapping[str, Any], timeout: float) -> dict[str
         return _strict_json_loads(response.read(), "HTTP response")
 
 
-def _post_profile_control(url: str, timeout: float = 30.0) -> dict[str, Any]:
-    request = urllib.request.Request(url, data=b"", method="POST")
+def _post_profile_control(
+    url: str, timeout: float = 30.0, *, admin_token: str | None = None
+) -> dict[str, Any]:
+    headers = (
+        {"Authorization": f"Bearer {admin_token}"} if admin_token is not None else {}
+    )
+    request = urllib.request.Request(url, data=b"", headers=headers, method="POST")
     started_ns = time.monotonic_ns()
     with urllib.request.urlopen(request, timeout=timeout) as response:
         body = response.read().decode("utf-8")
@@ -698,6 +770,7 @@ def _finalize_profile_worker(
     profile_output_dir: Path,
     proc_root: Path = Path("/proc"),
     timeout: float = 30.0,
+    admin_token: str | None = None,
 ) -> dict[str, Any]:
     """Request framework-native shutdown and prove worker exit plus export."""
 
@@ -742,7 +815,9 @@ def _finalize_profile_worker(
     if any(path.exists() or path.is_symlink() for path in expected_artifacts):
         raise FrameworkRouteError("profile worker profiler artifact already exists")
     control = _post_profile_control(
-        f"{base_url}/finalize_profile_worker", timeout=float(timeout)
+        f"{base_url}/finalize_profile_worker",
+        timeout=float(timeout),
+        admin_token=admin_token,
     )
     deadline = time.monotonic() + float(timeout)
     artifact_identities: list[dict[str, Any]] = []
@@ -1075,14 +1150,6 @@ def main() -> int:
         raise FrameworkRouteError("model revision environment mismatch")
 
     profile_enabled = os.environ.get("HYPERLOOM_ROCPROF_SELECTED_REGIONS") == "1"
-    command = _server_command(
-        framework=args.framework,
-        model=model,
-        served_model_name=args.served_model_name,
-        quantization=args.quantization,
-        port=args.port,
-        profile_selected_regions=profile_enabled,
-    )
     server_log = output_dir / "server.log"
     receipt_path = output_dir / "route-receipt.json"
     started = time.time()
@@ -1125,7 +1192,6 @@ def main() -> int:
         "model": str(model),
         "model_revision": args.model_revision,
         "served_model_name": args.served_model_name,
-        "command": command,
         "started_at_epoch": started,
         "route_spec": {
             "path": str(route_spec_path),
@@ -1139,10 +1205,28 @@ def main() -> int:
         "profile_output_dir": str(profile_output_dir) if profile_output_dir else None,
     }
     exit_code = 1
-    server_env = os.environ.copy()
-    if profile_enabled:
-        server_env["HYPERLOOM_PROFILE_SERVER_LOG"] = str(server_log)
+    admin_token: str | None = None
+    admin_config: Path | None = None
+    admin_config_context = None
     try:
+        if args.framework == "sglang" and profile_enabled:
+            admin_token = secrets.token_urlsafe(32)
+            _verify_sglang_admin_config_redaction(admin_token, model)
+            admin_config_context = _private_sglang_admin_config(admin_token)
+            admin_config = admin_config_context.__enter__()
+        command = _server_command(
+            framework=args.framework,
+            model=model,
+            served_model_name=args.served_model_name,
+            quantization=args.quantization,
+            port=args.port,
+            profile_selected_regions=profile_enabled,
+            admin_config=admin_config,
+        )
+        result["command"] = command
+        server_env = os.environ.copy()
+        if profile_enabled:
+            server_env["HYPERLOOM_PROFILE_SERVER_LOG"] = str(server_log)
         with server_log.open("xb") as log_stream:
             process = subprocess.Popen(
                 command,
@@ -1170,7 +1254,8 @@ def main() -> int:
                     {
                         "action": "resume",
                         **_post_profile_control(
-                            f"http://127.0.0.1:{args.port}/start_profile"
+                            f"http://127.0.0.1:{args.port}/start_profile",
+                            admin_token=admin_token,
                         ),
                     }
                 )
@@ -1187,7 +1272,8 @@ def main() -> int:
                     {
                         "action": "pause",
                         **_post_profile_control(
-                            f"http://127.0.0.1:{args.port}/stop_profile"
+                            f"http://127.0.0.1:{args.port}/stop_profile",
+                            admin_token=admin_token,
                         ),
                     }
                 )
@@ -1230,6 +1316,7 @@ def main() -> int:
                     process_tree=process_tree,
                     server_log=server_log,
                     profile_output_dir=profile_output_dir,
+                    admin_token=admin_token,
                 )
             result.update(
                 {
@@ -1269,7 +1356,8 @@ def main() -> int:
                     {
                         "action": "pause-after-error",
                         **_post_profile_control(
-                            f"http://127.0.0.1:{args.port}/stop_profile"
+                            f"http://127.0.0.1:{args.port}/stop_profile",
+                            admin_token=admin_token,
                         ),
                     }
                 )
@@ -1282,6 +1370,11 @@ def main() -> int:
                 }
                 exit_code = 1
         result["profile_controls"] = profile_controls
+        if admin_config_context is not None:
+            admin_config_context.__exit__(None, None, None)
+            admin_config_context = None
+            admin_config = None
+        admin_token = None
         if process is not None:
             result["server_exit_code"] = _stop(
                 process,

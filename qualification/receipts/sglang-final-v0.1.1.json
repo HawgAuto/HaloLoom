@@ -1,0 +1,52 @@
+{
+  "evidence_sha256": {
+    "gpu": "1f225ddf63c5817cf3f54878d50733ebf1513aa6ef864698c35657ba8bbf74a5",
+    "response": "d6a77c176ad6e4dd9815cdfc6237835fc2047c589783e1274db32a886dbe5427",
+    "server": "6a05d20067561587c6b6be9f21645b9c145cc9569650a77403f0898099745da4",
+    "static": "419a27c69a3a25d41724478f0ba0f2fab7d88976bfa8ffa8a2993a93fb39212e"
+  },
+  "framework": "sglang",
+  "gates": {
+    "aiter_enabled": false,
+    "attention_backend": "triton",
+    "cuda_graphs": false,
+    "lowbit_runtime_import": "PASS",
+    "model_request": "PASS",
+    "native_device": "PASS",
+    "static_root_nonroot": "PASS"
+  },
+  "hyperloom": {
+    "commit": "712edf5d38fad8cdbebbd254cd9520059490f5b3",
+    "tree": "76a39d34f1c535a1b7bd5969950e698ad3d24290",
+    "wheel_sha256": "212f721a610943b671ae40ed2356213add4ea9dd7a2c40adc7d1caacfc727e93"
+  },
+  "image": {
+    "local_image_id": "sha256:755c5034b3cad18cfe61009d70ad503f235e767beadcc392ad443243890de79b",
+    "local_reference": "haloloom-sglang-full-gfx1151:v0.1.1-final3",
+    "runtime_layer_image_id": "sha256:a47f3277a98a1dfbc0cde5259c45c72b46ec7786f4b40fc59b0c9d3556f9a716",
+    "size_bytes": 7634826634
+  },
+  "lowbit_wheel_sha256": "e06d773292cb05c45fc61fffb251fcace49ef387c284c00208fb1827248ed8ad",
+  "model": {
+    "architecture": "Qwen2ForCausalLM",
+    "repository": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "weight_bytes": 988097824
+  },
+  "production_activated": false,
+  "registry": "pending",
+  "release": "v0.1.1",
+  "request": {
+    "completion_tokens": 8,
+    "id": "7a91162e9cbb44be95c280ab8e1c90d3",
+    "nonempty_text": true
+  },
+  "schema": "haloloom.image-qualification.v1",
+  "status": "PASS",
+  "target": {
+    "arch": "gfx1151",
+    "gpu": "AMD Radeon 8060S",
+    "hip": "7.15.26333",
+    "rocm": "10.0.0"
+  }
+}

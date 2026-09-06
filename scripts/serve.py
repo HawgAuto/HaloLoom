@@ -130,6 +130,9 @@ def build_command(
                 "--attention-backend",
                 "triton",
                 "--disable-cuda-graph",
+                "--weight-loader-disable-mmap",
+                "--model-loader-extra-config",
+                '{"enable_multithread_load":false}',
             ]
         )
         if model_revision:

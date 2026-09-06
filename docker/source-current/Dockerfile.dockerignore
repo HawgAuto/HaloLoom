@@ -1,0 +1,9 @@
+**
+!docker/
+!docker/source-current/
+!docker/source-current/Dockerfile
+!docker/source-current/Dockerfile.dockerignore
+!dist/
+!dist/source-current/
+!dist/source-current/**
+dist/source-current/*.tar.gz

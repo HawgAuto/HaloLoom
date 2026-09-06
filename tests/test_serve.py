@@ -42,6 +42,24 @@ def test_sglang_command_pins_qualified_triton_route() -> None:
     assert command[command.index("--port") + 1] == "8000"
 
 
+def test_sglang_uses_bounded_non_mmap_weight_loading() -> None:
+    import json
+
+    command = serve.build_command("sglang", "Qwen/Qwen3.5-0.8B", [], max_model_len=4096)
+    assert "--weight-loader-disable-mmap" in command
+    value = command[command.index("--model-loader-extra-config") + 1]
+    assert json.loads(value) == {"enable_multithread_load": False}
+
+
+def test_compose_sglang_caches_stay_in_writable_workspace() -> None:
+    import yaml
+
+    config = yaml.safe_load((MODULE_PATH.parents[1] / "compose.yaml").read_text())
+    env = config["services"]["sglang"]["environment"]
+    assert env["SGLANG_CACHE_DIR"] == "/workspace/.cache/sglang"
+    assert env["SGLANG_JIT_CACHE_DIR"] == "/workspace/.cache/sglang/jit"
+
+
 def test_sglang_rejects_route_breaking_overrides() -> None:
     for extra in (["--attention-backend", "aiter"], ["--enable-cuda-graph"]):
         try:

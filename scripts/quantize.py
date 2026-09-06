@@ -11,12 +11,25 @@ import re
 import shlex
 import subprocess
 import sys
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
 LOCK_PATH = Path("/run/lock/hermes-vllm-gfx1151.lock")
 PROVIDERS = frozenset({"claude", "codex", "hermes"})
 WORKSPACE_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
+CREDENTIAL_ENV_NAMES = (
+    "OPENAI_API_KEY",
+    "OPENAI_BASE_URL",
+    "OPENAI_CUSTOM_HEADERS",
+    "ANTHROPIC_API_KEY",
+    "ANTHROPIC_AUTH_TOKEN",
+    "ANTHROPIC_BASE_URL",
+    "ANTHROPIC_CUSTOM_HEADERS",
+    "CLAUDE_CODE_OAUTH_TOKEN",
+    "CLAUDE_MODEL",
+    "CODEX_MODEL",
+)
 
 
 def resolve_provider(requested: str | None, env_file: Path) -> str:
@@ -47,6 +60,7 @@ def build_command(
     workspace: str,
     model_id: str | None,
     extra: list[str],
+    env: Mapping[str, str] | None = None,
 ) -> list[str]:
     if provider not in PROVIDERS:
         raise ValueError(f"unsupported provider: {provider}")
@@ -65,6 +79,12 @@ def build_command(
         "--rm",
         "-e",
         "HALOLOOM_PARENT_GPU_LOCK=1",
+    ]
+    if env is not None:
+        for name in CREDENTIAL_ENV_NAMES:
+            if name in env:
+                command.extend(["-e", name])
+    command.extend([
         "quark",
         "--provider",
         provider,
@@ -74,7 +94,7 @@ def build_command(
         f"/workspace/{workspace}",
         "--interactive",
         "off",
-    ]
+    ])
     if model_id:
         command.extend(["--model-id", model_id])
     command.extend(extra)
@@ -109,19 +129,20 @@ def main() -> int:
         print(f"ERROR: {error}", file=sys.stderr)
         return 2
 
-    command = build_command(
-        provider=provider,
-        prompt=args.prompt,
-        workspace=args.workspace,
-        model_id=args.model_id,
-        extra=args.extra,
-    )
     environment = dict(os.environ)
     if environment.pop("HSA_OVERRIDE_GFX_VERSION", None) is not None:
         print(
             "WARN: removing HSA_OVERRIDE_GFX_VERSION from the Quark environment",
             file=sys.stderr,
         )
+    command = build_command(
+        provider=provider,
+        prompt=args.prompt,
+        workspace=args.workspace,
+        model_id=args.model_id,
+        extra=args.extra,
+        env=environment,
+    )
 
     LOCK_PATH.parent.mkdir(parents=True, exist_ok=True)
     with LOCK_PATH.open("a+") as lock:

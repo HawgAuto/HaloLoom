@@ -1,0 +1,58 @@
+{
+  "schema": "haloloom.native-profile-action-adjudication/1",
+  "status": "PASS_ORIGINAL_NATIVE_PROFILE_ACTION_WITH_NATIVE_GPU_EVENTS",
+  "image": "sha256:44990a078989a1ab859eecf072c43a5e591cf53d5fda3e13b11b381fe5b1005f",
+  "scope": "One parent-authorized, original direct ProfileExecutor action: 16 requests, ISL 128, OSL 32, delay_iterations 128, max_iterations 128. No Coordinator/CLOSE rerun.",
+  "requests_completed": 16,
+  "capture_delay_iterations": 128,
+  "capture_max_iterations": 128,
+  "census": {
+    "trace_event_count": 4502626,
+    "kernel_event_count": 128912,
+    "hip_runtime_events": 193711,
+    "gpu_user_annotations": 120,
+    "user_annotations": 128,
+    "cpu_op_count": 547260,
+    "unique_kernel_names": 58,
+    "kernel_device_counts": {
+      "0": 128912
+    },
+    "profile_flags": {
+      "schemaVersion": 1,
+      "with_stack": 1,
+      "hip_driver_version": 71526333,
+      "profile_memory": 1,
+      "hip_runtime_version": 71526333,
+      "record_shapes": 1,
+      "with_flops": 1
+    },
+    "device": {
+      "id": 0,
+      "name": "AMD Radeon 8060S Graphics",
+      "totalGlobalMem": 133143986176,
+      "computeMajor": 11,
+      "computeMinor": 5,
+      "maxThreadsPerBlock": 1024,
+      "maxThreadsPerMultiprocessor": 2048,
+      "regsPerBlock": 196608,
+      "warpSize": 32,
+      "sharedMemPerBlock": 65536,
+      "numSms": 20,
+      "maxSharedMemoryPerMultiProcessor": 65536
+    }
+  },
+  "memory": {
+    "limit_bytes": 51539607552,
+    "peak_bytes": 32290017280,
+    "oom_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0"
+  },
+  "source_adjudication_sha256": "0ac4a0d98cf4159f6278858c996090e53bb46f218efaeac8ccce6d7fff26bb62",
+  "raw_census_sha256": "4266216bac7fd2af595d11f81ca1c34f8c8c5f5078561a47b027b41461c93867",
+  "trace": {
+    "sha256": "8614dc57f75a7ce0280fd3167c8862914cc7767c500d019c809d002e797d19e6",
+    "compressed_bytes": 89082106,
+    "expanded_bytes": 1435028081,
+    "gzip_crc_eof": true
+  },
+  "release_scope": "Historical exact-image original-action qualification. Final release image defaults are independently checked by release-closeout-v0.1.1.json; no observer or diagnostic preload shipped."
+}

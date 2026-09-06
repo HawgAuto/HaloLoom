@@ -1,0 +1,459 @@
+{
+  "schema": "haloloom.source-current-release-closeout/1",
+  "version": "v0.1.1",
+  "status": "PASS_FINAL_IMAGE_BUILD_TOOLCHAIN_RUNTIME_AND_ANONYMOUS_REGISTRY",
+  "scope": "Exact image/runtime qualification and public OCI publication. Embedded source identities are recorded but source-commit publication and fresh anonymous clone/install qualification await later release work. No production activation, new optimizer Coordinator, new PTQ, performance win, or quality promotion.",
+  "embedded_source_identity": {
+    "hyperloom_commit": "b91cab3433002fa8381108dd5ea7cb3633b6955e",
+    "hyperloom_tree": "67a82a90bf85e54104da833565627354351ebc85",
+    "hyperloom_wheel_sha256": "a0229171738133afbdffc91502006e9e872787d5350e7d438c3103064b058d23"
+  },
+  "source_commit_publication_claimed": false,
+  "fresh_anonymous_clone_install_claimed": false,
+  "build_inputs": {
+    "url": "https://github.com/HawgAuto/HaloLoom/releases/download/v0.1.1/haloloom-v0.1.1-build-inputs.tar.gz",
+    "sha256": "1829b58ae16459660e36e091f379131da7983f8d044a7f5fb6a48202d56a6ae5",
+    "filename": "haloloom-v0.1.1-build-inputs.tar.gz"
+  },
+  "code_review": {
+    "passed": true,
+    "reviewed_files": 48,
+    "reviewed_diff_sha256": "7cf8d4f77634fd61fb5067a4bb1cdeb2ed55bd714df29315fb807719ad4eea15",
+    "review_sha256": "7862f4bf1f72fa74c12ca3f720c4af65d49b277718ef4f20d724b86b2514ae27",
+    "tests": "123 passed"
+  },
+  "toolchain_proofs": [
+    {
+      "name": "vllm",
+      "image": "sha256:ebafdb4af4a6b444d1045b92f4d90c885184c548aff065fe9b69d8720794c1d0",
+      "python": "/opt/venv/bin/python3",
+      "checks": {
+        "hip_header": true,
+        "bitcode": true,
+        "sdk_linker": true,
+        "hipcc": true,
+        "no_gpu_devices": true,
+        "triton_linker": true,
+        "hip_compile_link": true,
+        "gfx1151_code_object": true
+      },
+      "compiled_library_sha256": "6cd94894ff6f56377e6487f95b8c57735f9cf5dad28888013e0a179b09a47a4b",
+      "receipt_sha256": "ebc7bc927fdfa52d2b5367afc39b4dd7c16f527001adccbbecaefb591ecaaa06"
+    },
+    {
+      "name": "sglang",
+      "image": "sha256:5f46740ad763e8c174df5c693616ea6da824ee5db341a42bec72eed0562597c2",
+      "python": "/opt/venv/bin/python3",
+      "checks": {
+        "hip_header": true,
+        "bitcode": true,
+        "sdk_linker": true,
+        "hipcc": true,
+        "no_gpu_devices": true,
+        "triton_linker": true,
+        "hip_compile_link": true,
+        "gfx1151_code_object": true
+      },
+      "compiled_library_sha256": "140f7b1c44bc53951b0396f3b2fce004ae7299e78ad37f5a9134643c67965e90",
+      "receipt_sha256": "a77d4ed9df070da5a08ddcdad776023c184c457131f4406f8f04bc56f95a2c5c"
+    },
+    {
+      "name": "quark",
+      "image": "sha256:9d7d0beb3e4ef1c4107e505ae7b17218217f8bea941f41c4bba86cbb649709a6",
+      "python": "/opt/venv/bin/python3",
+      "checks": {
+        "hip_header": true,
+        "bitcode": true,
+        "sdk_linker": true,
+        "hipcc": true,
+        "no_gpu_devices": true,
+        "triton_linker": true,
+        "hip_compile_link": true,
+        "gfx1151_code_object": true
+      },
+      "compiled_library_sha256": "f6ab76d10f7acbfee27d6641442cfea006337ee68f84fa4375b24a6561de5935",
+      "receipt_sha256": "73f587eccbf08279b49f38b0381045969875023930e9caf384d4f1370c00226b"
+    },
+    {
+      "name": "quark-quantizer",
+      "image": "sha256:9d7d0beb3e4ef1c4107e505ae7b17218217f8bea941f41c4bba86cbb649709a6",
+      "python": "/opt/quark-venv/bin/python3",
+      "checks": {
+        "hip_header": true,
+        "bitcode": true,
+        "sdk_linker": true,
+        "hipcc": true,
+        "no_gpu_devices": true,
+        "triton_linker": true,
+        "hip_compile_link": true,
+        "gfx1151_code_object": true
+      },
+      "compiled_library_sha256": "cba357cdcf1b64bcdb7b654a53f6428c4914b6d76001651afb42d66cdd62829d",
+      "receipt_sha256": "626a6fc0022c988e19b13b7a0dbbf503f9c35176c36f6a941a95105b8c1e2576"
+    }
+  ],
+  "images": {
+    "vllm": {
+      "image": "sha256:ebafdb4af4a6b444d1045b92f4d90c885184c548aff065fe9b69d8720794c1d0",
+      "reference": "ghcr.io/hawgauto/haloloom-vllm-full-gfx1151:v0.1.1",
+      "pinned_reference": "ghcr.io/hawgauto/haloloom-vllm-full-gfx1151@sha256:ebafdb4af4a6b444d1045b92f4d90c885184c548aff065fe9b69d8720794c1d0",
+      "oci_index_digest": "sha256:ebafdb4af4a6b444d1045b92f4d90c885184c548aff065fe9b69d8720794c1d0",
+      "oci_index_media_type": "application/vnd.oci.image.index.v1+json",
+      "amd64_manifest_digest": "sha256:559ed72ef970cd99a21984cc4902fafd0f17bf39c135181638aaea3bda0bc8e7",
+      "config_digest": "sha256:486dc0b0b1a65bfd2026a1176b28a1c58d7f2db7972b30fc915a9688e682c860",
+      "anonymous_registry_verified": true,
+      "source_verified_no_device": {
+        "status": "PASS_SOURCE_CURRENT_CPU_ONLY",
+        "refs": {
+          "hyperloom": "b91cab3433002fa8381108dd5ea7cb3633b6955e",
+          "vllm": "861cd9d993a7c92728db6d73cb0b62fa0df7c8a0",
+          "sglang": "90c62e027831111934a33b9bcc4e533ff61d8526"
+        },
+        "component_files_verified": 1222,
+        "component_python_files_verified": 1128,
+        "installed_wheel_python_files": {
+          "hyperloom": 734
+        },
+        "native_files": {
+          "/opt/venv/lib/python3.14/site-packages/vllm/_moe_C_stable_libtorch.abi3.so": "1545abc87f16ff7660d6eb96f528bc223856753d533340d561aab1d23155bfd9",
+          "/opt/venv/lib/python3.14/site-packages/vllm/_C.abi3.so": "05da5c40c7e95ad0003f38c04ed59bd5a5063e75071b5f69ce7b353bcd744aae",
+          "/opt/venv/lib/python3.14/site-packages/vllm/_C_stable_libtorch.abi3.so": "1ad7889139d3e563546df3371d7539622d50ebc5264e9c91cb16e8df6b75990b",
+          "/opt/venv/lib/python3.14/site-packages/vllm/spinloop.abi3.so": "9c56335fdcb7320b5db964dc095d43fc51c73100db2703071c1b51ce59df6770",
+          "/opt/venv/lib/python3.14/site-packages/vllm/_rust_tool_parser.abi3.so": "a242e4ebf3e86fa12824442837db849874873f2b389ae3e117f1258313b6ac29",
+          "/opt/venv/lib/python3.14/site-packages/vllm/_rocm_C.abi3.so": "bdaf43bace7b61c876f5b3f1ca714c64f6aaedc35b5db33ed9a902a4b1fef211",
+          "/opt/venv/lib/python3.14/site-packages/vllm/fs_io_C.abi3.so": "cc12d19e712372708929b3add92aa2507a19cb0bf0d68e526060479f73d936a2",
+          "/opt/venv/lib/python3.14/site-packages/vllm/cumem_allocator.abi3.so": "1cfc0b26bdf6a821f3f244cf928ae16eef7312697e77d02af38661a52079ec82",
+          "/opt/venv/lib/python3.14/site-packages/vllm/model_executor/layers/quantization/gfx1151_archive_assets/gfx1151_w4a4_m1_dot_pair2_signed_ext_rocm10.so": "34bc31908f949ac74b17bf377862fbc9127cb54df57171fd9f3206d0d7d31b92",
+          "/opt/venv/lib/python3.14/site-packages/vllm/model_executor/layers/quantization/gfx1151_archive_assets/gfx1151_w4a4_perf_ext_rocm10.so": "e6329fbc3fb6fac0f09af8d6d8011ae542485f75d9ab91010026361ad20360da",
+          "/opt/venv/lib/python3.14/site-packages/vllm/model_executor/layers/quantization/gfx1151_archive_assets/gfx1151_w4a4_m128_v4q_ext_rocm10.so": "2adb87c00341efa6639e25be6f2f2bcad43b1f7836610e8bd23f1be6c1590191",
+          "/opt/venv/lib/python3.14/site-packages/vllm/model_executor/layers/quantization/gfx1151_archive_assets/gfx1151_w4a4_m128_v3_ext_rocm10.so": "c6e2b106f4b9d6c62d7299244efc71d0dc67a632b2f0d27eca1add316cf03ccb"
+        },
+        "no_gpu": true,
+        "promotion_authority": false
+      },
+      "requests_completed": 16,
+      "cleanup_verified": true,
+      "production_preserved": true,
+      "adjudication_sha256": "ce9c97760864904d545d9c1bab5a4a8d7c9dd118c80586ef4e1af88d556d83e0",
+      "publication_receipt_sha256": "2620661cbcad39296dcfc5dc923f92076db7409f395c4fffab46e2ea7b755e4d",
+      "model": "Qwen/Qwen3.5-0.8B",
+      "capture_delay_iterations": 128,
+      "capture_max_iterations": 128,
+      "image_default_environment": {
+        "status": "PASS_INHERITED_FINAL_IMAGE_ENVIRONMENT",
+        "environment": {
+          "ROCP_TOOL_LIBRARIES": "/opt/venv/lib/python3.14/site-packages/torch/lib/libtorch_cpu.so",
+          "LD_LIBRARY_PATH": "/opt/venv/lib/python3.14/site-packages/_rocm_sdk_core/lib/host-math/lib:/opt/rocm/core-10.0/lib:/opt/rocm/core-10.0/lib/llvm/lib:/opt/venv/lib"
+        },
+        "observer": false,
+        "gate_does_not_modify_environment": true
+      },
+      "trace": {
+        "sha256": "da2753e956fa0c22738f079a635a1864846cd4df20e846ada9c77e9eb4b9366a",
+        "compressed_bytes": 90265572,
+        "gzip_crc_eof": true,
+        "decompressed_bytes": 1435030963
+      },
+      "census": {
+        "trace_event_count": 4502583,
+        "kernel_event_count": 128912,
+        "category_counts": {
+          "<none>": 66,
+          "user_annotation": 128,
+          "cpu_op": 547260,
+          "cpu_instant_event": 278044,
+          "python_function": 3031714,
+          "cuda_runtime": 193713,
+          "ac2g": 322625,
+          "kernel": 128912,
+          "gpu_user_annotation": 120,
+          "Trace": 1
+        },
+        "kernel_device_counts": {
+          "0": 128912
+        },
+        "profile_flags": {
+          "schemaVersion": 1,
+          "with_stack": 1,
+          "hip_driver_version": 71526333,
+          "profile_memory": 1,
+          "hip_runtime_version": 71526333,
+          "record_shapes": 1,
+          "with_flops": 1
+        },
+        "device_properties": [
+          {
+            "id": 0,
+            "name": "AMD Radeon 8060S Graphics",
+            "totalGlobalMem": 133143986176,
+            "computeMajor": 11,
+            "computeMinor": 5,
+            "maxThreadsPerBlock": 1024,
+            "maxThreadsPerMultiprocessor": 2048,
+            "regsPerBlock": 196608,
+            "warpSize": 32,
+            "sharedMemPerBlock": 65536,
+            "numSms": 20,
+            "maxSharedMemoryPerMultiProcessor": 65536
+          }
+        ]
+      },
+      "hip_runtime_events": 193713,
+      "memory_peak_bytes": 32284925952,
+      "memory_limit_bytes": 51539607552,
+      "raw_census_sha256": "b7049f780cc0ae6dd2fe11dc8dd4160f3bfb8b738bbacb05265816b4e47b34ce"
+    },
+    "sglang": {
+      "image": "sha256:5f46740ad763e8c174df5c693616ea6da824ee5db341a42bec72eed0562597c2",
+      "reference": "ghcr.io/hawgauto/haloloom-sglang-full-gfx1151:v0.1.1",
+      "pinned_reference": "ghcr.io/hawgauto/haloloom-sglang-full-gfx1151@sha256:5f46740ad763e8c174df5c693616ea6da824ee5db341a42bec72eed0562597c2",
+      "oci_index_digest": "sha256:5f46740ad763e8c174df5c693616ea6da824ee5db341a42bec72eed0562597c2",
+      "oci_index_media_type": "application/vnd.oci.image.index.v1+json",
+      "amd64_manifest_digest": "sha256:320f7efdf551e9889ae0c151a5914ab893270ffc050926e98de57385a9788713",
+      "config_digest": "sha256:34e6f01a04f1f5128f2de0b11ba2638816a57580b1338f0a7866c9fed92ae0aa",
+      "anonymous_registry_verified": true,
+      "source_verified_no_device": {
+        "status": "PASS_SOURCE_CURRENT_CPU_ONLY",
+        "refs": {
+          "hyperloom": "b91cab3433002fa8381108dd5ea7cb3633b6955e",
+          "vllm": "861cd9d993a7c92728db6d73cb0b62fa0df7c8a0",
+          "sglang": "90c62e027831111934a33b9bcc4e533ff61d8526"
+        },
+        "component_files_verified": 1222,
+        "component_python_files_verified": 1128,
+        "installed_wheel_python_files": {
+          "hyperloom": 734,
+          "sglang": 3650
+        },
+        "native_files": {
+          "/opt/venv/lib/python3.14/site-packages/sgl_kernel/common_ops.cpython-314-x86_64-linux-gnu.so": "05c26d50a7e8b78861121efb90a34ed162dc01e293409a64523ea32484ef35ed"
+        },
+        "no_gpu": true,
+        "promotion_authority": false
+      },
+      "requests_completed": 5,
+      "cleanup_verified": true,
+      "production_preserved": true,
+      "adjudication_sha256": "3e6767d2e36a534823e339a295e32fc32bb613bb7a641e355af090063b762dd2",
+      "publication_receipt_sha256": "64eed78d227364c4e473d441e47cbf905326b1ac0aa66eb9f551898f8b91eabe",
+      "model": "Qwen/Qwen3.5-0.8B",
+      "responses": [
+        {
+          "label": "cold-A",
+          "id": "6fb95c392da14fe08843fa62f66db2b3",
+          "model": "Qwen/Qwen3.5-0.8B",
+          "content": "PARIS",
+          "usage": {
+            "prompt_tokens": 259,
+            "total_tokens": 262,
+            "completion_tokens": 3,
+            "prompt_tokens_details": null,
+            "reasoning_tokens": 0
+          }
+        },
+        {
+          "label": "warm-A",
+          "id": "1f52c34d6a2c42798147bc7e1f08e976",
+          "model": "Qwen/Qwen3.5-0.8B",
+          "content": "PARIS",
+          "usage": {
+            "prompt_tokens": 259,
+            "total_tokens": 262,
+            "completion_tokens": 3,
+            "prompt_tokens_details": {
+              "cached_tokens": 256
+            },
+            "reasoning_tokens": 0
+          }
+        },
+        {
+          "label": "concurrent-A",
+          "id": "abbc6a6e0d8f4696b877338d197713c2",
+          "model": "Qwen/Qwen3.5-0.8B",
+          "content": "PARIS",
+          "usage": {
+            "prompt_tokens": 259,
+            "total_tokens": 262,
+            "completion_tokens": 3,
+            "prompt_tokens_details": {
+              "cached_tokens": 256
+            },
+            "reasoning_tokens": 0
+          }
+        },
+        {
+          "label": "concurrent-B",
+          "id": "1df19f58f7e8483a8257bbb3d250428c",
+          "model": "Qwen/Qwen3.5-0.8B",
+          "content": "Berlin",
+          "usage": {
+            "prompt_tokens": 259,
+            "total_tokens": 261,
+            "completion_tokens": 2,
+            "prompt_tokens_details": null,
+            "reasoning_tokens": 0
+          }
+        },
+        {
+          "label": "post-interleave-A",
+          "id": "56ad873d2d1b4e23b7514c7cf4cabe6a",
+          "model": "Qwen/Qwen3.5-0.8B",
+          "content": "PARIS",
+          "usage": {
+            "prompt_tokens": 259,
+            "total_tokens": 262,
+            "completion_tokens": 3,
+            "prompt_tokens_details": {
+              "cached_tokens": 256
+            },
+            "reasoning_tokens": 0
+          }
+        }
+      ],
+      "oracle_scope": "Unchanged frozen case-insensitive city-substring canary; not exact-format or instruction-following qualification. Earlier parent exact-string assumption was rejected; the raw driver/receipts were not changed.",
+      "model_manifest_sha256": "3eac907d5f7fe75058b03ef2febb5b1c8bfc49f6c28346a9b5277a49224dc0b3",
+      "quality_promotion": false
+    },
+    "quark": {
+      "image": "sha256:9d7d0beb3e4ef1c4107e505ae7b17218217f8bea941f41c4bba86cbb649709a6",
+      "reference": "ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151:v0.1.1",
+      "pinned_reference": "ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151@sha256:9d7d0beb3e4ef1c4107e505ae7b17218217f8bea941f41c4bba86cbb649709a6",
+      "oci_index_digest": "sha256:9d7d0beb3e4ef1c4107e505ae7b17218217f8bea941f41c4bba86cbb649709a6",
+      "oci_index_media_type": "application/vnd.oci.image.index.v1+json",
+      "amd64_manifest_digest": "sha256:98e48da6f96857865aeb67422135663fe4b21feca01ea82da7eb3329f9db3497",
+      "config_digest": "sha256:f5a3a1d505be2ffd3df9e0ca7fa4a7bbbdc1363a5bef7f98d527eabc0cf6c8b9",
+      "anonymous_registry_verified": true,
+      "source_verified_no_device": {
+        "status": "PASS_SOURCE_CURRENT_CPU_ONLY",
+        "refs": {
+          "hyperloom": "b91cab3433002fa8381108dd5ea7cb3633b6955e",
+          "vllm": "861cd9d993a7c92728db6d73cb0b62fa0df7c8a0",
+          "sglang": "90c62e027831111934a33b9bcc4e533ff61d8526"
+        },
+        "component_files_verified": 1222,
+        "component_python_files_verified": 1128,
+        "installed_wheel_python_files": {
+          "hyperloom": 734
+        },
+        "native_files": {
+          "/opt/venv/lib/python3.14/site-packages/vllm/_moe_C_stable_libtorch.abi3.so": "1545abc87f16ff7660d6eb96f528bc223856753d533340d561aab1d23155bfd9",
+          "/opt/venv/lib/python3.14/site-packages/vllm/_C.abi3.so": "05da5c40c7e95ad0003f38c04ed59bd5a5063e75071b5f69ce7b353bcd744aae",
+          "/opt/venv/lib/python3.14/site-packages/vllm/_C_stable_libtorch.abi3.so": "1ad7889139d3e563546df3371d7539622d50ebc5264e9c91cb16e8df6b75990b",
+          "/opt/venv/lib/python3.14/site-packages/vllm/spinloop.abi3.so": "9c56335fdcb7320b5db964dc095d43fc51c73100db2703071c1b51ce59df6770",
+          "/opt/venv/lib/python3.14/site-packages/vllm/_rust_tool_parser.abi3.so": "a242e4ebf3e86fa12824442837db849874873f2b389ae3e117f1258313b6ac29",
+          "/opt/venv/lib/python3.14/site-packages/vllm/_rocm_C.abi3.so": "bdaf43bace7b61c876f5b3f1ca714c64f6aaedc35b5db33ed9a902a4b1fef211",
+          "/opt/venv/lib/python3.14/site-packages/vllm/fs_io_C.abi3.so": "cc12d19e712372708929b3add92aa2507a19cb0bf0d68e526060479f73d936a2",
+          "/opt/venv/lib/python3.14/site-packages/vllm/cumem_allocator.abi3.so": "1cfc0b26bdf6a821f3f244cf928ae16eef7312697e77d02af38661a52079ec82",
+          "/opt/venv/lib/python3.14/site-packages/vllm/model_executor/layers/quantization/gfx1151_archive_assets/gfx1151_w4a4_m1_dot_pair2_signed_ext_rocm10.so": "34bc31908f949ac74b17bf377862fbc9127cb54df57171fd9f3206d0d7d31b92",
+          "/opt/venv/lib/python3.14/site-packages/vllm/model_executor/layers/quantization/gfx1151_archive_assets/gfx1151_w4a4_perf_ext_rocm10.so": "e6329fbc3fb6fac0f09af8d6d8011ae542485f75d9ab91010026361ad20360da",
+          "/opt/venv/lib/python3.14/site-packages/vllm/model_executor/layers/quantization/gfx1151_archive_assets/gfx1151_w4a4_m128_v4q_ext_rocm10.so": "2adb87c00341efa6639e25be6f2f2bcad43b1f7836610e8bd23f1be6c1590191",
+          "/opt/venv/lib/python3.14/site-packages/vllm/model_executor/layers/quantization/gfx1151_archive_assets/gfx1151_w4a4_m128_v3_ext_rocm10.so": "c6e2b106f4b9d6c62d7299244efc71d0dc67a632b2f0d27eca1add316cf03ccb"
+        },
+        "no_gpu": true,
+        "promotion_authority": false
+      },
+      "requests_completed": 5,
+      "cleanup_verified": true,
+      "production_preserved": true,
+      "adjudication_sha256": "c8ca327989f71f4a5bfefa95879e7660e4663235cc6fabcabf39a37feed7bd1c",
+      "publication_receipt_sha256": "069a431cf805a5529eccf46f649192ddbf3f5ec9b6532f1934b4b3ea63485b4c",
+      "model": "Qwen3-0.6B-Quark-W8A8",
+      "responses": [
+        {
+          "label": "cold-A",
+          "id": "chatcmpl-9ef5a4bbe5735fd0",
+          "model": "Qwen3-0.6B-Quark-W8A8",
+          "content": "The capital of France is Paris.\nThe capital of Germany is Berlin.\nThe capital of Italy is Rome.\nThe capital of Spain is Madrid.\nThe capital of Japan",
+          "usage": {
+            "prompt_tokens": 243,
+            "total_tokens": 275,
+            "completion_tokens": 32,
+            "prompt_tokens_details": null
+          }
+        },
+        {
+          "label": "warm-A",
+          "id": "chatcmpl-b5f7f017e1b12054",
+          "model": "Qwen3-0.6B-Quark-W8A8",
+          "content": "The capital of France is Paris.\nThe capital of Germany is Berlin.\nThe capital of Italy is Rome.\nThe capital of Spain is Madrid.\nThe capital of Japan",
+          "usage": {
+            "prompt_tokens": 243,
+            "total_tokens": 275,
+            "completion_tokens": 32,
+            "prompt_tokens_details": null
+          }
+        },
+        {
+          "label": "concurrent-A",
+          "id": "chatcmpl-8557904b558ea13b",
+          "model": "Qwen3-0.6B-Quark-W8A8",
+          "content": "The capital of France is Paris.\nThe capital of Germany is Berlin.\nThe capital of Japan is Tokyo.\nThe capital of India is New Dehi.\nThe capital",
+          "usage": {
+            "prompt_tokens": 243,
+            "total_tokens": 275,
+            "completion_tokens": 32,
+            "prompt_tokens_details": null
+          }
+        },
+        {
+          "label": "concurrent-B",
+          "id": "chatcmpl-a55fd13dc911ddae",
+          "model": "Qwen3-0.6B-Quark-W8A8",
+          "content": "The capital of Germany is Berlin.\n\n**Note:** The question \"What is the capital of Germany?\" is a geography question. The answer is **Berlin**.\n\n",
+          "usage": {
+            "prompt_tokens": 243,
+            "total_tokens": 275,
+            "completion_tokens": 32,
+            "prompt_tokens_details": null
+          }
+        },
+        {
+          "label": "post-interleave-A",
+          "id": "chatcmpl-960e24511224e725",
+          "model": "Qwen3-0.6B-Quark-W8A8",
+          "content": "The capital of France is Paris.\nThe capital of Germany is Berlin.\nThe capital of Italy is Rome.\nThe capital of Spain is Madrid.\nThe capital of Japan",
+          "usage": {
+            "prompt_tokens": 243,
+            "total_tokens": 275,
+            "completion_tokens": 32,
+            "prompt_tokens_details": null
+          }
+        }
+      ],
+      "oracle_scope": "Unchanged frozen case-insensitive city-substring canary; not exact-format or instruction-following qualification. Earlier parent exact-string assumption was rejected; the raw driver/receipts were not changed.",
+      "model_manifest_sha256": "2f2194288c8515910c71781bd28128311b92c45a6e067cbf6384d0088a02c11a",
+      "quality_promotion": false
+    },
+    "aiter-tools": {
+      "reference": "ghcr.io/hawgauto/haloloom-aiter-tools-full-gfx1151:v0.1.1",
+      "pinned_reference": "ghcr.io/hawgauto/haloloom-aiter-tools-full-gfx1151@sha256:a66c94bdbb877205fa125788be1e1d7ae5b03bd1e18b3c846298ddc97af3850c",
+      "digest": "sha256:a66c94bdbb877205fa125788be1e1d7ae5b03bd1e18b3c846298ddc97af3850c",
+      "digest_media_type": "application/vnd.oci.image.index.v1+json",
+      "amd64_manifest_digest": "sha256:def2605ea8ebe7b4da5f3a612ef56debfa110815f3352b6c7a0c90044cbf83ef",
+      "config_digest": "sha256:bf78cd40de50776d00ed7cd2f3cee2ca13c9a900579ce53b8b984b0743a5f5cc",
+      "anonymous": true
+    }
+  },
+  "historical_evidence": [
+    {
+      "sha256": "56116a5036f03a3d0b4c61b3d916702644cce99424a7fe98b833c708c690d70e"
+    },
+    {
+      "sha256": "1fc07b77c94ef8455b23c35c8d0fed6ba66cbd574f43b7deb94f8f58ea911994"
+    },
+    {
+      "sha256": "003e49863d123968de530759b2a3fb6c1549ba4cc8458ec5645dab8ab3ad86c5"
+    }
+  ],
+  "limits": [
+    "Optimizer actual internal CLOSE is preserved, not rerun on final images; its original OOM and disabled/skipped substeps are not erased.",
+    "Native vLLM full profiling is separately qualified using baked startup defaults and the unchanged 16-request, 128/128 action; observed 128912 kernel and 193713 HIP-runtime-category events are descriptive, not a performance claim.",
+    "SGLang and Quark five-request serving checks use frozen case-insensitive city-substring canaries; they are not exact-format, instruction-following, or quality tests.",
+    "The historical Quark INT8 evaluation candidate remains REJECTED; no new PTQ, evaluation, or quality promotion is made.",
+    "SGLang graph-shape discovery, EAGLE, and low-bit routes are not newly qualified by the BF16/Triton graphs-disabled smoke.",
+    "AITER reuses its existing bounded public registry proof; no new AITER claim is made, and attention and sampling operation remain unavailable."
+  ],
+  "production_activated": false,
+  "cleanup_candidates_deleted": false,
+  "native_profiler_diagnostic_observer_shipped": false
+}

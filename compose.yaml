@@ -10,6 +10,11 @@ x-rocm-runtime: &rocm-runtime
   HOME: /home/haloloom
   USER_DATA_PATH: /workspace
   HF_HOME: /home/haloloom/.cache/huggingface
+  XDG_CACHE_HOME: /workspace/.cache
+  VLLM_CACHE_ROOT: /workspace/.cache/vllm
+  VLLM_CONFIG_ROOT: /workspace/.config/vllm
+  TORCHINDUCTOR_CACHE_DIR: /workspace/.cache/torchinductor
+  TRITON_CACHE_DIR: /workspace/.cache/triton
   HERMES_HOME: /home/haloloom/.hermes
   CODEX_HOME: /home/haloloom/.codex
   HALOLOOM_AGENT_PROFILE: ${HALOLOOM_AGENT_PROFILE}
@@ -36,7 +41,7 @@ x-gpu-common: &gpu-common
     - ${HF_HOME}:/home/haloloom/.cache/huggingface
     - ${HALOLOOM_WORKSPACE}:/workspace
     - ${CLAUDE_HOME_HOST}:/home/haloloom/.claude
-    - ${CODEX_HOME_HOST}:/home/haloloom/.codex
+    - ${CODEX_HOME_HOST}:/home/haloloom/.codex:ro
     - ${HERMES_HOME_HOST}:/home/haloloom/.hermes
     - ${HALOLOOM_CLAUDE_ROOT_HOST}:${HALOLOOM_CLAUDE_ROOT_HOST}:ro
     - ${HALOLOOM_CODEX_ROOT_HOST}:${HALOLOOM_CODEX_ROOT_HOST}:ro
@@ -51,6 +56,13 @@ services:
     entrypoint: ["/opt/venv/bin/python3", "-m", "vllm.entrypoints.openai.api_server"]
     ports:
       - 8000:8000
+    environment:
+      <<: *rocm-runtime
+      # Register the existing Kineto client before the spawned worker starts.
+      # This closure is qualified for this vLLM image, not the other lanes.
+      ROCP_TOOL_LIBRARIES: /opt/venv/lib/python3.14/site-packages/torch/lib/libtorch_cpu.so
+      LD_LIBRARY_PATH: /opt/venv/lib/python3.14/site-packages/_rocm_sdk_core/lib/host-math/lib:/opt/rocm/core-10.0/lib:/opt/rocm/core-10.0/lib/llvm/lib:/opt/venv/lib
+      HYPERLOOM_GFX1151_LOWBIT_BRIDGE: "0"
 
   sglang:
     <<: *gpu-common
@@ -63,6 +75,8 @@ services:
       <<: *rocm-runtime
       AMDGPU_TARGET: gfx1151
       SGLANG_USE_AITER: "0"
+      SGLANG_CACHE_DIR: /workspace/.cache/sglang
+      SGLANG_JIT_CACHE_DIR: /workspace/.cache/sglang/jit
       HYPERLOOM_GFX1151_LOWBIT_BRIDGE: "0"
 
   quark:

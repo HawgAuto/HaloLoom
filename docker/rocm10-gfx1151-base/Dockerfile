@@ -25,7 +25,7 @@ RUN set -eux; \
 
 COPY dist/hyperloom/hyperloom_inference_optimizer-1.0.0-py3-none-any.whl /opt/haloloom/wheels/hyperloom_inference_optimizer-1.0.0-py3-none-any.whl
 COPY scripts/prune_rocm10_gfx1151.py /opt/haloloom/prune_rocm10_gfx1151.py
-RUN echo "9cc9884911db814c8d72d7e1219fe580f94f98849674f3b468f16caf3a8e09de  /opt/haloloom/wheels/hyperloom_inference_optimizer-1.0.0-py3-none-any.whl" | sha256sum --check --strict \
+RUN echo "212f721a610943b671ae40ed2356213add4ea9dd7a2c40adc7d1caacfc727e93  /opt/haloloom/wheels/hyperloom_inference_optimizer-1.0.0-py3-none-any.whl" | sha256sum --check --strict \
     && /opt/venv/bin/python3 -m pip install --no-index --no-deps --force-reinstall \
        /opt/haloloom/wheels/hyperloom_inference_optimizer-1.0.0-py3-none-any.whl \
     && /opt/venv/bin/python3 /opt/haloloom/prune_rocm10_gfx1151.py \
@@ -66,9 +66,9 @@ ENV PATH=/opt/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/
     PYTORCH_ROCM_ARCH=gfx1151
 LABEL org.opencontainers.image.title="HaloLoom ROCm 10 gfx1151 slim base" \
       org.opencontainers.image.source="https://github.com/HawgAuto/HaloLoom" \
-      org.opencontainers.image.revision="a94191bfe0b548a44113e0d28c432d1bff0e3f9f" \
+      org.opencontainers.image.revision="eaca6d848babfe0bf969e7bc442bcffcec829e85" \
       haloloom.target="gfx1151" \
-      haloloom.hyperloom_wheel_sha256="9cc9884911db814c8d72d7e1219fe580f94f98849674f3b468f16caf3a8e09de" \
+      haloloom.hyperloom_wheel_sha256="212f721a610943b671ae40ed2356213add4ea9dd7a2c40adc7d1caacfc727e93" \
       haloloom.promotion_authority="false"
 ENTRYPOINT []
 CMD ["/opt/venv/bin/python3", "-c", "import torch; print(torch.__version__, torch.version.hip)"]

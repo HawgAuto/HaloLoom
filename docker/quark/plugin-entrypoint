@@ -17,6 +17,18 @@ case "$agent" in
     ;;
   codex)
     agent_bin="${HALOLOOM_CODEX_BIN_HOST:-}"
+    if [[ ! -f /.dockerenv && ! -f /run/.containerenv ]]; then
+      echo "Quark's Codex plug-in requires the outer container sandbox." >&2
+      exit 1
+    fi
+    export HYPERLOOM_CODEX_EXTERNAL_SANDBOX=1
+    export HYPERLOOM_CODEX_SANDBOX_MODE=bypass
+    if [[ -f "${CODEX_HOME:-}/auth.json" && -z "${OPENAI_API_KEY:-}${OPENAI_BASE_URL:-}" ]]; then
+      native_home=$(mktemp -d /tmp/haloloom-quark-codex-home.XXXXXX)
+      install -m 0600 "$CODEX_HOME/auth.json" "$native_home/auth.json"
+      export CODEX_HOME="$native_home"
+      export HYPERLOOM_CODEX_HOME="$CODEX_HOME"
+    fi
     ;;
   hermes)
     agent_bin="${HALOLOOM_HERMES_BIN_HOST:-}"
@@ -32,7 +44,11 @@ if [[ ! -x "$agent_bin" ]]; then
   echo "Selected $agent agent CLI is not executable inside the container: $agent_bin" >&2
   exit 1
 fi
-export PATH="$(dirname "$agent_bin"):$PATH"
+# The installed host CLI may resolve to codex.js or another vendor filename.
+# Preserve that exact executable while exposing the native adapter's CLI name.
+agent_cli_dir=$(mktemp -d "${TMPDIR:-/tmp}/haloloom-quark-agent.XXXXXX")
+ln -s -- "$agent_bin" "$agent_cli_dir/$agent"
+export PATH="$agent_cli_dir:$(dirname "$agent_bin"):$PATH"
 export FORGE_AGENT_BACKEND="$agent"
 export FORGE_AGENT_CLI="$agent_bin"
 

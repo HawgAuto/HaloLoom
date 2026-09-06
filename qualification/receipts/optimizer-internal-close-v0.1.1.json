@@ -1,0 +1,108 @@
+{
+  "status": "PASS_INTERNAL_CLOSE_WITH_PROFILE_MEMORY_FAILURE",
+  "image": "sha256:44990a078989a1ab859eecf072c43a5e591cf53d5fda3e13b11b381fe5b1005f",
+  "source_ref": "b91cab3433002fa8381108dd5ea7cb3633b6955e",
+  "model_revision": "2fc06364715b967f1860aea9cf38778875588b17",
+  "phase": "CLOSE",
+  "close_sequence_done": true,
+  "stop_reason": "global_converged",
+  "max_ticks": null,
+  "package": {
+    "members": 53,
+    "crc_verified": true
+  },
+  "specialists_completed": 4,
+  "disabled_or_unqualified": [
+    "evaluation explicitly disabled",
+    "recipe KB and PR monitor disabled",
+    "GEAK skipped by native insufficient-budget guard",
+    "concurrency sweep disabled"
+  ],
+  "quality_claim": false,
+  "timing_authority": false,
+  "production_promoted": false,
+  "schema": "haloloom.public-historical-close/1",
+  "source_adjudication_sha256": "783657dc802ce4e049d6ea8f1696e7f6268ed8b0a5bf3ba877503bbbb59d0988",
+  "scope": "Preserved actual internal Coordinator CLOSE; not rerun on final image. Native profiling recovered and qualified separately; this does not retroactively alter its original OOM or skipped/disabled substeps.",
+  "profile_at_this_epoch": {
+    "root_cause": "kernel-proven CONSTRAINT_MEMCG OOM at 24GiB container memory cap; engine killed during profile processing/export, not model load or KV allocation",
+    "qualified": false
+  },
+  "close_steps": [
+    {
+      "status": "running",
+      "step": "sequencer_started"
+    },
+    {
+      "status": "skipped",
+      "step": "fact_finalize"
+    },
+    {
+      "status": "done",
+      "step": "report"
+    },
+    {
+      "status": "done",
+      "step": "session_breakdown"
+    },
+    {
+      "status": "done",
+      "step": "artifact_package"
+    },
+    {
+      "status": "skipped",
+      "step": "ndjson_drain"
+    },
+    {
+      "status": "done",
+      "step": "done"
+    }
+  ],
+  "artifact_hashes": [
+    {
+      "name": "state.json",
+      "bytes": 142994,
+      "sha256": "9e64315f3c3382d1f88f5e7e9f9c56bac342583dff36414b469cd56b643ee295"
+    },
+    {
+      "name": "final.json",
+      "bytes": 126201,
+      "sha256": "cdc199dce5aeec59471a787c1cf4b194af6c030ffa741f52fbafb9964f9a1399"
+    },
+    {
+      "name": "session_breakdown.json",
+      "bytes": 163144,
+      "sha256": "3b0be4d41cad1ca70fbe66e93c5a288093f71b7e12b7b4bbb87653ea418f9669"
+    },
+    {
+      "name": "2fc06364715b967f1860aea9cf38778875588b17_20260905T185948Z_1482b42f.zip",
+      "bytes": 257606,
+      "sha256": "9578e6f2ce1a154ff962f3ca83b3fa29c54eff09a04a87c78b13ccb1b43d4765"
+    },
+    {
+      "name": "rank0.1788635035897660620.pt.trace.json.gz",
+      "bytes": 82057027,
+      "sha256": "0c5c3d3fd8635af2ed5c4b5e138089fe3b9bd305a16c8ffd969292ac54b0c7f7"
+    },
+    {
+      "name": "kernel-profile-window.log",
+      "bytes": 16838,
+      "sha256": "0831cefa604ed0b7acf97cd3031b56d9b83a75a7062dfccbed9e19a13d8fcdd0"
+    },
+    {
+      "name": "receipt.json",
+      "bytes": 2226,
+      "sha256": "30522775ff454f0353605ceea72c8bec54591c328baf243063cf475db25f174f"
+    },
+    {
+      "name": "run3.py",
+      "bytes": 4969,
+      "sha256": "7b9f281f9aae80ad665514725858d0446259232e9ae42a6a99d929011a8c29f1"
+    },
+    {
+      "name": "compose.candidate3.yaml",
+      "bytes": 652,
+      "sha256": "17a75cae0635ac18e9a6a98f91c39fd881c7e807cb954d6ebf8ae1f8d277acf8"
+    }
+  ]
+}

@@ -28,7 +28,24 @@ if [[ ! -f .env ]]; then
   exit 1
 fi
 
+# Upstream Hyperloom authenticates from the process environment (API keys, a
+# `claude setup-token` subscription token, or gateway base URLs). `docker
+# compose run` does not inherit the host shell, so forward these by NAME only:
+# `-e NAME` copies the current value at runtime; nothing enters argv, .env,
+# Compose config, logs, or the repository. Unset names stay absent so upstream's
+# provider-side disabling and fail-closed credential checks are unchanged.
+secret_env_args=()
+for name in \
+  OPENAI_API_KEY OPENAI_BASE_URL OPENAI_CUSTOM_HEADERS \
+  ANTHROPIC_API_KEY ANTHROPIC_AUTH_TOKEN ANTHROPIC_BASE_URL ANTHROPIC_CUSTOM_HEADERS \
+  CLAUDE_CODE_OAUTH_TOKEN CLAUDE_MODEL CODEX_MODEL; do
+  if printenv "$name" >/dev/null 2>&1; then
+    secret_env_args+=("-e" "$name")
+  fi
+done
+
 exec docker compose run --rm \
   -e FRAMEWORK="$backend" \
+  "${secret_env_args[@]}" \
   --entrypoint /opt/haloloom/workbench-entrypoint \
   "$backend" "$@"

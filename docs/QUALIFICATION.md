@@ -2,6 +2,10 @@
 
 HaloLoom separates build, import, platform, model-request, route and operational evidence. Passing an earlier gate never implies a later gate.
 
+## Current v0.1.1 evidence
+
+`qualification/receipts/release-closeout-v0.1.1.json` is the final-image/runtime/anonymous-registry snapshot. It binds the original vLLM native profile action, the unchanged SGLang/Quark five-request substring canaries, and the four final HIP/Triton toolchain paths. Those model-runtime canaries do not replace the stricter exact-output/custom-route gates below or promote the rejected Quark candidate. `optimizer-internal-close-v0.1.1.json`, `native-profiler-historical-v0.1.1.json`, and `quark-native-evaluation-v0.1.1.json` preserve separate historical successes and limits. Source/tag and fresh-install verification occur after this runtime snapshot.
+
 ## Release gates
 
 ### Source and packaging
@@ -29,7 +33,7 @@ Run without `/dev/kfd` or `/dev/dri`:
 
 Every GPU container must hold `/run/lock/hermes-vllm-gfx1151.lock`, run `fuser /dev/kfd` after acquiring it, use native `gfx1151`, and leave `HSA_OVERRIDE_GFX_VERSION` unset.
 
-The compact release images use one coherent runtime root: `ROCM_PATH`, `ROCM_HOME` and `HIP_PATH` are `/opt/rocm/core-10.0`, with `LD_LIBRARY_PATH=/opt/rocm/core-10.0/lib:/opt/rocm/core-10.0/lib/llvm/lib:/opt/venv/lib`. Mixing those images with their duplicate modular-SDK library roots is not a qualified configuration.
+The compact release images use one coherent runtime root: `ROCM_PATH`, `ROCM_HOME` and `HIP_PATH` are `/opt/rocm/core-10.0`. Keep the complete loader settings supplied by Compose. vLLM additionally prepends its exact wheel-provided `host-math/lib` dependency directory and registers its existing Kineto client through `ROCP_TOOL_LIBRARIES`; this qualified dependency closure is intentional, not permission to mix arbitrary SDK roots. SGLang uses both `SGLANG_CACHE_DIR=/workspace/.cache/sglang` and `SGLANG_JIT_CACHE_DIR=/workspace/.cache/sglang/jit` from Compose. Its two native cache roots are independent; `XDG_CACHE_HOME` or `TRITON_CACHE_DIR` alone does not replace them. Private test launchers must preserve these shipping settings and the writable workspace mount.
 
 For vLLM and SGLang, require:
 
@@ -60,7 +64,7 @@ For AITER tools, require package/device import and the separately declared JIT m
 - preserve failed attempts as separate epochs;
 - publish no image until its release candidate completes its own fresh physical gate.
 
-## Existing component evidence
+## Historical component evidence
 
 - Final Hyperloom readiness authority is commit `6f67fbef…` plus its public-release portability successor, not the earlier `0c32b463…` wheel epoch.
 - Magpie current-main port: 404 root tests; 16 focused runner tests; independent review passed.
@@ -75,6 +79,6 @@ Final local W4A8 route receipts are:
 - `qualification/receipts/vllm-full-w4a8-final-v0.1.0.json`
 - `qualification/receipts/sglang-full-w4a8-final-v0.1.0.json`
 
-Each binds the exact final local image ID, model revision, exact `RDNA35_OK` response, 16 eligible layers, positive asynchronous physical dispatches, event completion, zero fallback/foreign rows, coherent `/opt/rocm/core-10.0` runtime, and clean teardown. They do not claim a performance win or production activation. Public registry digests remain pending push/readback verification.
+Each binds its historical final local image ID, model revision, exact `RDNA35_OK` response, 16 eligible layers, positive asynchronous physical dispatches, event completion, zero fallback/foreign rows, coherent `/opt/rocm/core-10.0` runtime, and clean teardown. They do not claim a performance win or production activation. These historical local-image receipts predate registry readback; current public image identities are recorded separately in `manifests/components.json`.
 
 `qualification/route-status-v0.1.0.json` remains the earlier full-image W4A8 publication receipt. The later sealed readiness matrix additionally closes all six SGLang-native methods with real request-owned route evidence and closes the 23-target functional registry. Neither authority claims a performance win or production activation.

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "version": "v0.1.1",
+  "overlay_archive": {
+    "url": "https://github.com/HawgAuto/HaloLoom/releases/download/v0.1.1/haloloom-v0.1.1-build-inputs.tar.gz",
+    "sha256": "1829b58ae16459660e36e091f379131da7983f8d044a7f5fb6a48202d56a6ae5",
+    "filename": "haloloom-v0.1.1-build-inputs.tar.gz"
+  },
+  "images": {
+    "vllm": {
+      "base_reference": "ghcr.io/hawgauto/haloloom-vllm-full-gfx1151@sha256:cb1e644be30c408d98d75f6c8369782b7d8d50c0c24245e429e6132b22d342f1",
+      "local_tag": "haloloom-vllm-full-gfx1151:v0.1.1-public-rebuild",
+      "apply_overlay": true
+    },
+    "sglang": {
+      "base_reference": "ghcr.io/hawgauto/haloloom-sglang-full-gfx1151@sha256:5c21e9a0e53a2c9b1532e3c36a401012cd3a83f5339482fa839977c78b1c2ce3",
+      "local_tag": "haloloom-sglang-full-gfx1151:v0.1.1-public-rebuild",
+      "apply_overlay": true
+    },
+    "quark": {
+      "base_reference": "ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151@sha256:3cc42a8e942e731d4231b9bae005168835328346721a3e8dbf43f42ee42d4e99",
+      "local_tag": "haloloom-quark-rocm10-gfx1151:v0.1.1-public-rebuild",
+      "apply_overlay": true
+    },
+    "aiter-tools": {
+      "base_reference": "ghcr.io/hawgauto/haloloom-aiter-tools-full-gfx1151@sha256:a66c94bdbb877205fa125788be1e1d7ae5b03bd1e18b3c846298ddc97af3850c",
+      "local_tag": "haloloom-aiter-tools-full-gfx1151:v0.1.1-public-rebuild",
+      "apply_overlay": false
+    }
+  }
+}

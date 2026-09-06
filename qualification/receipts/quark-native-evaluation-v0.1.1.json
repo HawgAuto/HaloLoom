@@ -1,0 +1,85 @@
+{
+  "status": "PASS_NATIVE_EVALUATION_LIFECYCLE_CANDIDATE_REJECTED",
+  "image": "sha256:3cc42a8e942e731d4231b9bae005168835328346721a3e8dbf43f42ee42d4e99",
+  "scores": {
+    "source": {
+      "examples": 16,
+      "correct": 4.0,
+      "score": 0.25,
+      "strict_score": 0.0
+    },
+    "quantized": {
+      "examples": 16,
+      "correct": 3.0,
+      "score": 0.1875,
+      "strict_score": 0.0
+    }
+  },
+  "relative_gap": 0.25,
+  "allowed_gap": 0.03,
+  "candidate_accepted": false,
+  "performance_authority": false,
+  "settings": {
+    "framework": "lm_eval",
+    "framework_version": "0.4.9.2",
+    "task": "gsm8k_local",
+    "dataset_path": "openai/gsm8k",
+    "limit": 16,
+    "num_fewshot": 0,
+    "model": "local-chat-completions",
+    "apply_chat_template": true,
+    "generation": {
+      "temperature": 0,
+      "top_p": 1,
+      "max_gen_toks": 512,
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      }
+    },
+    "metric_used": "exact_match,flexible-extract"
+  },
+  "matched_inputs_and_generation_arguments": true,
+  "independently_reduced_raw_samples": true,
+  "claim_limits": [
+    "16-example zero-shot smoke; not statistical benchmark authority",
+    "original Quark candidate rejected; no requantization or promotion",
+    "Quark agent Python3.12 is source-current; bundled serving Hyperloom Python3.14 still needs six-file wheel reconciliation before final image qualification"
+  ],
+  "schema": "haloloom.public-historical-quark-evaluation/1",
+  "source_adjudication_sha256": "e7a1626a08eb4d20f29067f881f99bcd65f44699e4719bbebaa2711413f89ca8",
+  "scope": "Native source-versus-INT8 evaluation and quality REJECT retained; no new PTQ or evaluation run is implied.",
+  "raw_evidence_hashes": [
+    {
+      "name": "samples_gsm8k_local_2026-09-05T12-38-20.686950.jsonl",
+      "sha256": "5ecfab1e78be9efa97094446036ff690b4a21ac47638d13cd55c92790765b2c8"
+    },
+    {
+      "name": "samples_gsm8k_local_2026-09-05T12-40-56.983499.jsonl",
+      "sha256": "aa33b6e79925028973148b8d29b10103e3506a73302082d51a0f11280777c3db"
+    },
+    {
+      "name": "eval_details.json",
+      "sha256": "cd3cf9cbad51a6b35b192462b37f881cc30e44eaf77db8e3596a8f915777a39d"
+    },
+    {
+      "name": "eval_report.json",
+      "sha256": "57da5c1bc6eb16dbed27a5a8f698bf1d495d849ce82a0fd45ab269d58f435600"
+    },
+    {
+      "name": "eval_report.md",
+      "sha256": "377f80b863331549964c04091f2b99da1832671ed315e3bb4f2cd04dda799824"
+    },
+    {
+      "name": "blocked.md",
+      "sha256": "ff09170e350a0bbada05ae234dc47aca206dacae2495f37001eb1304a91c41b4"
+    },
+    {
+      "name": "validation_report.md",
+      "sha256": "9ab85f9f0c4b448be12c6b245a6f0c3f18fdc9de58b79aac951eed4ac8b5bcb5"
+    },
+    {
+      "name": "gsm8k_local.yaml",
+      "sha256": "33e71c894a4b57f2dba01a0d55711383278e16ecae84c9d73d19e2598bd8b76a"
+    }
+  ]
+}

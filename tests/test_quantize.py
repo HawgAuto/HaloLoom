@@ -43,6 +43,34 @@ def test_build_command_matches_original_quark_cli() -> None:
     ]
 
 
+def test_build_command_forwards_only_present_allowlisted_environment_names() -> None:
+    command = quantize.build_command(
+        provider="codex",
+        prompt="p",
+        workspace="job",
+        model_id=None,
+        extra=[],
+        env={
+            "OPENAI_API_KEY": "dummy-openai-secret",
+            "ANTHROPIC_AUTH_TOKEN": "dummy-anthropic-secret",
+            "UNRELATED_SECRET": "dummy-unrelated-secret",
+        },
+    )
+
+    service_index = command.index("quark")
+    assert command[service_index - 4 : service_index] == [
+        "-e",
+        "OPENAI_API_KEY",
+        "-e",
+        "ANTHROPIC_AUTH_TOKEN",
+    ]
+    assert "ANTHROPIC_API_KEY" not in command
+    assert "UNRELATED_SECRET" not in command
+    assert "dummy-openai-secret" not in command
+    assert "dummy-anthropic-secret" not in command
+    assert "dummy-unrelated-secret" not in command
+
+
 def test_workspace_is_single_relative_name() -> None:
     for bad in ("/tmp/job", "../job", "a/b", ""):
         try:

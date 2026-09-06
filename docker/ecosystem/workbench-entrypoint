@@ -37,6 +37,11 @@ case "${1:-}" in
     ;;
   readiness)
     shift
+    if [[ "${1:-}" == status && ! -f "$USER_DATA_PATH/readiness-control/READINESS-EPOCH.json" ]]; then
+      echo "HaloLoom readiness epoch is not initialized in this workspace yet." >&2
+      echo "Run:  ./scripts/haloloom ${FRAMEWORK:-vllm} readiness initialize" >&2
+      exit 2
+    fi
     exec /opt/venv/bin/python3 -m hyperloom.orchestrator.production_readiness \
       --root "$USER_DATA_PATH/readiness-control" \
       --registry /opt/haloloom/components/Hyperloom/src/hyperloom/orchestrator/kernel-targets-gfx1151-v1.json \
@@ -60,6 +65,26 @@ case "$agent" in
   codex)
     agent_bin="${HALOLOOM_CODEX_BIN_HOST:-}"
     export GEAK_CODEX_BIN="$agent_bin"
+    # Subscription users: the host `codex login` is mounted read-only at
+    # $CODEX_HOME. When it exists and the operator set no API key/gateway URL,
+    # opt the Orchestrator's Codex role into Hyperloom's native_oauth mode (the
+    # same contract KernelForge's Codex backend uses). An explicit key always
+    # wins and keeps upstream gateway semantics untouched.
+    if [[ -f "$CODEX_HOME/auth.json" && -z "${OPENAI_API_KEY:-}${OPENAI_BASE_URL:-}" ]]; then
+      native_home=/tmp/haloloom-codex-home
+      rm -rf "$native_home"
+      install -d -m 0700 "$native_home"
+      install -m 0600 "$CODEX_HOME/auth.json" "$native_home/auth.json"
+      export INFERENCE_OPTIMIZER_CODEX_AUTH_MODE=native_oauth
+      export INFERENCE_OPTIMIZER_CODEX_HOME="$native_home"
+      # The workbench container is the sandbox boundary. It intentionally does
+      # not ship bubblewrap, so nested Codex sandboxing must be bypassed rather
+      # than retried forever. No writable-root broadening happens here; each
+      # role still supplies its own existing Hyperloom/KernelForge allowlist.
+      export HYPERLOOM_CODEX_EXTERNAL_SANDBOX=1
+      export HYPERLOOM_CODEX_SANDBOX_MODE=bypass
+      export GEAK_CODEX_EXTERNAL_SANDBOX=1
+    fi
     ;;
   hermes)
     agent_bin="${HALOLOOM_HERMES_BIN_HOST:-}"
@@ -88,30 +113,27 @@ if [[ "${1:-}" == agent-check ]]; then
   exec "$agent_bin" --version "$@"
 fi
 
-mkdir -p "$HYPERLOOM_RUNTIME_DIR" "$USER_DATA_PATH/optimizer_runs"
+mkdir -p \
+  "$HYPERLOOM_RUNTIME_DIR" "$USER_DATA_PATH/optimizer_runs" \
+  "$XDG_CACHE_HOME" "$VLLM_CACHE_ROOT" "$VLLM_CONFIG_ROOT" \
+  "$TORCHINDUCTOR_CACHE_DIR" "$TRITON_CACHE_DIR"
 
-# Hyperloom's Ray/subprocess workers source this file. It contains non-secret
-# paths and provider selection only; credentials stay in the runtime process.
+# Hyperloom's preflight re-reads this file through a strict allowlist
+# (hyperloom.common.env_safety.KERNEL_AGENT_ENV_EXACT_ALLOWLIST) and warns on
+# every key it rejects, so write only allowlisted keys here. Everything else
+# (PATH, PYTHONPATH, agent profile/bin selection, component roots) is already
+# exported into the process environment above. No credentials are written.
 tmp="${KERNEL_AGENT_ENV}.tmp.$$"
 {
   printf '%s\n' '#!/usr/bin/env bash'
   for name in \
-    USER_DATA_PATH HYPERLOOM_RUNTIME_DIR HYPERLOOM_CACHE_DIR \
-    HYPERLOOM_DEPS_ROOT HYPERLOOM_ROOT HYPERLOOM_KERNEL_AGENT_ROOT \
-    KERNEL_AGENT_ROOT FRAMEWORK_AGENT_ROOT MAGPIE_PATH MAGPIE_PYTHON \
+    USER_DATA_PATH HYPERLOOM_RUNTIME_DIR HYPERLOOM_ROOT HYPERLOOM_KERNEL_AGENT_ROOT \
+    KERNEL_AGENT_ROOT MAGPIE_PATH MAGPIE_PYTHON \
     INFERENCEX_PATH TRACELENS_ROOT GEAK_ROOT GEAK_E2E_RUNNER \
-    INFERENCE_OPTIMIZER_FRAMEWORK_SOURCE_ROOTS \
-    GEAK_AGENT_PROFILE FORGE_AGENT_BACKEND FORGE_AGENT_CLI PYTHONPATH PATH; do
+    INFERENCE_OPTIMIZER_FRAMEWORK_SOURCE_ROOTS; do
     printf 'export %s=%q\n' "$name" "${!name}"
   done
-  if [[ "$agent" == hermes ]]; then
-    printf 'export HYPERLOOM_HERMES_BIN=%q\n' "$HYPERLOOM_HERMES_BIN"
-    printf 'export HYPERLOOM_HERMES_EXTERNAL_SANDBOX=1\n'
-    printf 'export GEAK_HERMES_BIN=%q\n' "$GEAK_HERMES_BIN"
-    printf 'export GEAK_HERMES_EXTERNAL_SANDBOX=1\n'
-  elif [[ "$agent" == codex ]]; then
-    printf 'export GEAK_CODEX_BIN=%q\n' "$GEAK_CODEX_BIN"
-  else
+  if [[ "$agent" == claude ]]; then
     printf 'export GEAK_CLAUDE_BIN=%q\n' "$GEAK_CLAUDE_BIN"
   fi
 } > "$tmp"

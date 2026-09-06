@@ -1,5 +1,25 @@
 # Building HaloLoom
 
+## Canonical public-base rebuild (v0.1.1)
+
+The supported rebuild entrypoint is:
+
+```bash
+./scripts/build_images.sh
+```
+
+It requires the release-provided `manifests/build-inputs.json`; there is no local-image fallback. The schema is exactly `schema_version: 1`, `version: v0.1.1`, one HTTPS overlay archive (`url`, lowercase SHA-256, and matching safe filename), and exactly four image rows: `vllm`, `sglang`, `quark`, and `aiter-tools`. Every base is a full `ghcr.io/...@sha256:<64 hex>` reference and every output has an explicit, unique local tag. The release manifest applies the overlay to the three framework images and leaves `aiter-tools` unchanged.
+
+The entrypoint downloads only the small public overlay archive, verifies its digest before extraction, rejects traversal and non-regular archive entries, and caps total unpacked bytes at 1 GiB. It stages the archive and its original contents under ignored `dist/source-current/`, refusing to overwrite an existing stage. It then pulls each exact public base. Framework rows are rebuilt from the same recipe with no build-time network; the selected Dockerfile target is exactly `vllm`, `sglang`, or `quark`:
+
+```bash
+docker build --network none --target <vllm|sglang|quark> \
+  --build-arg BASE_IMAGE=ghcr.io/...@sha256:<digest> \
+  -f docker/source-current/Dockerfile -t <manifest-local-tag> .
+```
+
+The AITER tools row is only tagged from its pulled digest-pinned base. `docker/source-current/Dockerfile.dockerignore` is the explicit safe context; the downloaded tar is retained under `dist/source-current/` for provenance but is not copied into an image. The workflow changes no other production tags and performs no Docker cleanup. Any missing or malformed manifest, unsafe archive, digest mismatch, failed download, or failed Docker command stops the build. `docker/source-current/Dockerfile`, its dockerignore, and the immutable manifest values are release inputs; do not substitute the historical local recipes below.
+
 ## Normal users
 
 Normal users pull the released images with `scripts/install.sh`. They do not rebuild ROCm, vLLM, SGLang or Quark.
@@ -14,11 +34,26 @@ python3 scripts/sync_sources.py --root components
 
 Every checkout is detached at a full 40-character commit. Existing dirty or wrong-remote destinations are rejected.
 
+The source-current release input binds Hyperloom commit `b91cab3433002fa8381108dd5ea7cb3633b6955e`, tree `67a82a90bf85e54104da833565627354351ebc85`, and wheel SHA-256 `a0229171738133afbdffc91502006e9e872787d5350e7d438c3103064b058d23`; SGLang is `0.5.19.dev0` at `90c62e027831111934a33b9bcc4e533ff61d8526`, not the historical 0.5.15 base. The release archive is 54,043,592 bytes with SHA-256 `1829b58ae16459660e36e091f379131da7983f8d044a7f5fb6a48202d56a6ae5`. The release has exactly three assets: `SHA256SUMS`, that Hyperloom wheel, and `haloloom-v0.1.1-build-inputs.tar.gz`.
+
+## vLLM native Kineto runtime wiring
+
+Native Kineto registration is release wiring for the vLLM lane only. Both the vLLM image and `services.vllm.environment` in `compose.yaml` set exactly:
+
+```text
+ROCP_TOOL_LIBRARIES=/opt/venv/lib/python3.14/site-packages/torch/lib/libtorch_cpu.so
+LD_LIBRARY_PATH=/opt/venv/lib/python3.14/site-packages/_rocm_sdk_core/lib/host-math/lib:/opt/rocm/core-10.0/lib:/opt/rocm/core-10.0/lib/llvm/lib:/opt/venv/lib
+```
+
+The original `ProfileExecutor` inherits these fields without a wrapper or Hyperloom/source/feature change. Default shipped benchmark YAML does not override them. A custom `benchmark.envs` value takes precedence and must match the exact qualified value above. Do not add this wiring to SGLang or Quark.
+
 ## Hyperloom wheel dependency contract
 
 The released `hyperloom-inference_optimizer` wheel declares no mandatory base `Requires-Dist` entries. Its requirements are extra-scoped. A normal consumer install uses `[runtime]`, which composes the wheel's `forge`, `llm` and `web` extras plus PyYAML. `pip install --no-deps` is used only when overlaying the exact wheel into an already complete, identity-checked runtime image; it does not make the wheel self-contained.
 
-## Canonical v0.1 images: compact the qualified goldens
+## Historical v0.1 local-golden recipe (not canonical)
+
+> **Historical reference only.** The sections from here through the legacy layering details document the original local qualified-golden process. They are not inputs or aliases for the canonical public-base rebuild above.
 
 The first release uses the exact physically qualified runtime images as golden inputs:
 
@@ -79,18 +114,9 @@ The layer rejects changes to every other package-freeze row and verifies both wh
 
 External agent CLIs are deliberately not installed. `scripts/detect_agent_plugins.py` discovers an existing host Claude Code, Codex or Hermes installation, and Compose bind-mounts that installation read-only. Provider credentials/configuration remain separate runtime mounts.
 
-### Rebuilding the ecosystem layer yourself
+### Historical ecosystem-layer reconstruction (not a v0.1.1 path)
 
-`dist/` is not tracked. Before `docker build -f docker/ecosystem/Dockerfile`, place the exact released wheel at `dist/hyperloom/hyperloom_inference_optimizer-1.0.0-py3-none-any.whl` and verify it against `release/SHA256SUMS` (the Dockerfile re-checks the hash and fails closed on mismatch):
-
-```bash
-mkdir -p dist/hyperloom
-gh release download v0.1.0 --repo HawgAuto/HaloLoom \
-  --pattern 'hyperloom_inference_optimizer-1.0.0-py3-none-any.whl' --dir dist/hyperloom
-(cd dist/hyperloom && sha256sum --check --strict ../../release/SHA256SUMS)
-docker build --build-arg BASE_IMAGE=<qualified vllm or sglang golden> \
-  -f docker/ecosystem/Dockerfile -t <tag> .
-```
+`docker/ecosystem/Dockerfile`, the legacy framework Dockerfiles, and `scripts/verify_ecosystem.py` are historical base blueprints. Do not combine the current v0.1.1 wheel with their old source hashes or pins. A fresh clone must use the canonical `./scripts/build_images.sh` path above.
 
 The layer is applied once per framework base. Every build-time gate is fail-closed and recorded in the build log:
 
@@ -102,6 +128,18 @@ The layer is applied once per framework base. Every build-time gate is fail-clos
 - `pip check` must report zero *new* conflicts relative to the golden base (`PIP_CHECK_NO_NEW_CONFLICTS`);
 - component checkouts are owned by UID 1000 and registered as exact git `safe.directory` entries so `verify`/`readiness` work under any `HOST_UID`; the build-time `verify_ecosystem.py` runs after that chown so it exercises the non-owner path;
 - no `claude`, `codex` or `hermes` binary may resolve inside the image.
+
+### UMA vLLM baseline
+
+On Strix Halo, vLLM's default percentage-based allocator can fail its free-memory snapshot assertion when shared host/GTT memory increases during the profile run. This is not an OOM. Use Hyperloom's existing server-argument seam to provide an explicit KV budget, which skips that unstable inference while retaining the model profile:
+
+```bash
+./scripts/haloloom vllm optimize --model <model> --framework vllm \
+  --gpu-type radeon8060s \
+  --server-args "--kv-cache-memory-bytes <bytes> [--enforce-eager]"
+```
+
+The v0.1.1 bounded gate uses 268435456 bytes only for a 512-token, single-request 0.8B canary. Size the budget for the real model, context, and concurrency. Compose also places vLLM, TorchInductor, Triton, and XDG caches under the writable `/workspace` mount and keeps the optional low-bit bridge disabled on normal BF16 routes.
 
 ## Deferred clean core flavor
 

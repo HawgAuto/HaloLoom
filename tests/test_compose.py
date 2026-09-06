@@ -78,7 +78,11 @@ def test_every_gpu_service_pins_one_coherent_rocm_runtime() -> None:
         assert environment["ROCM_PATH"] == "/opt/rocm/core-10.0"
         assert environment["ROCM_HOME"] == "/opt/rocm/core-10.0"
         assert environment["HIP_PATH"] == "/opt/rocm/core-10.0"
-        assert environment["LD_LIBRARY_PATH"] == (
-            "/opt/rocm/core-10.0/lib:/opt/rocm/core-10.0/lib/llvm/lib:/opt/venv/lib"
-        )
+        loader = "/opt/rocm/core-10.0/lib:/opt/rocm/core-10.0/lib/llvm/lib:/opt/venv/lib"
+        if name == "vllm":
+            loader = (
+                "/opt/venv/lib/python3.14/site-packages/_rocm_sdk_core/lib/host-math/lib:"
+                + loader
+            )
+        assert environment["LD_LIBRARY_PATH"] == loader
         assert "HSA_OVERRIDE_GFX_VERSION" not in environment

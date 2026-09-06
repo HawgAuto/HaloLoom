@@ -16,3 +16,7 @@ docker/*/Dockerfile.build-local
 qualification/full-golden-v0.1.0/
 qualification/final-v0.1.0/
 qualification/replay-golden.sh
+# Private qualification workspaces are preserved locally, never shipped.
+qualification/resume-*/
+qualification/release-closeout-*/
+.hermes-tmp.*

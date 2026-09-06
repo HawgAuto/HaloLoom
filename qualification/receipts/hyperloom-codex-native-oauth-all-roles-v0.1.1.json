@@ -1,0 +1,66 @@
+{
+  "branch": "feat/gfx1151-haloloom",
+  "claim_boundary": {
+    "api_key_gateway_default_unchanged": true,
+    "mocks_required": false,
+    "native_oauth_all_openai_side_roles": true,
+    "optimization_win_claimed": false,
+    "production_activation_authority": false
+  },
+  "commit": "712edf5d38fad8cdbebbd254cd9520059490f5b3",
+  "live_native_oauth": {
+    "auth_json_unchanged": true,
+    "live_log_sha256": "c84839c35240675b5db6108c6c44faf6e1faa725b28cb06a444aa00367f0ac79",
+    "provider_variables_present": 0,
+    "roles": {
+      "critic": "real keyless one-shot verdict",
+      "framework_audit_and_breakdown": "sync client shape covered by tests",
+      "framework_specialist": "validated specialist_done envelope",
+      "orchestrator": "validated send_message envelope",
+      "proposal_scorer": "async streaming response",
+      "robustness": "real RCA response"
+    },
+    "status": "PASS"
+  },
+  "parent": "de0e428538b761d84665796a671e27d66f90bb40",
+  "regression": {
+    "base_log_sha256": "5d22b94e700b1ff886262ce49cb8bc2d3ab0d910cfbc2536eafb5db021915f79",
+    "base_summary": "12 failed, 14889 passed, 48 skipped, 1 xfailed, 14 warnings, 15 subtests passed in 851.56s (0:14:11)",
+    "failure_sets_identical": true,
+    "new_failures": [],
+    "preexisting_failure_count": 12,
+    "preexisting_failures": [
+      "src/hyperloom/agents/robustness/tests/test_inference_optimizer_integration.py::test_heartbeat_passes_gate",
+      "src/hyperloom/agents/robustness/tests/test_runtime_cli.py::test_run_tick_emits_heartbeat_envelope",
+      "src/hyperloom/agents/robustness/tests/test_runtime_cli.py::test_subprocess_tick_emits_heartbeat",
+      "src/hyperloom/inference_optimizer/tests/test_external_multi_node.py::test_bookkeeping_carries_over_within_the_same_handoff",
+      "src/hyperloom/inference_optimizer/tests/test_external_multi_node.py::test_kill_inference_invalidates_the_launch_it_terminated",
+      "src/hyperloom/inference_optimizer/tests/test_external_multi_node.py::test_pd_leg_urls_carry_over_within_the_same_handoff",
+      "src/hyperloom/inference_optimizer/tests/test_external_multi_node.py::test_resume_needs_a_cluster_that_still_serves[False-False-True]",
+      "src/hyperloom/inference_optimizer/tests/test_external_multi_node.py::test_resume_needs_a_cluster_that_still_serves[True-False-False]",
+      "src/hyperloom/inference_optimizer/tests/test_packaging_lint.py::test_no_undeclared_assets_under_src",
+      "src/hyperloom/inference_optimizer/tests/test_preflight_serving_framework.py::test_guidance_carries_no_image_tags_or_doc_paths[False]",
+      "src/hyperloom/inference_optimizer/tests/test_preflight_serving_framework.py::test_guidance_carries_no_image_tags_or_doc_paths[True]",
+      "src/hyperloom/inference_optimizer/tests/test_robustness_agent_e2e.py::test_robustness_agent_real_runtime_heartbeat"
+    ],
+    "successor_log_sha256": "a7e41878b4de6a8ad91382125ff097b8a7f8c7f9a6a313ac7ef91608b69a97aa",
+    "successor_summary": "12 failed, 14911 passed, 48 skipped, 1 xfailed, 14 warnings, 15 subtests passed in 839.13s (0:13:59)"
+  },
+  "release": "v0.1.1",
+  "repository": "https://github.com/hstolte11-collab/Hyperloom",
+  "review": {
+    "staged_diff_sha256": "0add81dbcbaae09fc572621cbdf52b2296b5b6e8a911133615fecafc050d00db",
+    "staged_tree": "76a39d34f1c535a1b7bd5969950e698ad3d24290",
+    "verdict": "PASS"
+  },
+  "schema": "haloloom.hyperloom-source-qualification.v1",
+  "status": "PASS",
+  "tree": "76a39d34f1c535a1b7bd5969950e698ad3d24290",
+  "wheel": {
+    "bytes": 5502724,
+    "entries": 980,
+    "name": "hyperloom_inference_optimizer-1.0.0-py3-none-any.whl",
+    "reproducible_two_builds": true,
+    "sha256": "212f721a610943b671ae40ed2356213add4ea9dd7a2c40adc7d1caacfc727e93"
+  }
+}
