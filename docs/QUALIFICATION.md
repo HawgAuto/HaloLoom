@@ -1,10 +1,40 @@
-# Qualification contract
+# Test results and limitations
 
-HaloLoom separates build, import, platform, model-request, route and operational evidence. Passing an earlier gate never implies a later gate.
+This is the detailed verification reference for HaloLoom. For installation and everyday use, start with the [README](../README.md) and [user guide](USAGE.md).
 
-## Current v0.1.1 evidence
+Build success, package imports, model responses, kernel execution, and model quality are different tests. A pass in one does not imply a pass in the others. The original evidence records below retain exact configurations and outcomes, including earlier failed attempts.
 
-`qualification/receipts/release-closeout-v0.1.1.json` is the final-image/runtime/anonymous-registry snapshot. It binds the original vLLM native profile action, the unchanged SGLang/Quark five-request substring canaries, and the four final HIP/Triton toolchain paths. Those model-runtime canaries do not replace the stricter exact-output/custom-route gates below or promote the rejected Quark candidate. `optimizer-internal-close-v0.1.1.json`, `native-profiler-historical-v0.1.1.json`, and `quark-native-evaluation-v0.1.1.json` preserve separate historical successes and limits. Source/tag and fresh-install verification occur after this runtime snapshot.
+## v0.1.1 summary
+
+| Area | Recorded result | What it establishes |
+|---|---|---|
+| Public installation | Anonymous clone, release-asset checksums, and installation of four public image identities passed. | A new checkout works on a Docker/Compose-equipped Strix Halo host with an existing Codex CLI. Docker/driver bootstrap was not tested. |
+| Test suite | 123 tests passed for the released source and fresh clone. | The release's scoped CPU test suite passed; this is not a model-quality benchmark. |
+| Public rebuild | The standard build helper completed using the public archive and pinned bases. | Rebuilt source, installed Python, and native-file hashes matched; OCI metadata/image identities need not be identical. |
+| vLLM API | A cached Qwen3.5-0.8B request returned `PARIS`. | Real text-only API delivery with the bounded configuration below, not arbitrary-model or multimodal coverage. |
+| vLLM profiling | 16 requests completed at capture delay/max 128/128; 128,912 GPU kernels and 193,713 HIP runtime events were captured. | Native profiling worked in the final release image with its supplied defaults. |
+| SGLang and Quark serving | Each completed five model requests. | The existing city-substring response checks passed; they are not exact-format or quality benchmarks. |
+| Build tools | Four final HIP/Triton toolchain paths passed checks without GPU devices. | Compiler/native-loader availability, not a claim that every kernel works or improves performance. |
+
+### Published-source and installation checks
+
+These checks used the original release source at [commit `353ae77b2d733fb7292abb771d11ca5e6a44ba10`](https://github.com/HawgAuto/HaloLoom/tree/353ae77b2d733fb7292abb771d11ca5e6a44ba10). All 94 tracked files matched the reviewed tree. Documentation on `main` may change independently; the tag, images, and original evidence remain unchanged by this documentation update.
+
+All three release assets were downloaded anonymously and matched their SHA-256 values. `scripts/install.sh --agent codex --include-aiter` pulled all four images with an empty registry credential store. The host already had Docker/Compose and Codex; no host packages or new Python environment were installed.
+
+The default `scripts/build_images.sh` completed from the public release archive and pinned bases. All three rebuilt runtimes matched the published images' embedded source, installed Python, and native-file hashes. AITER retained its digest. Build/provenance metadata can change OCI identities; this is not a bit-identical image-index claim. The API check used the **published vLLM image**, not a newly served instance of the rebuilt image.
+
+The unmodified `scripts/serve.py` served cached Qwen3.5-0.8B revision `2fc06364715b967f1860aea9cf38778875588b17`. The response was `PARIS`, with 31 prompt and 3 completion tokens. Model settings were a 512-token context, one sequence, fixed `--kv-cache-memory-bytes 268435456`, `--language-model-only`, BF16, eager loading/execution, and Triton attention. Local Compose overrides restricted the test to loopback, read-only model data, no credential mounts, and bounded container resources; these restrictions are not all defaults in the public Compose file.
+
+The automatic UMA sizing attempt hit a free-memory-change guard. The fixed-KV success does not establish broad automatic-sizing or multimodal support. Full optimizer/PTQ work was not repeated from the anonymous checkout, and no candidate was promoted. Cleanup removed the test container and released the GPU lock; existing production processes, model registry, and service health were preserved.
+
+The original installation/rebuild/API verification receipt has SHA-256 `a8be442bb253b52052c53f56b26be19fce5cba853c58a49634dca2670a3066cf`. This section retains the verification details previously included in the public release notes; the original receipt and historical runtime records were not rewritten.
+
+### Original runtime and optimizer records
+
+The [final runtime record](../qualification/receipts/release-closeout-v0.1.1.json) binds the vLLM profile, SGLang/Quark request checks, final toolchain checks, and anonymous image-registry readback. It was recorded before the source publication and installation checks above.
+
+Separate historical records cover the [completed optimizer run](../qualification/receipts/optimizer-internal-close-v0.1.1.json), [earlier native-profiler test](../qualification/receipts/native-profiler-historical-v0.1.1.json), and [Quark evaluation](../qualification/receipts/quark-native-evaluation-v0.1.1.json). The optimizer's actual internal `CLOSE` remains valid and was not rerun. Its disabled evaluation/knowledge-base options and skipped GEAK native-budget work describe that specific run, not universal feature coverage. Successful serving does not change the Quark candidate's recorded quality rejection. No quality or performance improvement is inferred from these runtime checks.
 
 ## Release gates
 

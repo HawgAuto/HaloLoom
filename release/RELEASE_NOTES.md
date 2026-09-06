@@ -1,42 +1,67 @@
 # HaloLoom v0.1.1
 
-Turnkey ROCm 10 / AMD Radeon 8060S (`gfx1151`) distribution of the faithful Hyperloom port.
+**A container-based toolkit for running and improving LLM inference on AMD Strix Halo.**
 
-This is the immutable turnkey successor to the initial `v0.1.0` publication. It adds the missing friend-facing `inference_optimizer optimize` board/runner closure: Hyperloom now accepts and auto-detects `radeon8060s` (`gfx1151`, 40 CUs), and Magpie maps `gfx1151` to its existing `vllm_radeon8060s.sh` / `sglang_radeon8060s.sh` runners. Every OpenAI-side LLM role — Orchestrator, critic review, robustness RCA, framework specialist, proposal scorer and framework audit — also gains Codex `native_oauth`, mirroring upstream's own Claude-subscription transport (`claude_oneshot`) and KernelForge's already-shipped Codex mode, so ChatGPT-subscription users run the full role set from their host `codex login` with no API key, proxy, or mocks. It also makes the Python 3.14 Ray override explicit at runtime, bounds/retries public source fetches, and forwards upstream orchestration credentials by variable name only.
+HaloLoom brings Hyperloom, vLLM, SGLang, AMD Quark, and GPU profiling tools together in a pinned ROCm 10 environment for the Radeon 8060S (`gfx1151`). It is designed for users who want to serve models, quantize them, or explore agent-assisted optimization without assembling the underlying Python and GPU toolchains on the host.
 
-## Included
+[Quickstart](https://github.com/HawgAuto/HaloLoom#quickstart) · [User guide](https://github.com/HawgAuto/HaloLoom/blob/main/docs/USAGE.md) · [Build guide](https://github.com/HawgAuto/HaloLoom/blob/main/docs/BUILD.md) · [Test results](https://github.com/HawgAuto/HaloLoom/blob/main/docs/QUALIFICATION.md)
 
-- reviewed Hyperloom commit `b91cab3433002fa8381108dd5ea7cb3633b6955e`, tree `67a82a90bf85e54104da833565627354351ebc85`, and wheel `hyperloom_inference_optimizer-1.0.0-py3-none-any.whl` (`sha256:a0229171738133afbdffc91502006e9e872787d5350e7d438c3103064b058d23`)
-- full vLLM and SGLang serving workbench images
-- faithful Quark agent image
-- optional AITER tools/JIT image
-- installed pinned Magpie, IntelliKit Metrix, TraceLens, GEAK, InferenceX and built-in KernelForge
-- Compose, preflight, source-sync, serving and quantization launchers
-- automatic read-only plug-in for an existing host Claude Code, Codex or Hermes CLI; no agent CLI is bundled
-- Codex subscription auth is copied from the read-only host mount into container-ephemeral `/tmp` mode 0600; the host login is never modified and the copy disappears with `docker compose run --rm`
+## What's included
 
-Exact public image references and registry digests are in `manifests/components.json`.
+- **vLLM and SGLang images** for OpenAI-compatible model serving and Hyperloom optimization.
+- **AMD Quark** for agent-assisted model quantization.
+- **KernelForge and GEAK** for generating, compiling, and testing kernel candidates.
+- **Magpie, InferenceX, TraceLens, and IntelliKit Metrix** for benchmarks, accuracy checks, and GPU profiling.
+- **Optional AITER tools** for selected kernel-development tasks.
+- Install, verification, serving, quantization, source-fetch, and rebuild helpers.
+- Integration with an existing **Claude Code, Codex, or Hermes CLI**. Agent executables are not bundled in the images.
 
-Release assets are exactly `SHA256SUMS`, the current Hyperloom wheel, and `haloloom-v0.1.1-build-inputs.tar.gz` (54,043,592 bytes; SHA-256 `1829b58ae16459660e36e091f379131da7983f8d044a7f5fb6a48202d56a6ae5`). The supported fresh-clone rebuild is `./scripts/build_images.sh`, which uses one safe source-current recipe with targets `vllm`, `sglang`, and `quark`; AITER is digest-pinned and tagged without overlay.
+## What's new in v0.1.1
 
-Final source-current image IDs and anonymous OCI readbacks are in `manifests/components.json` and `qualification/receipts/release-closeout-v0.1.1.json`. All three final runtimes completed their physical gate with clean containment and unchanged production. The final vLLM image completed 16/16 requests at capture delay/max 128/128 with 128,912 GPU kernels and 193,713 HIP runtime events, using the baked native-profiler defaults. SGLang and Quark each passed the frozen five-request substring canary; this is not new exact-format or quality qualification. The release code suite passes 123 tests. Existing `*-final-v0.1.1.json` files remain historical lineage. The runtime receipt deliberately does not claim the later source/tag publication or anonymous installation checks.
+- Native Radeon 8060S detection and the corresponding vLLM/SGLang benchmark runners in the optimizer.
+- Codex/ChatGPT subscription login support across the OpenAI-side optimizer roles, alongside the existing API-key and Claude subscription paths.
+- Working vLLM native GPU profiling with the required library settings included in the image and Compose configuration.
+- Updated SGLang 0.5.19 development sources and writable runtime/JIT cache settings for non-root operation.
+- A public, checksum-verified rebuild workflow using pinned base images and a downloadable build-input archive.
 
-## Low-bit package
+Exact component commits and image references are listed in the [release manifest](https://github.com/HawgAuto/HaloLoom/blob/v0.1.1/manifests/components.json).
 
-The six-route HIP module and framework adapters are independently owned and released at:
+## Get started
 
-https://github.com/HawgAuto/Strix-Halo-Lowbit-Kernel-Pack/releases/tag/v0.1.0
+The host needs Linux with a working AMD GPU driver, Docker with Compose v2, Git, Python 3, access to the `video`/`render` groups, and an installed supported agent CLI. Model capacity depends on available RAM and the requested context and concurrency.
 
-- All six routes pass direct physical qualification. W4A8 additionally has vLLM and SGLang request/dispatch qualification on the v0.1.0 image lineage; v0.1.1 separately proves BF16 serving and the bounded optimizer gate. No low-bit performance win is claimed.
+```bash
+git clone https://github.com/HawgAuto/HaloLoom.git
+cd HaloLoom
+unset HSA_OVERRIDE_GFX_VERSION
+./scripts/install.sh
+./scripts/haloloom vllm verify
+```
 
-## Boundaries
+The installer pulls the vLLM, SGLang, and Quark images. Add `--include-aiter` for the optional tools image or `--agent codex` to choose a CLI explicitly. It does not install Docker, the kernel driver, an agent CLI, or host Python packages.
 
-- Native `gfx1151` is required; do not set `HSA_OVERRIDE_GFX_VERSION`.
-- SGLang is pinned at `0.5.19.dev0` commit `90c62e027831111934a33b9bcc4e533ff61d8526`; it uses default Triton attention with CUDA graphs disabled. The reviewed TraceLens 0.5.19 patch is strict/idempotent CPU payload only; graph-shape discovery, graph capture/replay and EAGLE runtime are not qualified.
-- AITER core, gemm-common and RMSNorm canaries pass; AITER greedy sampling and AITER attention are unavailable.
-- The prior Quark INT8 PTQ candidate was quality-rejected: bundled-source evaluation scored 4/16 versus 3/16 for quantized output, a 25% relative gap above the 3% limit. No quality or performance win is claimed.
-- Clean low-bit-free framework wheels are provenance-bound but are not v0.1 images because they have not passed separate physical serving.
-- Nothing is promoted into an existing production service automatically.
-- Codex `native_oauth` adds a transport behind upstream's existing client seam; no role's prompts, contracts, gates or default (API-key) behaviour changes. Nothing is replaced with a mock.
-- Optimizer attempt3 remains an actual `CLOSE`; it was not rerun. Evaluation/knowledge-base disabling and skipped GEAK native-budget work describe that attempt, not universal feature readiness.
-- Historical original `ProfileExecutor` evidence is 16/16 requests, capture delay/max 128/128, 128,912 kernel events, 193,711 HIP runtime events, raw-trace SHA-256 `8614dc57f75a7ce0280fd3167c8862914cc7767c500d019c809d002e797d19e6`. The separate 997-kernel/1,169-HIP-event tiny-worker run is not the original profile.
+Follow the [quickstart](https://github.com/HawgAuto/HaloLoom#quickstart) to start a small model and send an API request. The full optimizer also needs supported orchestration credentials; a Hermes CLI alone does not provide them. See [authentication](https://github.com/HawgAuto/HaloLoom/blob/main/docs/USAGE.md#authentication).
+
+## Downloads and rebuilding
+
+Most users should install the published container images rather than assemble the release files manually. The attached assets are:
+
+- `hyperloom_inference_optimizer-1.0.0-py3-none-any.whl` — the pinned Hyperloom package used by the images; not a standalone installation of the full stack.
+- `haloloom-v0.1.1-build-inputs.tar.gz` — the source and overlay inputs used by the public rebuild workflow.
+- `SHA256SUMS` — checksums for the wheel and archive.
+
+To rebuild, use `./scripts/build_images.sh` as described in the [build guide](https://github.com/HawgAuto/HaloLoom/blob/main/docs/BUILD.md). Framework builds use the pinned public bases; AITER is reused at its recorded digest.
+
+## Tested behavior and current limits
+
+Release checks covered an anonymous clone and image installation, 123 passing tests, a public rebuild, and a real API response from the released vLLM image. Native vLLM profiling and SGLang/Quark model requests were also exercised. Detailed configurations, results, and original evidence records are in [Test results and limitations](https://github.com/HawgAuto/HaloLoom/blob/main/docs/QUALIFICATION.md).
+
+Before use:
+
+- Keep native `gfx1151` detection; do not set `HSA_OVERRIDE_GFX_VERSION`.
+- Use a fixed vLLM KV-cache budget if shared-memory changes trip automatic sizing. The published small-model API check was text-only, not broad multimodal coverage.
+- Keep SGLang's supplied Triton attention configuration with CUDA graphs disabled. Graph discovery, capture/replay, and EAGLE operation are outside current test coverage.
+- AITER attention and sampling are unavailable. Optional [low-bit kernels](https://github.com/HawgAuto/Strix-Halo-Lowbit-Kernel-Pack) have separate, model/framework-specific coverage.
+- The default server port is published on host interfaces without API authentication. Restrict access, trust your model sources, and read the [security policy](https://github.com/HawgAuto/HaloLoom/blob/main/SECURITY.md).
+
+Quantization and optimization results must be evaluated for your workload; no general quality or speed improvement is promised. HaloLoom does not automatically change existing inference services or apply optimizer results.

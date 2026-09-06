@@ -1,8 +1,14 @@
 # Building HaloLoom
 
-## Canonical public-base rebuild (v0.1.1)
+## Use released images unless you need a rebuild
 
-The supported rebuild entrypoint is:
+For normal use, run `./scripts/install.sh` from the repository root and follow the [quickstart](../README.md#quickstart). The installer pulls the released images; you do not need to compile ROCm, vLLM, SGLang, or Quark on the host.
+
+This guide is for users who want to reproduce the images, inspect their pinned sources, or understand the build configuration. It requires Docker, network access to the public bases and release assets, and enough local storage for those images and the build cache. It does not install host Python packages or alter existing inference services.
+
+## Rebuild from public inputs (v0.1.1)
+
+From a fresh checkout, run:
 
 ```bash
 ./scripts/build_images.sh
@@ -19,10 +25,6 @@ docker build --network none --target <vllm|sglang|quark> \
 ```
 
 The AITER tools row is only tagged from its pulled digest-pinned base. `docker/source-current/Dockerfile.dockerignore` is the explicit safe context; the downloaded tar is retained under `dist/source-current/` for provenance but is not copied into an image. The workflow changes no other production tags and performs no Docker cleanup. Any missing or malformed manifest, unsafe archive, digest mismatch, failed download, or failed Docker command stops the build. `docker/source-current/Dockerfile`, its dockerignore, and the immutable manifest values are release inputs; do not substitute the historical local recipes below.
-
-## Normal users
-
-Normal users pull the released images with `scripts/install.sh`. They do not rebuild ROCm, vLLM, SGLang or Quark.
 
 ## Source pins
 
