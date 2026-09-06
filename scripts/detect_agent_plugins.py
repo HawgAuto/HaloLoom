@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import platform
 import re
 import shlex
 import shutil
@@ -32,7 +33,108 @@ def _find_executable(name: str, path_env: str) -> Path | None:
     return path.resolve()
 
 
+def _codex_bundle(root: Path, executable: Path) -> dict[str, object]:
+    """Validate the native package layout without executing package code."""
+    try:
+        metadata = json.loads((root / "codex-package.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise RuntimeError(f"cannot read Codex bundle metadata: {root}") from exc
+    if not isinstance(metadata, dict) or metadata.get("layoutVersion") != 1:
+        raise RuntimeError(f"unsupported Codex bundle layout: {root}")
+    for field in ("entrypoint", "resourcesDir", "pathDir"):
+        value = metadata.get(field)
+        if not isinstance(value, str) or not value or Path(value).is_absolute():
+            raise RuntimeError(f"invalid Codex bundle {field}: {root}")
+        relative = Path(value)
+        target = (root / relative).resolve()
+        if ".." in relative.parts or not target.is_relative_to(root.resolve()):
+            raise RuntimeError(f"Codex bundle {field} escapes its runtime root: {root}")
+        if field == "entrypoint":
+            if (
+                target != executable.resolve()
+                or not target.is_file()
+                or not os.access(target, os.X_OK)
+            ):
+                raise RuntimeError(
+                    f"Codex bundle entrypoint does not match selected executable: {root}"
+                )
+        elif not target.is_dir():
+            raise RuntimeError(f"Codex bundle {field} is missing: {root}")
+    helper = root / "bin" / "codex-code-mode-host"
+    if not helper.is_file() or not os.access(helper, os.X_OK):
+        raise RuntimeError(
+            f"Codex bundle helper codex-code-mode-host is missing: {root}"
+        )
+    return metadata
+
+
+def _codex_native_executable(executable: Path) -> Path:
+    """Resolve a modern npm launcher's exact native package, including hoisted deps.
+
+    The vendor metadata is the mount boundary. Selecting its native executable
+    avoids binding only codex.js while omitting a sibling platform package, and
+    keeps Code Mode helpers and resources beside the executable inside Docker.
+    Legacy/self-contained launchers retain their existing plug-in behavior.
+    """
+    if executable.suffix != ".js" or executable.parent.name != "bin":
+        return executable
+    wrapper = executable.parent.parent
+    package_file = wrapper / "package.json"
+    if not package_file.is_file():
+        return executable
+    try:
+        package = json.loads(package_file.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise RuntimeError(
+            f"cannot read Codex npm package metadata: {wrapper}"
+        ) from exc
+    if not isinstance(package, dict) or package.get("name") != "@openai/codex":
+        return executable
+    machine = platform.machine().lower()
+    targets = {
+        ("Linux", "x86_64"): ("x86_64-unknown-linux-musl", "linux-x64"),
+        ("Linux", "aarch64"): ("aarch64-unknown-linux-musl", "linux-arm64"),
+    }
+    target = targets.get((platform.system(), machine))
+    if target is None:
+        return executable
+    triple, suffix = target
+    dependency = "@openai/codex-" + suffix
+    dependencies = package.get("optionalDependencies", {})
+    if not isinstance(dependencies, dict) or dependency not in dependencies:
+        return executable
+    # Match Node's upward node_modules search, including nested and hoisted npm
+    # dependencies. Resolve symlinks for pnpm stores before choosing the mount.
+    roots = [
+        parent / "node_modules" / dependency / "vendor" / triple
+        for parent in (wrapper, *wrapper.parents)
+        if parent.name != "node_modules"
+    ]
+    roots.append(wrapper / "vendor" / triple)
+    for candidate in roots:
+        root = candidate.resolve()
+        if not (root / "codex-package.json").is_file():
+            continue
+        binary = root / "bin" / "codex"
+        metadata = _codex_bundle(root, binary)
+        if (
+            metadata.get("version") != package.get("version")
+            or metadata.get("target") != triple
+        ):
+            raise RuntimeError(f"Codex npm/native bundle identity mismatch: {root}")
+        return binary
+    # Modern npm distributions that advertise a platform package are unusable
+    # unless that exact native dependency is present. Falling back to codex.js
+    # would mount only the wrapper and omit sibling helpers/resources.
+    raise RuntimeError(f"native Codex bundle not found for {dependency}: {wrapper}")
+
+
 def _codex_root(executable: Path) -> Path:
+    if executable.parent.name == "bin":
+        root = executable.parent.parent
+        if (root / "codex-package.json").is_file():
+            _codex_bundle(root, executable)
+            return root
     if executable.suffix == ".js" and executable.parent.name == "bin":
         return executable.parent.parent
     return executable.parent
@@ -82,6 +184,17 @@ def detect_plugins(
 
     claude = found["claude"] if selected == "claude" else None
     codex = found["codex"] if selected == "codex" else None
+    if codex is not None:
+        codex = _codex_native_executable(codex)
+    codex_root = _codex_root(codex) if codex else empty_root / "codex"
+    if codex is not None and codex_root.resolve() in {
+        home.resolve(),
+        home.resolve().parent,
+        Path("/"),
+    }:
+        raise RuntimeError(
+            "Codex needs a dedicated installation directory; refusing to mount an entire home or filesystem root"
+        )
     hermes = found["hermes"] if selected == "hermes" else None
     config_dirs = {
         "CLAUDE_HOME_HOST": (
@@ -104,9 +217,7 @@ def detect_plugins(
         "HALOLOOM_CLAUDE_BIN_HOST": str(
             claude if claude else empty_root / "claude" / "missing"
         ),
-        "HALOLOOM_CODEX_ROOT_HOST": str(
-            _codex_root(codex) if codex else empty_root / "codex"
-        ),
+        "HALOLOOM_CODEX_ROOT_HOST": str(codex_root),
         "HALOLOOM_CODEX_BIN_HOST": str(
             codex if codex else empty_root / "codex" / "missing"
         ),
@@ -147,9 +258,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--env-file", type=Path, required=True)
     parser.add_argument("--state-dir", type=Path, required=True)
-    parser.add_argument(
-        "--agent", choices=("auto", *_AGENT_ORDER), default="auto"
-    )
+    parser.add_argument("--agent", choices=("auto", *_AGENT_ORDER), default="auto")
     args = parser.parse_args()
     result = detect_plugins(
         path_env=os.environ.get("PATH", ""),

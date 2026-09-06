@@ -27,7 +27,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
        build-essential ca-certificates cmake curl git jq libdwarf-dev libelf-dev \
-       libhwloc-dev libnuma-dev libzstd-dev moreutils ninja-build nodejs patch \
+       libhwloc-dev libnuma-dev libzstd-dev moreutils ninja-build nodejs npm patch \
        pkg-config python3-dev python3-venv \
     && rm -rf /var/lib/apt/lists/*
 
@@ -97,6 +97,7 @@ RUN set -euo pipefail; \
     /opt/venv/bin/python3 -m pip install --no-deps -e /opt/haloloom/components/TraceLens; \
     GEAK_SKIP_BOOTSTRAP=1 GEAK_HOME=/opt/haloloom/components/GEAK \
       /opt/venv/bin/python3 -m pip install -e /opt/haloloom/components/GEAK; \
+    npm --prefix /opt/haloloom/components/GEAK/geak/workflow_runtime/node ci --ignore-scripts; \
     MAGPIE_PATH=/opt/haloloom/components/Magpie \
       INFERENCEX_PATH=/opt/haloloom/components/InferenceX \
       /opt/venv/bin/python3 /opt/haloloom/magpie_patch_gate.py /opt/haloloom/components/Magpie /opt/haloloom/components/InferenceX; \

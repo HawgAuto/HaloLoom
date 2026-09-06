@@ -17,17 +17,24 @@ case "$agent" in
     ;;
   codex)
     agent_bin="${HALOLOOM_CODEX_BIN_HOST:-}"
+    export INFERENCE_OPTIMIZER_CODEX_BIN="${INFERENCE_OPTIMIZER_CODEX_BIN:-$agent_bin}"
+    if [[ -n "${INFERENCE_OPTIMIZER_CODEX_HOME:-}" ]]; then
+      export GEAK_CODEX_HOME="$INFERENCE_OPTIMIZER_CODEX_HOME"
+    fi
     if [[ ! -f /.dockerenv && ! -f /run/.containerenv ]]; then
       echo "Quark's Codex plug-in requires the outer container sandbox." >&2
       exit 1
     fi
     export HYPERLOOM_CODEX_EXTERNAL_SANDBOX=1
     export HYPERLOOM_CODEX_SANDBOX_MODE=bypass
+    export GEAK_CODEX_EXTERNAL_SANDBOX=1
     if [[ -f "${CODEX_HOME:-}/auth.json" && -z "${OPENAI_API_KEY:-}${OPENAI_BASE_URL:-}" ]]; then
       native_home=$(mktemp -d /tmp/haloloom-quark-codex-home.XXXXXX)
       install -m 0600 "$CODEX_HOME/auth.json" "$native_home/auth.json"
       export CODEX_HOME="$native_home"
       export HYPERLOOM_CODEX_HOME="$CODEX_HOME"
+      export INFERENCE_OPTIMIZER_CODEX_HOME="$native_home"
+      export GEAK_CODEX_HOME="$native_home"
     fi
     ;;
   hermes)

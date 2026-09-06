@@ -26,6 +26,8 @@ docker build --network none --target <vllm|sglang|quark> \
 
 The AITER tools row is only tagged from its pulled digest-pinned base. `docker/source-current/Dockerfile.dockerignore` is the explicit safe context; the downloaded tar is retained under `dist/source-current/` for provenance but is not copied into an image. The workflow changes no other production tags and performs no Docker cleanup. Any missing or malformed manifest, unsafe archive, digest mismatch, failed download, or failed Docker command stops the build. `docker/source-current/Dockerfile`, its dockerignore, and the immutable manifest values are release inputs; do not substitute the historical local recipes below.
 
+The new GEAK Codex workflow integration is source-only and is not included in the immutable v0.1.1 release inputs or shipped images. Making it available in images requires a successor source-bound public input packet with a locked Node dependency closure and verification of rebuilt images. Source integration authorization does not authorize release or image publication.
+
 ## Source pins
 
 `manifests/components.json` is authoritative. Public source checkouts can be materialized with:

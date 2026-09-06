@@ -64,6 +64,7 @@ case "$agent" in
     ;;
   codex)
     agent_bin="${HALOLOOM_CODEX_BIN_HOST:-}"
+    export INFERENCE_OPTIMIZER_CODEX_BIN="${INFERENCE_OPTIMIZER_CODEX_BIN:-$agent_bin}"
     export GEAK_CODEX_BIN="$agent_bin"
     # Subscription users: the host `codex login` is mounted read-only at
     # $CODEX_HOME. When it exists and the operator set no API key/gateway URL,
@@ -77,6 +78,7 @@ case "$agent" in
       install -m 0600 "$CODEX_HOME/auth.json" "$native_home/auth.json"
       export INFERENCE_OPTIMIZER_CODEX_AUTH_MODE=native_oauth
       export INFERENCE_OPTIMIZER_CODEX_HOME="$native_home"
+      export GEAK_CODEX_HOME="$native_home"
       # The workbench container is the sandbox boundary. It intentionally does
       # not ship bubblewrap, so nested Codex sandboxing must be bypassed rather
       # than retried forever. No writable-root broadening happens here; each
