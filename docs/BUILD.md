@@ -28,6 +28,60 @@ The AITER tools row is only tagged from its pulled digest-pinned base. `docker/s
 
 The new GEAK Codex workflow integration is source-only and is not included in the immutable v0.1.1 release inputs or shipped images. Making it available in images requires a successor source-bound public input packet with a locked Node dependency closure and verification of rebuilt images. Source integration authorization does not authorize release or image publication.
 
+## Build a local qualification candidate (schema 2)
+
+An operator-prepared candidate uses the same entrypoint, Dockerfile, and framework targets:
+
+```bash
+./scripts/build_images.sh \
+  --archive /absolute/path/candidate-inputs.tar.gz \
+  --manifest /absolute/path/candidate.json
+```
+
+Schema 2 requires exactly these fields:
+
+- `schema_version`: the integer `2`.
+- `version`: `candidate-` followed by an alphanumeric character and then only alphanumeric characters, dots, or hyphens. Release names such as `v0.1.1` are rejected.
+- `overlay_archive`: exactly `filename` and `sha256`, with no URL. The filename starts with an alphanumeric character, contains only alphanumeric characters, dots, underscores, or hyphens, and ends in `.tar.gz` or `.tgz`. SHA-256 is 64 lowercase hexadecimal characters.
+- `sources`: exactly `GEAK`, `Hyperloom`, and `HaloLoom`; each contains exactly `ref` and `tree`, both full lowercase 40-character Git hashes.
+- `images`: the same exactly four rows and validation as schema 1, including digest-pinned public GHCR bases, unique explicit local tags, and the three overlay rows plus the AITER no-overlay row.
+
+`--archive` is required only for schema 2 and is rejected for schema 1. Its absolute path must identify a regular nonsymlink file with the manifest's exact basename. The builder copies it into fresh private temporary staging, limits compressed bytes to the size cap, verifies SHA-256, and uses the existing safe extraction and unpacked size cap. The default cap is 1 GiB; `--max-unpacked-bytes` controls both caps for candidates. No archive download or URL fallback occurs.
+
+The archive must contain a root-level `candidate-sources.json` whose parsed object equals the manifest's `sources` exactly. Duplicate JSON keys in either manifest are rejected. Source mismatch or malformed/unsafe archive inputs fail before any Docker invocation. These pins bind the packet's declared provenance; the parent must prepare the actual offline installer, source payloads, wheels, and locked dependency closures from exact public revisions and independently verify the resulting runtime. The builder does not provision missing dependencies.
+
+Before publishing the prepared stage or pulling/building/tagging images, the builder inspects every destination tag. An existing tag refuses the operation; only Docker's explicit image-not-found response counts as absence. Daemon, authorization, and ambiguous errors fail closed. Use globally unique tags and ensure no concurrent writer claims them: this preflight is not an atomic Docker tag reservation. An existing `dist/source-current/` is still refused, and no cleanup or replacement is performed automatically.
+
+After preflight, the builder pulls the exact public digest bases and builds the same three targets with `--network none`. Schema 2 adds build labels `haloloom.hyperloom_ref`, `haloloom.geak_ref`, and `haloloom.haloloom_ref` from the corresponding source refs, `haloloom.candidate_id` from `version`, and `haloloom.promotion_authority=false`. These override inherited historical values without changing the immutable recipe. The AITER no-overlay row is only retagged from its base: it receives no candidate integration/source labels and cannot claim that integration or those source identities.
+
+A completed candidate build is a local qualification input, not GPU qualification, release authorization, or permission to publish images or release assets. Schema 1 and its public v0.1.1 inputs remain unchanged.
+
+## Build from public successor inputs (schema 3)
+
+Schema 3 supports an explicitly supplied, source-bound public successor packet:
+
+```bash
+./scripts/build_images.sh --manifest /absolute/path/public-successor.json
+```
+
+This describes builder support, not an available or qualified successor release. The default manifest and consumer pins remain the immutable schema 1/v0.1.1 inputs. No successor archive URL, hash, source pin, or image publication is supplied by this change.
+
+The manifest contains exactly `schema_version`, `version`, `overlay_archive`, `sources`, and `images`:
+
+- `schema_version` is the integer `3`; booleans, floats, and strings are rejected for all schema versions.
+- `version` is an explicit `vX.Y.Z` or `vX.Y.Z-rcN`. Each numeric component is a nonnegative decimal integer without leading zeros (except zero itself). Exact `v0.1.1`, `candidate-*`, build metadata, other prerelease forms, and malformed values are rejected.
+- `overlay_archive` contains exactly `url`, `filename`, and `sha256`. The URL is credential-free HTTPS without query or fragment and its path basename matches `filename`. The filename starts with an ASCII alphanumeric character, uses only ASCII alphanumerics, dots, underscores, or hyphens, and ends in `.tar.gz` or `.tgz`. SHA-256 is exactly 64 lowercase hexadecimal characters.
+- `sources` has the exact schema 2 shape: `GEAK`, `Hyperloom`, and `HaloLoom`, each with exactly `ref` and `tree`, both full lowercase 40-character Git hashes.
+- `images` has the same exact four rows, digest-pinned GHCR bases, unique explicit tags, and overlay booleans as schemas 1 and 2. No additional image fields are required.
+
+`--archive` is rejected for both public schemas (1 and 3); it remains required only for schema 2. Schema 3 uses the existing HTTPS downloader with its timeout and redirect checks. The default compressed and unpacked limits are each 1 GiB; `--max-unpacked-bytes` controls both limits for schema 3. There is no mutable-base or local-archive fallback. Duplicate JSON keys, digest mismatch, unsafe extraction, or missing/malformed/mismatched root `candidate-sources.json` fail before **any** Docker action. That JSON object must equal the manifest's `sources` exactly, as in schema 2.
+
+After those gates, schema 3 uses the same fail-closed absence preflight for all four destination tags as schema 2, before committing the stage or pulling/building/tagging. An inspect error is accepted only when it is the exact supported image-not-found response for that tag. This does not reserve tags against concurrent writers. Existing staging paths are refused.
+
+The same Dockerfile and three framework targets build with `--network none` and the exact schema 2 labels: `haloloom.hyperloom_ref`, `haloloom.geak_ref`, `haloloom.haloloom_ref`, `haloloom.candidate_id` (the release `version` for compatibility), and `haloloom.promotion_authority=false`. The AITER row remains a retag of its pinned base, without new source or integration labels. Successful execution prints `HALOLOOM_PUBLIC_BUILD_COMPLETE`; it performs no push and establishes no qualification or promotion authority.
+
+The parent must still complete actual GEAK qualification, prepare and verify the exact offline payload and source/dependency closure, assign the real archive hash and public pins, rebuild and verify runtime identities and physical serving, and complete the authorized publication stages. Updating default consumer inputs follows those gates; this builder change alone does not claim that current or latest images exist or pass.
+
 ## Source pins
 
 `manifests/components.json` is authoritative. Public source checkouts can be materialized with:
