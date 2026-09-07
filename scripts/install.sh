@@ -75,6 +75,14 @@ python3 scripts/detect_agent_plugins.py \
 # shellcheck disable=SC1091
 source .env
 mkdir -p artifacts workspace components .haloloom-agent-plugins
+# Docker creates missing bind sources as root. Prepare the HF cache as the
+# installing/runtime user, including Xet's independent default under HF_HOME.
+for cache_dir in "$HF_HOME" "$HF_HOME/hub" "$HF_HOME/datasets" "$HF_HOME/xet"; do
+  if ! mkdir -p "$cache_dir" || [[ ! -w "$cache_dir" || ! -x "$cache_dir" ]]; then
+    printf 'ERROR: Hugging Face cache is not writable by the runtime user: %s\n' "$cache_dir" >&2
+    exit 1
+  fi
+done
 chmod 0755 scripts/haloloom
 
 if [[ "$SYNC_SOURCES" == 1 ]]; then
