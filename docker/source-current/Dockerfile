@@ -15,6 +15,8 @@ RUN if [ -x /opt/haloloom-agent/bin/python3 ]; then \
 RUN /opt/venv/bin/python3 -c 'import os,importlib.metadata as m; installed={d.metadata["Name"].lower().replace("_","-"):d for d in m.distributions()}; roots=[installed[name].locate_file(name) for name in ("vllm","sglang") if name in installed]; [os.chown(directory,1000,1000) for root in roots for directory,_,_ in os.walk(root)]'
 COPY dist/source-current/hyperloom_inference_optimizer-1.0.0-py3-none-any.whl /opt/haloloom/wheels/hyperloom_inference_optimizer-1.0.0-py3-none-any.whl
 COPY dist/source-current/verify_ecosystem.py /opt/haloloom/verify_ecosystem.py
+# The source-bound archive carries the current CLI-selection entrypoint too.
+COPY --chmod=0755 dist/source-current/workbench-entrypoint /opt/haloloom/workbench-entrypoint
 LABEL haloloom.hyperloom_ref="b91cab3433002fa8381108dd5ea7cb3633b6955e" \
       haloloom.vllm_source_ref="861cd9d993a7c92728db6d73cb0b62fa0df7c8a0" \
       haloloom.sglang_source_ref="90c62e027831111934a33b9bcc4e533ff61d8526" \
