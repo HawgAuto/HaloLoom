@@ -3,6 +3,9 @@ FROM ${BASE_IMAGE} AS source-current
 USER root
 COPY --chown=1000:1000 dist/source-current/ /opt/haloloom/source-current/
 RUN /opt/venv/bin/python3 /opt/haloloom/source-current/apply-and-verify.py
+# Keep native evaluation tasks compatible with namespace-qualified HF URIs.
+COPY dist/source-current/qualify_eval_task_namespaces.py /opt/haloloom/qualify_eval_task_namespaces.py
+RUN /opt/venv/bin/python3 /opt/haloloom/qualify_eval_task_namespaces.py --report /opt/haloloom/lm-eval-task-namespaces.json
 # The bundled Quark agent has a separate supported Python runtime.
 # Update its Hyperloom wheel too; leave its Quark/Torch runtime untouched.
 RUN if [ -x /opt/haloloom-agent/bin/python3 ]; then \
