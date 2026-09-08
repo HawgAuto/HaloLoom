@@ -5,6 +5,9 @@ ENV HYPERLOOM_GFX1151_LOWBIT_BRIDGE=0
 USER root
 COPY --chown=1000:1000 dist/source-current/ /opt/haloloom/source-current/
 RUN /opt/venv/bin/python3 /opt/haloloom/source-current/apply-and-verify.py
+# Register only this interpreter's sealed SDK. GEAK deliberately removes
+# ambient PYTHONPATH; its ordinary server subprocess must still import AMD SMI.
+RUN /opt/venv/bin/python3 /opt/haloloom/source-current/install_bundled_amdsmi.py --report /opt/haloloom/bundled-amdsmi.json
 # Keep native evaluation tasks compatible with namespace-qualified HF URIs.
 COPY dist/source-current/qualify_eval_task_namespaces.py /opt/haloloom/qualify_eval_task_namespaces.py
 RUN /opt/venv/bin/python3 /opt/haloloom/qualify_eval_task_namespaces.py --report /opt/haloloom/lm-eval-task-namespaces.json
