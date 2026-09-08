@@ -86,6 +86,7 @@ services:
     environment:
       <<: *rocm-runtime
       QUARK_ACCELERATOR: rocm
+      HYPERLOOM_GFX1151_LOWBIT_BRIDGE: "0"
 
   aiter-tools:
     <<: *gpu-common

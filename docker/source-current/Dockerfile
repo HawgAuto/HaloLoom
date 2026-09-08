@@ -1,5 +1,7 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE} AS source-current
+# Optional custom routes are enabled explicitly by scripts/serve.py.
+ENV HYPERLOOM_GFX1151_LOWBIT_BRIDGE=0
 USER root
 COPY --chown=1000:1000 dist/source-current/ /opt/haloloom/source-current/
 RUN /opt/venv/bin/python3 /opt/haloloom/source-current/apply-and-verify.py
