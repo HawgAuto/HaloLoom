@@ -1,5 +1,36 @@
 # Bundled AMD SMI and GEAK Setup handoff
 
+## Source-bound vLLM signal and profiler lifecycle
+
+Package `scripts/apply_source_current_overlay.py` byte-for-byte as the native
+archive's `apply-and-verify.py`. It synchronizes both the validated Qwen loader
+and `vllm/entrypoints/launcher.py`, updates and verifies their existing wheel
+RECORD entries, and retains the immutable native-library/source-identity checks.
+If the base carries an earlier pre-applied vLLM overlay, the archive must declare
+its exact predecessor commit and tree. Reconciliation requires full working-tree
+equality and ancestry before advancing; unknown local edits remain a hard error.
+A source checkout containing a repair is not proof that the imported installed
+package contains it. Verify both paths, metadata hashes, and real HTTP shutdown
+in the final image without development-source mounts.
+
+The paired vLLM patch leaves embedded-server signal handling to the existing
+vLLM event-loop coordinator. This avoids restoring a native profiler handler
+represented by Python as None; it does not guess defaults or monkey-patch the
+signal module. GEAK's opt-in `SERVER_STOP_SCOPE=parent` lets that coordinator
+drain its workers before the existing identity-bound deadline cleanup. Profile
+load clients retain their independent tree cleanup. For external capture only,
+pair parent-first stop with a positive native `--shutdown-timeout` and a longer
+driver grace. Keep ordinary unprofiled benchmark policy unchanged.
+
+Qualification proceeds through no-device HTTP SIGINT/SIGTERM tests, a tiny real
+spawned-worker capture, then real-model export and the original engagement/A-B
+gates. Native Torch/Kineto geometry is a separate path: CPU-tested upstream
+decoder changes are not an installed Torch fix or permission to fill missing
+grid values from configuration. Publish matching source/archive/image pins only
+after the appropriate installed-image and workflow gates pass.
+
+## Bundled AMD SMI registration
+
 The source-current image assembly runs `scripts/install_bundled_amdsmi.py` from
 the hash-bound overlay archive under the image's `/opt/venv/bin/python3`.
 Include that tracked helper as `install_bundled_amdsmi.py` in the overlay archive;
