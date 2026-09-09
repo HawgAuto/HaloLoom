@@ -79,10 +79,26 @@ case "$agent" in
       export INFERENCE_OPTIMIZER_CODEX_AUTH_MODE=native_oauth
       export INFERENCE_OPTIMIZER_CODEX_HOME="$native_home"
       export GEAK_CODEX_HOME="$native_home"
-      # The workbench container is the sandbox boundary. It intentionally does
-      # not ship bubblewrap, so nested Codex sandboxing must be bypassed rather
-      # than retried forever. No writable-root broadening happens here; each
-      # role still supplies its own existing Hyperloom/KernelForge allowlist.
+      # Forge has a separate transport-options contract. Carry the selected
+      # native login without replacing explicit per-Forge transport settings.
+      FORGE_AGENT_OPTIONS_JSON="$(python3 - "$native_home" <<'PY'
+import json, os, sys
+options = json.loads(os.environ.get("FORGE_AGENT_OPTIONS_JSON") or "{}")
+if not isinstance(options, dict):
+    raise SystemExit("FORGE_AGENT_OPTIONS_JSON must be a JSON object")
+if "auth_mode" not in options and not options.get("gateway"):
+    options["auth_mode"] = "native_oauth"
+if options.get("auth_mode") == "native_oauth":
+    options.setdefault("home", sys.argv[1])
+print(json.dumps(options))
+PY
+)"
+      export FORGE_AGENT_OPTIONS_JSON
+      export FORGE_AGENT_FALLBACK_PROVIDER="${FORGE_AGENT_FALLBACK_PROVIDER:-none}"
+      export FORGE_AGENT_FALLBACK_MODEL="${FORGE_AGENT_FALLBACK_MODEL:-off}"
+      # Kernel authoring uses the outer container boundary. Roles that pin
+      # workspace-write (such as candidate review) retain that restriction and
+      # require the opt-in native sandbox policy; never downgrade those roles.
       export HYPERLOOM_CODEX_EXTERNAL_SANDBOX=1
       export HYPERLOOM_CODEX_SANDBOX_MODE=bypass
       export GEAK_CODEX_EXTERNAL_SANDBOX=1
