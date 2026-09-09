@@ -17,6 +17,7 @@ verify_only = '--verify-only' in sys.argv
 allowed = {
     'hyperloom': '/opt/haloloom/components/Hyperloom',
     'geak': '/opt/haloloom/components/GEAK',
+    'intellikit': '/opt/haloloom/components/IntelliKit',
     'vllm': '/opt/haloloom/framework-source/vllm',
     'sglang': '/opt/haloloom/framework-source/sglang',
 }
@@ -101,7 +102,10 @@ assert all((hyper_source / p).is_file() and sha(hyper_source / p) == h
            for p, h in ref['expected'].items())
 
 wheel_counts = {}
-for name, distribution in [('hyperloom', 'hyperloom-inference-optimizer'), ('sglang', 'sglang'), ('geak','geak')]:
+for name, distribution in [('hyperloom', 'hyperloom-inference-optimizer'), ('sglang', 'sglang'), ('geak','geak'), ('intellikit', 'metrix')]:
+    # Historical archives have no IntelliKit update; keep them verifiable.
+    if name == 'intellikit' and name not in m['components']:
+        continue
     c = m['components'][name]
     wheel = root / c['wheel']
     assert sha(wheel) == c['wheel_sha256']
@@ -112,12 +116,15 @@ for name, distribution in [('hyperloom', 'hyperloom-inference-optimizer'), ('sgl
     with zipfile.ZipFile(wheel) as z:
         names = [n for n in z.namelist() if n.endswith('.py')]
         assert not any('.data/' in n for n in names)
+        if name == 'intellikit':
+            assert all(n.startswith('metrix/') and '..' not in Path(n).parts
+                       for n in names), names
         mismatch = [n for n in names if not Path(str(d.locate_file(n))).is_file()
                     or Path(str(d.locate_file(n))).read_bytes() != z.read(n)]
         if mismatch and not verify_only:
-            # Serving code was already qualified. Only the known pure-Python
-            # Hyperloom wheel is installable here; never upgrade a backend.
-            assert name in ('hyperloom','geak'), mismatch
+            # Only the named pure-Python control/profiling packages may be
+            # reinstalled. Never upgrade a serving backend or native library.
+            assert name in ('hyperloom','geak','intellikit'), mismatch
             assert not any(n.endswith('.so') for n in z.namelist())
             subprocess.run([sys.executable, '-m', 'pip', 'install', '--no-deps',
                             '--no-index', '--force-reinstall', str(wheel)], check=True)
