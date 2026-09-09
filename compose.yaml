@@ -11,6 +11,8 @@ x-rocm-runtime: &rocm-runtime
   USER_DATA_PATH: /workspace
   HF_HOME: /home/haloloom/.cache/huggingface
   XDG_CACHE_HOME: /workspace/.cache
+  MIOPEN_CUSTOM_CACHE_DIR: /workspace/.cache/miopen
+  MIOPEN_USER_DB_PATH: /workspace/.cache/miopen_db
   VLLM_CACHE_ROOT: /workspace/.cache/vllm
   VLLM_CONFIG_ROOT: /workspace/.config/vllm
   TORCHINDUCTOR_CACHE_DIR: /workspace/.cache/torchinductor

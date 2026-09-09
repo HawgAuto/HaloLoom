@@ -2,12 +2,20 @@ ARG BASE_IMAGE
 FROM ${BASE_IMAGE} AS source-current
 # Optional custom routes are enabled explicitly by scripts/serve.py.
 ENV HYPERLOOM_GFX1151_LOWBIT_BRIDGE=0
+# Keep MIOpen writes off HOME, which may be root-owned for a host UID.
+ENV MIOPEN_CUSTOM_CACHE_DIR=/workspace/.cache/miopen \
+    MIOPEN_USER_DB_PATH=/workspace/.cache/miopen_db
 USER root
 COPY --chown=1000:1000 dist/source-current/ /opt/haloloom/source-current/
 RUN /opt/venv/bin/python3 /opt/haloloom/source-current/apply-and-verify.py
 # Register only this interpreter's sealed SDK. GEAK deliberately removes
 # ambient PYTHONPATH; its ordinary server subprocess must still import AMD SMI.
 RUN /opt/venv/bin/python3 /opt/haloloom/source-current/install_bundled_amdsmi.py --report /opt/haloloom/bundled-amdsmi.json
+# The evaluator is needed by the native optimizer, not only the Quark image.
+# Missing dependencies must not trigger runtime pip writes into the sealed venv.
+RUN /opt/venv/bin/python3 -m pip install --no-cache-dir --no-index --no-deps --require-hashes \
+      --find-links /opt/haloloom/source-current/evaluation-wheels \
+      -r /opt/haloloom/source-current/evaluation-wheels/requirements.lock
 # Keep native evaluation tasks compatible with namespace-qualified HF URIs.
 COPY dist/source-current/qualify_eval_task_namespaces.py /opt/haloloom/qualify_eval_task_namespaces.py
 RUN /opt/venv/bin/python3 /opt/haloloom/qualify_eval_task_namespaces.py --report /opt/haloloom/lm-eval-task-namespaces.json

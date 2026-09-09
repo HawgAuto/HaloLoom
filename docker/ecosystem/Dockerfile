@@ -23,6 +23,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
     HIP_DEVICE_LIB_PATH=/opt/rocm/core-10.0/amdgcn/bitcode \
     HSA_ENABLE_SDMA=0 \
     PYTORCH_ROCM_ARCH=gfx1151
+# Keep MIOpen writes off HOME, which may be root-owned for a host UID.
+ENV MIOPEN_CUSTOM_CACHE_DIR=/workspace/.cache/miopen \
+    MIOPEN_USER_DB_PATH=/workspace/.cache/miopen_db
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \

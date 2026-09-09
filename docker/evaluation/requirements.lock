@@ -1,0 +1,30 @@
+# Evaluator additions for the pinned Python 3.14 ROCm serving images.
+# Wheels are delivered inside the hash-bound source-current archive.
+absl-py==2.5.0 --hash=sha256:0f17b89f2a4eaaedc4f28c622998aa690564b3012a396a4ffad0821007fe03ba
+chardet==6.0.0.post1 --hash=sha256:c894a36800549adf7bb5f2af47033281b75fdfcd2aa0f0243be0ad22a52e2dcb
+colorama==0.4.6 --hash=sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6
+DataProperty==1.1.1 --hash=sha256:cf026aa002dbd6c57c619ec6741ffd61ae7bf2f20481951d8af2dff44480340e
+defusedxml==0.7.1 --hash=sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61
+evaluate==0.4.6 --hash=sha256:bca85bc294f338377b7ac2f861e21c308b11b2a285f510d7d5394d5df437db29
+joblib==1.6.0 --hash=sha256:3dbbf9f6e4b592a2357b854608e980fe6390d131d7a82f011a377ef2ebef7aba
+jsonlines==4.0.0 --hash=sha256:185b334ff2ca5a91362993f42e83588a360cf95ce4b71a73548502bda52a7c55
+lm_eval==0.4.9.2 --hash=sha256:b8d12410ab9c6321c9e26a9fb7e13a4e1b920ed4907905804dc2e231b7482a6e
+lxml==6.1.3 --hash=sha256:a7eb78ba28b187e1e9203a55c60fcf70df2d22cb205fe6d51b9383d6097419f0
+mbstrdecoder==1.1.5 --hash=sha256:4a50fe113d4abecfd86e8f716b2e413cce03d63af83ec3c7cdbe81dec0e519ed
+nltk==3.10.3 --hash=sha256:ff9598a8e20518ee0d557745890cc4435b9578489e2dcbc69c4f81fa060caf7c
+numexpr==2.14.2 --hash=sha256:bac00898930f962f360c3d763a8e2273fc931f65a1759ff1bf64b3cf13d65aee
+pathvalidate==3.3.1 --hash=sha256:5263baab691f8e1af96092fa5137ee17df5bdfbd6cff1fcac4d6ef4bc2e1735f
+portalocker==4.3.0 --hash=sha256:aa91709ccfc322b8225171392d64a2f9fc833f15f5ab741cfba6d3fba285ce31
+pybind11==3.1.0 --hash=sha256:b8488090f8acffbcb6b5d6a85571a6827a0a2981ffb75e5a0b27b87c4a6b7dd0
+pytablewriter==1.2.1 --hash=sha256:e906ff7ff5151d70a5f66e0f7b75642a7f2dce8d893c265b79cc9cf6bc04ddb4
+rouge_score==0.1.2 --hash=sha256:a85eccb17a3f2df566b9a2941d89aef17aabb037365c94f73280e30b3929108c
+sacrebleu==2.6.0 --hash=sha256:3edc1531575cfe4ad04ce53491a9307e234af1c3f805a1f491cbec844229a8a8
+scikit-learn==1.9.0 --hash=sha256:1fea2cc5677ab49d6f5bade978c866da44957b712d92e9635e8b4f723013c3cb
+sqlitedict==2.1.0 --hash=sha256:b8fdef0ac5fa5a612d7032ab23dfc2c4a5fa07f0491b7fa3edfee1dd4f94a4d6
+tabledata==1.3.5 --hash=sha256:a1e57afc4767b51bef551114c0df31f205d712dbb75e3caf9be7834a79f23136
+tcolorpy==0.1.7 --hash=sha256:26a59d52027e175a37e0aba72efc99dda43f074db71f55b316d3de37d3251378
+threadpoolctl==3.6.0 --hash=sha256:43a0b8fd5a2928500110039e43a5eed8480b918967083ea48dc3ab9f13c4a7fb
+tqdm-multiprocess==0.0.11 --hash=sha256:3ebdf03e7a675150fa0bbceaa9c3c64b8cb556e9ffafa4fe6c078e51820524aa
+typepy==1.3.5 --hash=sha256:de361b59609c7503efc2edbe9d7a4e053ae71307bf90ae1678ec4d6bcd807922
+word2number==1.1 --hash=sha256:607504f8945a4f49b1f7e32e908c12ad25bfa0f7ec5edd1bf4f94d9fe8ce1a89
+zstandard==0.25.0 --hash=sha256:e09bb6252b6476d8d56100e8147b803befa9a12cea144bbe629dd508800d1ad0

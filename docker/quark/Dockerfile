@@ -7,6 +7,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PYTHONPATH=/opt/quark-runtime-src \
     USER_DATA_PATH=/workspace
+# Keep MIOpen writes off HOME, which may be root-owned for a host UID.
+ENV MIOPEN_CUSTOM_CACHE_DIR=/workspace/.cache/miopen \
+    MIOPEN_USER_DB_PATH=/workspace/.cache/miopen_db
 
 COPY scripts/runtime_identity.py /opt/haloloom/runtime_identity.py
 COPY scripts/verify_quantization_contract.py /opt/haloloom/verify_quantization_contract.py
