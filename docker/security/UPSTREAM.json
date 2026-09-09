@@ -1,0 +1,11 @@
+{
+  "moby_profiles_commit": "61eaf32614c7c71b60bd8927d3e6a4ffc8ff1f31",
+  "repository": "https://github.com/moby/profiles",
+  "license": "Apache-2.0",
+  "files": {
+    "moby-apparmor-template.go": "cce1c730656ad73cb04b19bf25caa2351732a00e04a06eeaf3010105e1ba6a57",
+    "moby-seccomp-base.json": "536529b665dd0972c37bfb569f5d4ac8a53592e7b00752bc39ff063ca9864c74",
+    "LICENSE.moby": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  "scope": "Opt-in named AppArmor profile plus Docker-default seccomp with six namespace/mount syscall additions; retain cap-drop ALL and no-new-privileges."
+}
