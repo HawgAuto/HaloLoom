@@ -132,6 +132,13 @@ RUN set -euo pipefail; \
     chown 1000:1000 /opt/haloloom/ecosystem-verification.json; \
     rm -rf /root/.cache/pip /tmp/haloloom-core-constraints.txt /tmp/pip-check-before /tmp/pip-check-after
 
+# Container-only defaults survive an empty HOME and cloned campaign checkout.
+# BEGIN container automation identity
+RUN set -eu; \
+    if ! git config --system --get user.name >/dev/null; then git config --system user.name KernelForge; fi; \
+    if ! git config --system --get user.email >/dev/null; then git config --system user.email kernel-forge@localhost; fi
+# END container automation identity
+
 ENV PATH=/opt/venv/bin:/opt/haloloom/agent-bin:/usr/local/bin:/opt/rocm/core-10.0/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin \
     HOME=/home/haloloom \
     RAY_VERSION=2.55.0 \

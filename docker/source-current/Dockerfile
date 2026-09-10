@@ -6,6 +6,12 @@ ENV HYPERLOOM_GFX1151_LOWBIT_BRIDGE=0
 ENV MIOPEN_CUSTOM_CACHE_DIR=/workspace/.cache/miopen \
     MIOPEN_USER_DB_PATH=/workspace/.cache/miopen_db
 USER root
+# Container-only defaults; explicit user/repository identities retain precedence.
+# BEGIN container automation identity
+RUN set -eu; \
+    if ! git config --system --get user.name >/dev/null; then git config --system user.name KernelForge; fi; \
+    if ! git config --system --get user.email >/dev/null; then git config --system user.email kernel-forge@localhost; fi
+# END container automation identity
 COPY --chown=1000:1000 dist/source-current/ /opt/haloloom/source-current/
 RUN /opt/venv/bin/python3 /opt/haloloom/source-current/apply-and-verify.py
 # Register only this interpreter's sealed SDK. GEAK deliberately removes

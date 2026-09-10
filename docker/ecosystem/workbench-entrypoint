@@ -66,6 +66,10 @@ case "$agent" in
     agent_bin="${HALOLOOM_CODEX_BIN_HOST:-}"
     export INFERENCE_OPTIMIZER_CODEX_BIN="${INFERENCE_OPTIMIZER_CODEX_BIN:-$agent_bin}"
     export GEAK_CODEX_BIN="$agent_bin"
+    # Forge's native hooks protect driver/oracle files inside each lane. Keep
+    # an explicit operator choice (the adapter rejects bypass with hooks), but
+    # do not default Forge to the broader authoring role's outer-only boundary.
+    export FORGE_AGENT_SANDBOX_MODE="${FORGE_AGENT_SANDBOX_MODE:-workspace-write}"
     # Subscription users: the host `codex login` is mounted read-only at
     # $CODEX_HOME. When it exists and the operator set no API key/gateway URL,
     # opt the Orchestrator's Codex role into Hyperloom's native_oauth mode (the
