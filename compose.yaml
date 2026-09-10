@@ -22,6 +22,8 @@ x-rocm-runtime: &rocm-runtime
   HALOLOOM_AGENT_PROFILE: ${HALOLOOM_AGENT_PROFILE}
   HALOLOOM_CLAUDE_BIN_HOST: ${HALOLOOM_CLAUDE_BIN_HOST}
   HALOLOOM_CODEX_BIN_HOST: ${HALOLOOM_CODEX_BIN_HOST}
+  # Empty explicit override opts back into the detected host CLI.
+  HALOLOOM_CODEX_BIN_IMAGE: ${HALOLOOM_CODEX_BIN_IMAGE-/opt/haloloom/codex-amd/bin/codex}
   HALOLOOM_HERMES_BIN_HOST: ${HALOLOOM_HERMES_BIN_HOST}
 
 x-gpu-common: &gpu-common

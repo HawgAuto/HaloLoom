@@ -142,3 +142,6 @@ These notes apply when changing optimizer or container settings; normal users sh
 - [Component manifest](manifests/components.json): exact source commits, image references, and digests.
 - [Release downloads](https://github.com/HawgAuto/HaloLoom/releases/tag/v0.1.1): Hyperloom wheel, build-input archive, and checksums. Normal users install the container images rather than assembling these assets manually.
 - [Security policy](SECURITY.md) and [upstream credits](NOTICE.md).
+
+Native Codex packaging, authentication, build verification and resume controls:
+[native agent runtime](docs/native-agent-runtime.md).

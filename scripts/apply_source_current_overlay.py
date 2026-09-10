@@ -158,6 +158,11 @@ if v is not None:
 
 subprocess.run([sys.executable,str(root/'apply-geak-integration.py')]+(['--verify-only'] if verify_only else []),check=True)
 subprocess.run([sys.executable,str(root/'apply-quark-dense-qwen35.py')]+(['--verify-only'] if verify_only else []),check=True)
+native_agent = None
+if m.get("native_agent_runtime") is not None:
+    native_agent = json.loads(subprocess.check_output(
+        [sys.executable, str(root / "install-native-agent-runtime.py")] +
+        (["--verify-only"] if verify_only else []), text=True))
 assert native_before == native_map()
 result = {
     'status': 'PASS_SOURCE_CURRENT_CPU_ONLY',
@@ -169,6 +174,8 @@ result = {
     'no_gpu': True,
     'promotion_authority': False,
 }
+if native_agent is not None:
+    result["native_agent_runtime"] = native_agent
 if verify_only:
     old = json.loads((root / 'build-receipt.json').read_text())
     assert result == old

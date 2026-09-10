@@ -16,7 +16,7 @@ case "$agent" in
     agent_bin="${HALOLOOM_CLAUDE_BIN_HOST:-}"
     ;;
   codex)
-    agent_bin="${HALOLOOM_CODEX_BIN_HOST:-}"
+    agent_bin="${HALOLOOM_CODEX_BIN_IMAGE:-${HALOLOOM_CODEX_BIN_HOST:-/opt/haloloom/codex-amd/bin/codex}}"
     export INFERENCE_OPTIMIZER_CODEX_BIN="${INFERENCE_OPTIMIZER_CODEX_BIN:-$agent_bin}"
     if [[ -n "${INFERENCE_OPTIMIZER_CODEX_HOME:-}" ]]; then
       export GEAK_CODEX_HOME="$INFERENCE_OPTIMIZER_CODEX_HOME"
@@ -58,6 +58,10 @@ ln -s -- "$agent_bin" "$agent_cli_dir/$agent"
 export PATH="$agent_cli_dir:$(dirname "$agent_bin"):$PATH"
 export FORGE_AGENT_BACKEND="$agent"
 export FORGE_AGENT_CLI="$agent_bin"
+
+if [[ "${1:-}" == agent-check ]]; then
+  exec "$agent_bin" --version
+fi
 
 if [[ "${HALOLOOM_PARENT_GPU_LOCK:-0}" == 1 ]]; then
   exec 9>/run/lock/hermes-vllm-gfx1151.lock

@@ -63,7 +63,9 @@ case "$agent" in
     export GEAK_CLAUDE_BIN="$agent_bin"
     ;;
   codex)
-    agent_bin="${HALOLOOM_CODEX_BIN_HOST:-}"
+    # Prefer an explicit image-runtime selection. Bare image use falls back
+    # to the bundled, source-pinned CLI; an explicit host path remains usable.
+    agent_bin="${HALOLOOM_CODEX_BIN_IMAGE:-${HALOLOOM_CODEX_BIN_HOST:-/opt/haloloom/codex-amd/bin/codex}}"
     export INFERENCE_OPTIMIZER_CODEX_BIN="${INFERENCE_OPTIMIZER_CODEX_BIN:-$agent_bin}"
     export GEAK_CODEX_BIN="$agent_bin"
     # Forge's native hooks protect driver/oracle files inside each lane. Keep
