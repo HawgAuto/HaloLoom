@@ -144,7 +144,7 @@ def test_component_manifest_has_complete_source_provenance() -> None:
     assert components["lowbit_kernel_pack"]["bundled_in_deferred_core"] is False
     assert (
         components["hyperloom"]["wheel_sha256"]
-        == "a0229171738133afbdffc91502006e9e872787d5350e7d438c3103064b058d23"
+        == "b14177b4047f7566dc1165bcb0c00d7bfc008298b4dee7d6dca6ffdb07360f6a"
     )
     for name in (
         "hyperloom",
@@ -183,7 +183,7 @@ def test_release_inventory_is_only_four_images_and_three_assets() -> None:
     sums = _text("release/SHA256SUMS").splitlines()
     assert sums == [
         (
-            "a0229171738133afbdffc91502006e9e872787d5350e7d438c3103064b058d23  "
+            "b14177b4047f7566dc1165bcb0c00d7bfc008298b4dee7d6dca6ffdb07360f6a  "
             "hyperloom_inference_optimizer-1.0.0-py3-none-any.whl"
         ),
         (
@@ -196,7 +196,7 @@ def test_release_inventory_is_only_four_images_and_three_assets() -> None:
 def test_intellikit_is_a_pinned_required_transitive_profiler() -> None:
     data = json.loads(_text("manifests/components.json"))
     intellikit = data["components"]["intellikit"]
-    assert intellikit["commit"] == "2f61453a779980b00504ea3b772ff4a1a1c3f4ad"
+    assert intellikit["commit"] == "08b82a834a54f910e4061f11a6d81eb451f70f4c"
     assert intellikit["role"] == "required_transitive_profiler"
     assert intellikit["required_packages"] == ["metrix"]
     assert "accordo" in intellikit["optional_source_packages"]

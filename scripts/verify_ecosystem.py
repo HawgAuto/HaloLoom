@@ -12,16 +12,16 @@ from pathlib import Path
 
 COMPONENT_ROOT = Path("/opt/haloloom/components")
 EXPECTED_REFS = {
-    "Hyperloom": "eaca6d848babfe0bf969e7bc442bcffcec829e85",
+    "Hyperloom": "3a09039ec5f8f61da7393da0a7946148f67e2293",
     "Magpie": "25681df93ba21a1a6b0bdd4151884f42eead1063",
     "TraceLens": "a59a9c165bb64c7c416fd7cf79149803d552e43c",
-    "GEAK": "b4dea3fa33ef438d4233aae0ed2c2f425c4e419a",
-    "IntelliKit": "2f61453a779980b00504ea3b772ff4a1a1c3f4ad",
+    "GEAK": "f94682cb51f22c5e0fd71c61915e0d355c7734cd",
+    "IntelliKit": "08b82a834a54f910e4061f11a6d81eb451f70f4c",
     "InferenceX": "3d5581562f643f9bdeb8410cd924e2c70906c966",
 }
 EXPECTED_FRAMEWORK_REFS = {
-    "vllm": "6ddd7a77a256e90f86c108eeed4ce46602cf9657",
-    "sglang": "cb9e016cb33b98bc804a57bc70b8272d8e8d134c",
+    "vllm": "1846b9cc55bd31361471920dcb9d7c2bf45cac2b",
+    "sglang": "90c62e027831111934a33b9bcc4e533ff61d8526",
 }
 REQUIRED_IMPORTS = (
     "hyperloom",

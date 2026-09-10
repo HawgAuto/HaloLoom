@@ -8,8 +8,8 @@ import subprocess
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_REF = "b91cab3433002fa8381108dd5ea7cb3633b6955e"
-WHEEL_SHA256 = "a0229171738133afbdffc91502006e9e872787d5350e7d438c3103064b058d23"
+SOURCE_REF = "3a09039ec5f8f61da7393da0a7946148f67e2293"
+WHEEL_SHA256 = "b14177b4047f7566dc1165bcb0c00d7bfc008298b4dee7d6dca6ffdb07360f6a"
 
 
 def test_public_default_build_manifest_is_complete():

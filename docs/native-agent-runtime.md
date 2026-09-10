@@ -3,7 +3,8 @@
 The source-current payload includes the qualified native Codex CLI, its official
 sidecars, license/notice files, a file-hash manifest and source provenance. The
 patched CLI comes from `ff1c753381773e8c22e1739ab29709dc7589ba8c` (upstream `rust-v0.153.4`). The matching
-source archive retains upstream build instructions and Cargo/Bazel lock files.
+source archive, stored at `native-agent-source/codex-amd-source-rust-v0.153.4.tar.gz`
+inside the build-input payload, retains upstream build instructions and Cargo/Bazel lock files.
 Build the application with `cargo build --locked --release -p codex-cli --bin codex`
 from `codex-rs/`, using the toolchain and dependencies specified by that tree.
 Sidecars are preserved byte-for-byte from the official runtime, not modified.

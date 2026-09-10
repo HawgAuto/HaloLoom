@@ -9,11 +9,15 @@
       "wheel_sha256": "6b665e7dc08364ca2aa240acf75bee180ef4ea16d929333a48513c71d24e392c"
     },
     "geak": {
-      "commit": "b4dea3fa33ef438d4233aae0ed2c2f425c4e419a",
+      "commit": "f94682cb51f22c5e0fd71c61915e0d355c7734cd",
       "repository": "https://github.com/HawgAuto/GEAK",
-      "tree": "560d7555afa3452dc19ab51a1d3475826ac74fbf",
+      "tree": "1a8ef1fb3c6479b4435730b316af2950bc102dd8",
       "upstream_base_commit": "0e1ef546356052e15ae10e2cf7abe9841d1693e8",
-      "upstream_repository": "https://github.com/AMD-AGI/GEAK"
+      "upstream_repository": "https://github.com/AMD-AGI/GEAK",
+      "previous_release_commit": "b4dea3fa33ef438d4233aae0ed2c2f425c4e419a",
+      "wheel": "geak-4.0.0-py3-none-any.whl",
+      "wheel_sha256": "c7e06168d06ef0d16cc268059e9fe026827e0a3c9a50b66c78c45a2d6ae06597",
+      "wheel_bytes": 67281
     },
     "hyperloom": {
       "board_support": {
@@ -39,7 +43,7 @@
         "reviewed_index_sha256": "0add81dbcbaae09fc572621cbdf52b2296b5b6e8a911133615fecafc050d00db",
         "reviewed_tree": "76a39d34f1c535a1b7bd5969950e698ad3d24290"
       },
-      "commit": "b91cab3433002fa8381108dd5ea7cb3633b6955e",
+      "commit": "3a09039ec5f8f61da7393da0a7946148f67e2293",
       "final_closeout_sha256": "f297f412275349cce8f4bacb33ccbd6920b9ca627ab0af4792e8699a23ed9282",
       "previous_commit": "712edf5d38fad8cdbebbd254cd9520059490f5b3",
       "previous_tree": "76a39d34f1c535a1b7bd5969950e698ad3d24290",
@@ -54,10 +58,16 @@
       "radeon8060s_change": "radeon8060s -> (gfx1151, 40 CU) in the single AMD board table; rocm-smi alias; shared local/remote product-text parser; RAY_VERSION / RAY_CLI_CLICK_MAX_VERSION strict-version env overrides",
       "repository": "https://github.com/hstolte11-collab/Hyperloom",
       "sealed_functional_proof_sha256": "189d3f37808efd2d07e019802f8e8983c283bbbce66f79889a0dac3152840a4e",
-      "tree": "67a82a90bf85e54104da833565627354351ebc85",
+      "tree": "693e06927b2b6a3f9ff689edbb346b0d6bb22926",
       "wheel": "hyperloom_inference_optimizer-1.0.0-py3-none-any.whl",
-      "wheel_sha256": "a0229171738133afbdffc91502006e9e872787d5350e7d438c3103064b058d23",
-      "internal_close_receipt": "qualification/receipts/optimizer-internal-close-v0.1.1.json"
+      "wheel_sha256": "b14177b4047f7566dc1165bcb0c00d7bfc008298b4dee7d6dca6ffdb07360f6a",
+      "internal_close_receipt": "qualification/receipts/optimizer-internal-close-v0.1.1.json",
+      "previous_release_commit": "b91cab3433002fa8381108dd5ea7cb3633b6955e",
+      "wheel_bytes": 5518335,
+      "runtime_registry_sha256": "d505f83c7f6d2be10156ad459c45479f589303175373b488c8096cd48e5b9409",
+      "public_registry_scope": "immutable historical functional matrix and public-lineage handoff; not the current runtime registry",
+      "runtime_registry_scope": "current source-bound registry; current-runtime evidence belongs to the coordinated release, not the historical matrix",
+      "runtime_registry_snapshot": "qualification/readiness/source-current/registry-v0.1.2.json"
     },
     "inferencex": {
       "commit": "3d5581562f643f9bdeb8410cd924e2c70906c966",
@@ -65,7 +75,7 @@
       "role": "required_benchmark_and_accuracy_harness"
     },
     "intellikit": {
-      "commit": "2f61453a779980b00504ea3b772ff4a1a1c3f4ad",
+      "commit": "08b82a834a54f910e4061f11a6d81eb451f70f4c",
       "gfx1151_support": "metrix_native",
       "optional_source_packages": [
         "accordo",
@@ -75,13 +85,18 @@
         "rocm_mcp",
         "uprof_mcp"
       ],
-      "repository": "https://github.com/AMDResearch/intellikit",
+      "repository": "https://github.com/hstolte11-collab/intellikit",
       "required_packages": [
         "metrix"
       ],
       "rocm10_support": true,
       "role": "required_transitive_profiler",
-      "scope": "Metrix is the native gfx1151 profiler used by Magpie and GEAK. The full IntelliKit source is included; other packages are optional and are not required by the default Hyperloom loop."
+      "scope": "Metrix is the native gfx1151 profiler used by Magpie and GEAK. The full IntelliKit source is included; other packages are optional and are not required by the default Hyperloom loop.",
+      "previous_release_commit": "2f61453a779980b00504ea3b772ff4a1a1c3f4ad",
+      "tree": "7e509621666a05076ea159e899517e95433ba248",
+      "wheel": "metrix-0.1.1-py3-none-any.whl",
+      "wheel_sha256": "5be4984d2ca6dd201370687a72eb472fb519c07de2fb139afeabdb00a55b11db",
+      "wheel_bytes": 56816
     },
     "lowbit_kernel_pack": {
       "bundled_in_deferred_core": false,
@@ -106,10 +121,12 @@
       "upstream_pr": "https://github.com/AMD-AGI/Magpie/pull/90"
     },
     "quark": {
-      "commit": "f7d8cefc7a6c973ff90cb87a6b154cbe3cc9aef2",
-      "repository": "https://github.com/amd/Quark",
+      "commit": "de3edd8c7c2725ce10d9e2b8b74fc96071b1d012",
+      "repository": "https://github.com/hstolte11-collab/Quark",
       "wheel": "amd_quark-0.12.post1-py3-none-any.whl",
-      "wheel_sha256": "00a786f59259ce4412d3183b861cbc4eb8535b152bf0f1dc7080adfd9e6b5ad6"
+      "wheel_sha256": "00a786f59259ce4412d3183b861cbc4eb8535b152bf0f1dc7080adfd9e6b5ad6",
+      "previous_release_commit": "f7d8cefc7a6c973ff90cb87a6b154cbe3cc9aef2",
+      "tree": "3df793b28ad9c6b2ee77956ec5e73fba30f9e579"
     },
     "sglang": {
       "code_object_targets": [
@@ -152,10 +169,10 @@
       "code_object_targets": [
         "gfx1151"
       ],
-      "commit": "861cd9d993a7c92728db6d73cb0b62fa0df7c8a0",
+      "commit": "1846b9cc55bd31361471920dcb9d7c2bf45cac2b",
       "composite_wheel": "vllm-0.27.0+haloloom.full.gfx1151.rocm10.rocm100-cp314-cp314-linux_x86_64.whl",
       "composite_wheel_sha256": "e5f65076a2a5144e36cd78f89e5e61133fa13660574b014424a7dffdd890b831",
-      "installed_artifact_form": "verified composite binary wheel plus exact-source qwen3_5.py overlay",
+      "installed_artifact_form": "verified composite binary wheel plus exact-source qwen3_5.py and launcher.py overlays",
       "lowbit_pack_bundled": false,
       "official_backports": [
         "febea17f6aa9141b3a0044e9690d6e6501f5c9d3",
@@ -166,12 +183,14 @@
       "source_manifest": "manifests/source/vllm-core-source-manifest.json",
       "source_manifest_schema": 2,
       "source_root_sha256": "d287b14add97ec67163f76bc47f64dbab2e9aa9f6db4d1a7a45332b0227239d2",
-      "tree": "6ce913b409e047de28e11fdbe28020c154cb5e99",
+      "tree": "2fdd9bd15c9d367150fab48cc6c0be560044e976",
       "upstream_base_commit": "4bdc8a788d2e2ce9165d552b3d4d8b72604626bf",
       "upstream_repository": "https://github.com/vllm-project/vllm",
       "wheel": "vllm-0.27.0+haloloom.gfx1151.rocm10.rocm100-cp314-cp314-linux_x86_64.whl",
       "wheel_bytes": 59004148,
-      "wheel_sha256": "a62e0198069cf42583a500091b5d85c18c0ebdabc195d2878934ddc4dcda59b9"
+      "wheel_sha256": "a62e0198069cf42583a500091b5d85c18c0ebdabc195d2878934ddc4dcda59b9",
+      "previous_release_commit": "861cd9d993a7c92728db6d73cb0b62fa0df7c8a0",
+      "source_manifest_scope": "underlying composite binary source; current overlay commit/tree tracked separately"
     }
   },
   "images": {
@@ -387,5 +406,12 @@
     "receipt": "qualification/receipts/release-closeout-v0.1.1.json",
     "sha256": "d35029dd39cb05344da18c80121b15962e81fcc2c00fa8d676cc871289491a81",
     "scope": "Exact image/runtime qualification and public OCI publication. Embedded source identities are recorded but source-commit publication and fresh anonymous clone/install qualification await later release work. No production activation, new optimizer Coordinator, new PTQ, performance win, or quality promotion."
+  },
+  "coordinated_release": {
+    "version": "v0.1.2",
+    "status": "local-image-qualification-pending",
+    "source_payload_sha256": "735ed29b1a25498f3d5c80b525c07d0546d18095614777314b18fff8eeed5791",
+    "native_codex_source_commit": "ff1c753381773e8c22e1739ab29709dc7589ba8c",
+    "prior_qualified_commit_fields_are_retained_historical_evidence": true
   }
 }

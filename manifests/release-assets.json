@@ -3,14 +3,14 @@
     {
       "name": "SHA256SUMS",
       "source": "release/SHA256SUMS",
-      "sha256": "27a25843cc8271f2a867b411fd805fe855bdb87b77bbf9228e6638827543077a",
+      "sha256": "dcdec3d050889b27b40b98e54e09b4514392128549745a5e1dd9cdc654b7b957",
       "bytes": 221
     },
     {
       "name": "hyperloom_inference_optimizer-1.0.0-py3-none-any.whl",
       "source": "dist/hyperloom_inference_optimizer-1.0.0-py3-none-any.whl",
-      "sha256": "a0229171738133afbdffc91502006e9e872787d5350e7d438c3103064b058d23",
-      "bytes": 5506556
+      "sha256": "b14177b4047f7566dc1165bcb0c00d7bfc008298b4dee7d6dca6ffdb07360f6a",
+      "bytes": 5518335
     },
     {
       "name": "haloloom-v0.1.1-build-inputs.tar.gz",
