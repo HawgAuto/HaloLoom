@@ -158,6 +158,17 @@ if v is not None:
 
 subprocess.run([sys.executable,str(root/'apply-geak-integration.py')]+(['--verify-only'] if verify_only else []),check=True)
 subprocess.run([sys.executable,str(root/'apply-quark-dense-qwen35.py')]+(['--verify-only'] if verify_only else []),check=True)
+# The Quark base has its own entrypoint; keep it aligned with the
+# workbench's image-owned native CLI selection without touching other bases.
+quark_entrypoint = Path('/opt/haloloom/quark-entrypoint')
+if quark_entrypoint.is_file():
+    source_entrypoint = root / 'quark-entrypoint'
+    assert source_entrypoint.is_file(), source_entrypoint
+    if not verify_only:
+        shutil.copyfile(source_entrypoint, quark_entrypoint)
+        quark_entrypoint.chmod(0o755)
+    assert source_entrypoint.read_bytes() == quark_entrypoint.read_bytes()
+    assert os.access(quark_entrypoint, os.X_OK)
 native_agent = None
 if m.get("native_agent_runtime") is not None:
     native_agent = json.loads(subprocess.check_output(
