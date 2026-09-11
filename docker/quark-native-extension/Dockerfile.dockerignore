@@ -1,0 +1,6 @@
+**
+!scripts/
+!scripts/package_quark_native_extension.py
+!docker/
+!docker/quark-native-extension/
+!docker/quark-native-extension/Dockerfile
