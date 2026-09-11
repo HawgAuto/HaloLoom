@@ -4,3 +4,9 @@
 !docker/
 !docker/quark-native-extension/
 !docker/quark-native-extension/Dockerfile
+!patches/
+!patches/vllm/
+!patches/vllm/quark-excluded-embedding.patch
+!tests/
+!tests/image/
+!tests/image/quark_excluded_embeddings.py

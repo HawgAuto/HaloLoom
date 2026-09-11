@@ -12,8 +12,14 @@ The current `./scripts/build_images.sh` also compiles and packages Quark's nativ
 extension after building the source overlays. It uses Quark's installed source
 and build helpers with its own Python/Torch/ROCm versions, requires no GPU or
 network during compilation, and checks import as UID 1000 with JIT disabled.
-The separate serving Python environment is unchanged. Runtime quantization no
-longer needs to compile inside the installed package directory.
+Installed package versions in both Python environments remain unchanged.
+Runtime quantization no longer needs to compile inside the installed package
+directory. The final image also applies a hash-guarded vLLM Quark adapter patch:
+excluded token embeddings and tied LM heads retain the native unquantized
+embedding handler rather than a linear-only handler. Five image-local CPU
+regressions run as the same non-root user. Unexpected vLLM source versions fail
+the build instead of receiving a blind patch. Correct loading does not establish
+model accuracy.
 
 `docker/quark-native-extension/Dockerfile` is the final build stage. Its standalone
 default is the immutable published Quark base; the full builder instead supplies

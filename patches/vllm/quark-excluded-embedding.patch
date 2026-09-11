@@ -1,0 +1,24 @@
+diff --git a/vllm/model_executor/layers/quantization/quark/quark.py b/vllm/model_executor/layers/quantization/quark/quark.py
+index 694116827..0c0f4a2d7 100644
+--- a/vllm/model_executor/layers/quantization/quark/quark.py
++++ b/vllm/model_executor/layers/quantization/quark/quark.py
+@@ -39,6 +39,10 @@ from vllm.model_executor.layers.quantization.quark.utils import (
+     deep_compare,
+     should_ignore_layer,
+ )
++from vllm.model_executor.layers.vocab_parallel_embedding import (
++    UnquantizedEmbeddingMethod,
++    VocabParallelEmbedding,
++)
+ from vllm.model_executor.models.utils import WeightsMapper
+ from vllm.platforms import current_platform
+ 
+@@ -156,6 +160,8 @@ class QuarkConfig(QuantizationConfig):
+         ):
+             if isinstance(layer, RoutedExperts):
+                 return UnquantizedFusedMoEMethod(layer.moe_config)
++            if isinstance(layer, VocabParallelEmbedding):
++                return UnquantizedEmbeddingMethod()
+             if (
+                 "self_attn" not in prefix  # only quantize attention projections
+                 or not getattr(self, "dynamic_mxfp4_quant", False)

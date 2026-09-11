@@ -1,4 +1,6 @@
 # Hash-bound qualification inputs: their exact bytes are referenced by SHA-256 in
 # manifests/components.json and qualification/*-final-v1.json. Do not normalize.
 patches/sglang/gfx1151-core.patch                        -whitespace
+# Unified-diff blank context lines contain a required space.
+patches/vllm/quark-excluded-embedding.patch              whitespace=-blank-at-eol
 qualification/validators/run_rdna35_lowbit_framework_route_v7.py  -whitespace
