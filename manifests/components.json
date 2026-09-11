@@ -201,30 +201,32 @@
       "digest_media_type": "application/vnd.oci.image.index.v1+json",
       "golden_image_id": "sha256:e9647f36b4659b3272c1689fcbb85fee17002a7ead9516c09f3e310ec9e719e6",
       "local_image_id": "sha256:a66c94bdbb877205fa125788be1e1d7ae5b03bd1e18b3c846298ddc97af3850c",
-      "local_reference": "haloloom-aiter-tools-full-gfx1151:v0.1.2-qualified-local-5",
+      "local_reference": "ghcr.io/hawgauto/haloloom-aiter-tools-full-gfx1151:v0.1.3",
       "physical_arch": "gfx1151",
       "pinned_reference": "ghcr.io/hawgauto/haloloom-aiter-tools-full-gfx1151@sha256:a66c94bdbb877205fa125788be1e1d7ae5b03bd1e18b3c846298ddc97af3850c",
       "production_activated": false,
       "qualification_receipt": "qualification/receipts/aiter-final-bounded-v0.1.0.json",
       "qualification_receipt_sha256": "dd3455b424eb5461a415b686db34c99eeee0331935fe066827ef1d135f942d67",
-      "reference": "ghcr.io/hawgauto/haloloom-aiter-tools-full-gfx1151:v0.1.2",
+      "reference": "ghcr.io/hawgauto/haloloom-aiter-tools-full-gfx1151:v0.1.3",
       "registry_readback": "PASS_INDEX_AMD64_CONFIG_EXACT_ROOTFS_AND_CONFIG",
       "size_bytes": 5796045091,
       "status": "published_bounded_optional_tools",
       "toolchain_receipt_scope": "Final immutable image HIP compile plus Triton offline gfx1151 code generation and bundled ld.lld linkage PASS; attention and sampling operation remain unqualified.",
       "final_runtime_receipt": "qualification/receipts/release-runtime-v0.1.2.json",
       "final_runtime_receipt_sha256": "47f01b4c3bad61d599f1c01f220c0352cf578c3914f11cc50f59475763ac9e7b",
-      "previous_release_reference": "ghcr.io/hawgauto/haloloom-aiter-tools-full-gfx1151:v0.1.1"
+      "previous_release_reference": "ghcr.io/hawgauto/haloloom-aiter-tools-full-gfx1151:v0.1.2",
+      "release_alias_only": true,
+      "unchanged_from_release": "v0.1.2"
     },
     "full_sglang": {
-      "reference": "ghcr.io/hawgauto/haloloom-sglang-full-gfx1151:v0.1.2",
+      "reference": "ghcr.io/hawgauto/haloloom-sglang-full-gfx1151:v0.1.3",
       "digest": "sha256:4c0a6d4326320638963797f0e7eb85455d8885dcf72877d7f6324f0a5363e623",
       "pinned_reference": "ghcr.io/hawgauto/haloloom-sglang-full-gfx1151@sha256:4c0a6d4326320638963797f0e7eb85455d8885dcf72877d7f6324f0a5363e623",
       "digest_media_type": "application/vnd.oci.image.index.v1+json",
       "amd64_manifest_digest": "sha256:2bc7cc671d5060bfecdd2d38f7cbc962c9727a843a80da6d16856ee910783753",
       "config_digest": "sha256:4d994c0358376496003bdff8685c9ca93d542e177311338a95724fcece7c94ef",
       "local_image_id": "sha256:4c0a6d4326320638963797f0e7eb85455d8885dcf72877d7f6324f0a5363e623",
-      "local_reference": "haloloom-sglang-full-gfx1151:v0.1.2-qualified-local-5",
+      "local_reference": "ghcr.io/hawgauto/haloloom-sglang-full-gfx1151:v0.1.3",
       "size_bytes": 8346565149,
       "physical_arch": "gfx1151",
       "production_activated": false,
@@ -265,22 +267,24 @@
         "v0_1_1_qualification_receipt": "qualification/receipts/sglang-final-v0.1.1.json",
         "v0_1_1_qualification_receipt_sha256": "9b8f736cec39527bb249160984aa4bae391c31da1ebd52f93692bc46e865c041"
       },
-      "previous_release_reference": "ghcr.io/hawgauto/haloloom-sglang-full-gfx1151:v0.1.1",
+      "previous_release_reference": "ghcr.io/hawgauto/haloloom-sglang-full-gfx1151:v0.1.2",
       "final_runtime_receipt": "qualification/receipts/release-runtime-v0.1.2.json",
       "final_runtime_receipt_sha256": "47f01b4c3bad61d599f1c01f220c0352cf578c3914f11cc50f59475763ac9e7b",
       "bundled_agent_clis": [
         "codex"
-      ]
+      ],
+      "release_alias_only": true,
+      "unchanged_from_release": "v0.1.2"
     },
     "full_vllm": {
-      "reference": "ghcr.io/hawgauto/haloloom-vllm-full-gfx1151:v0.1.2",
+      "reference": "ghcr.io/hawgauto/haloloom-vllm-full-gfx1151:v0.1.3",
       "digest": "sha256:3f80b2e086010a8d5c3c89ed236318f38a2ad3549170799765e29844e3800139",
       "pinned_reference": "ghcr.io/hawgauto/haloloom-vllm-full-gfx1151@sha256:3f80b2e086010a8d5c3c89ed236318f38a2ad3549170799765e29844e3800139",
       "digest_media_type": "application/vnd.oci.image.index.v1+json",
       "amd64_manifest_digest": "sha256:b1db56419d13ea698f019b5f32e555604adf60acf6255757eb9f4aa2de581db2",
       "config_digest": "sha256:194674574e756b9c01676369717fe0735cd2fa4b6a99984bb238a84f737bc449",
       "local_image_id": "sha256:3f80b2e086010a8d5c3c89ed236318f38a2ad3549170799765e29844e3800139",
-      "local_reference": "haloloom-vllm-full-gfx1151:v0.1.2-qualified-local-5",
+      "local_reference": "ghcr.io/hawgauto/haloloom-vllm-full-gfx1151:v0.1.3",
       "size_bytes": 8326258607,
       "physical_arch": "gfx1151",
       "production_activated": false,
@@ -336,27 +340,29 @@
         "v0_1_1_qualification_receipt": "qualification/receipts/vllm-final-v0.1.1.json",
         "v0_1_1_qualification_receipt_sha256": "317d9e20c7a6743a6db3cab27f338f8e5d51768c6e6a6b0234c5ab97a93d28ca"
       },
-      "previous_release_reference": "ghcr.io/hawgauto/haloloom-vllm-full-gfx1151:v0.1.1",
+      "previous_release_reference": "ghcr.io/hawgauto/haloloom-vllm-full-gfx1151:v0.1.2",
       "final_runtime_receipt": "qualification/receipts/release-runtime-v0.1.2.json",
       "final_runtime_receipt_sha256": "47f01b4c3bad61d599f1c01f220c0352cf578c3914f11cc50f59475763ac9e7b",
       "bundled_agent_clis": [
         "codex"
-      ]
+      ],
+      "release_alias_only": true,
+      "unchanged_from_release": "v0.1.2"
     },
     "quark": {
-      "reference": "ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151:v0.1.2",
-      "digest": "sha256:8c7553658267495a0d2b4d0279c9d23f9a71a50297947d1d0fd40a18547f7942",
-      "pinned_reference": "ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151@sha256:8c7553658267495a0d2b4d0279c9d23f9a71a50297947d1d0fd40a18547f7942",
+      "reference": "ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151:v0.1.3",
+      "digest": "sha256:b4bf033c34b9acfbf2eb548c80cb3686c0eab3049093c1ef9a46ff14339f5f3f",
+      "pinned_reference": "ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151@sha256:b4bf033c34b9acfbf2eb548c80cb3686c0eab3049093c1ef9a46ff14339f5f3f",
       "digest_media_type": "application/vnd.oci.image.index.v1+json",
-      "amd64_manifest_digest": "sha256:486f83ae356492cda22c293d23eeeb275076287e5aef3c57ad5399fc04fcdbc5",
-      "config_digest": "sha256:44cdfbf28a18c0f2da1ae87b34263635d863806dfc71d42665e8b9187f23a0bf",
-      "local_image_id": "sha256:8c7553658267495a0d2b4d0279c9d23f9a71a50297947d1d0fd40a18547f7942",
-      "local_reference": "haloloom-quark-rocm10-gfx1151:v0.1.2-qualified-local-5",
-      "size_bytes": 11706121000,
+      "amd64_manifest_digest": "sha256:26ec578b37835bb6a5ad358b58e96216f0f9473b4f975b779651330c7ee73f49",
+      "config_digest": "sha256:3b06c994605dd1dc3ce60ad693dfd260e5229b315d8c9944d14c17ea5697ec8f",
+      "local_image_id": "sha256:b4bf033c34b9acfbf2eb548c80cb3686c0eab3049093c1ef9a46ff14339f5f3f",
+      "local_reference": "ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151:v0.1.3",
+      "size_bytes": 11706790186,
       "physical_arch": "gfx1151",
       "production_activated": false,
       "external_agent_clis_bundled": true,
-      "status": "published_source_current_runtime_qualified",
+      "status": "published_runtime_bugfix_verified",
       "registry_readback": "PASS_INDEX_AMD64_CONFIG_EXACT_ROOTFS_AND_CONFIG",
       "hyperloom_wheel_sha256": "4f49d5a7fd745c78fbf34e2f13d05379b45b5abfc7e0b1d4afefafc53a97c1eb",
       "qualification_receipt": "qualification/receipts/quark-runtime-release-v0.1.1.json",
@@ -384,13 +390,17 @@
         "v0_1_1_qualification_receipt": "qualification/receipts/quark-final-v0.1.1.json",
         "v0_1_1_qualification_receipt_sha256": "f8c1ce495b4703e43bfb899b4abd2ff744096eefc6de017e4d15bdd6be1cf387"
       },
-      "final_runtime_receipt": "qualification/receipts/release-runtime-v0.1.2.json",
-      "final_runtime_receipt_sha256": "47f01b4c3bad61d599f1c01f220c0352cf578c3914f11cc50f59475763ac9e7b",
-      "previous_release_reference": "ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151:v0.1.1",
+      "final_runtime_receipt": "qualification/receipts/quark-native-runtime-v0.1.3.json",
+      "final_runtime_receipt_sha256": "2cb12fe5fdf5d68d139bdfabcc2a856a3171c9bc303c7a2aba9a39f8f4efcbde",
+      "previous_release_reference": "ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151:v0.1.2",
       "bundled_agent_clis": [
         "codex"
       ],
-      "qualification_receipt_scope": "Retained immutable Quark model/export qualification. New runtime/compiler/export-guard evidence is in final_runtime_receipt; no fresh full-model PTQ claim."
+      "qualification_receipt_scope": "Historical qualification remains immutable and claim-limited. Current model-neutral runtime repair verification is bound by final_runtime_receipt. No model or model-optimization payload is distributed.",
+      "previous_runtime_receipt": {
+        "path": "qualification/receipts/release-runtime-v0.1.2.json",
+        "sha256": "47f01b4c3bad61d599f1c01f220c0352cf578c3914f11cc50f59475763ac9e7b"
+      }
     }
   },
   "qualification": {
@@ -400,7 +410,7 @@
       "status": "PASS"
     }
   },
-  "release": "v0.1.2",
+  "release": "v0.1.3",
   "runtime_dependencies": {
     "click": ">=8.4.2,<9",
     "ray": "2.55.0",
@@ -431,5 +441,6 @@
     "source_payload_sha256": "735ed29b1a25498f3d5c80b525c07d0546d18095614777314b18fff8eeed5791",
     "native_codex_source_commit": "ff1c753381773e8c22e1739ab29709dc7589ba8c",
     "prior_qualified_commit_fields_are_retained_historical_evidence": true
-  }
+  },
+  "runtime_repair_release_assets": "manifests/release-assets-v0.1.3.json"
 }

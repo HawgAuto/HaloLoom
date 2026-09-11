@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "release": "v0.1.3",
+  "scope": "Model-agnostic Quark runtime repair; no model or optimization artifact is distributed",
+  "build_source_commit": "a306bfd1cfd5314fddbaaf3231d01e3166189e47",
+  "image": {
+    "reference": "ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151:v0.1.3",
+    "digest": "sha256:b4bf033c34b9acfbf2eb548c80cb3686c0eab3049093c1ef9a46ff14339f5f3f",
+    "amd64_manifest_digest": "sha256:26ec578b37835bb6a5ad358b58e96216f0f9473b4f975b779651330c7ee73f49",
+    "config_digest": "sha256:3b06c994605dd1dc3ce60ad693dfd260e5229b315d8c9944d14c17ea5697ec8f",
+    "anonymous": true
+  },
+  "runtime": {
+    "uid": 1000,
+    "physical_arch": "gfx1151",
+    "rocm": "10.0",
+    "quark": "0.12.post1",
+    "quark_torch": "2.13.0+rocm10.0.0",
+    "hip": "7.15.26333",
+    "quark_python": "3.12.3",
+    "serving_python": "3.14",
+    "vllm": "0.27.0+haloloom.full.gfx1151.rocm10",
+    "native_library_sha256": "b092cf146bde7c841ee7826396afe46811f5fbc886a53f508a65202edfb1f629",
+    "quark_source_tree_sha256": "944810a6af76b7a65308a8f5bb136702c5d82c9f0764b658830c2e03fc1d01e9",
+    "original_quark_source_files": 579,
+    "quark_source_unchanged": true,
+    "both_interpreter_package_versions_unchanged": true,
+    "vllm_adapter_preimage_sha256": "80099b0b5874264ea51d17422cfcf50633f8698f8bd8e50b4aeef4eb02d5408e",
+    "vllm_adapter_postimage_sha256": "b93e25d93466adde5e9d7725199d9d2fd9c57a9cf9eb6418ecf434ab5c28784c"
+  },
+  "tests": {
+    "baseline": {
+      "passed": 430,
+      "skipped": 2,
+      "subtests_passed": 5
+    },
+    "final_source_suite": {
+      "passed": 436,
+      "skipped": 2,
+      "subtests_passed": 5
+    },
+    "image_embedding_cpu_tests_passed": 5,
+    "nonroot_readonly_no_jit_import_passed": true
+  },
+  "functional_validation": {
+    "normal_runtime_uid": 1000,
+    "jit_disabled_import": "passed",
+    "readonly_filesystem_import": "passed",
+    "actual_quantization": "executed",
+    "native_export_validation": "executed",
+    "bundled_serving_and_evaluation": "executed",
+    "temporary_workers_and_listeners": "cleaned_up",
+    "fixture_results": "Retained privately as test evidence, not shipped as model artifacts or an optimization campaign.",
+    "quality_contract": "Successful tool execution does not guarantee a chosen quantization meets user-defined model quality goals."
+  },
+  "release_scope": {
+    "changed_images": [
+      "quark"
+    ],
+    "unchanged_images": [
+      "full_vllm",
+      "full_sglang",
+      "aiter_tools"
+    ],
+    "standalone_framework_handoff": "No new cross-image serving or full optimizer qualification claim."
+  },
+  "model_payloads_included": false,
+  "model_optimization_outputs_included": false,
+  "production_activated": false
+}

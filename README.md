@@ -8,6 +8,8 @@ The goal is to make this stack usable without assembling several projects, resol
 
 [Get started](#quickstart) · [User guide](docs/USAGE.md) · [Build from public inputs](docs/BUILD.md) · [Test results and limitations](docs/QUALIFICATION.md) · [Releases](https://github.com/HawgAuto/HaloLoom/releases)
 
+**v0.1.3:** fixes Quark's non-root native-extension loading and its bundled vLLM embedding dispatch. HaloLoom stays model-agnostic; models used for verification are not release payloads. [Release details](docs/releases/v0.1.3.md).
+
 ## What's included
 
 | Tool | What it does |
@@ -53,7 +55,7 @@ unset HSA_OVERRIDE_GFX_VERSION
 
 To choose a CLI explicitly, use `./scripts/install.sh --agent codex` (or `claude` / `hermes`). Add `--include-aiter` only if you need the optional tools image. No host `pip install` is performed.
 
-**v0.1.2 installer correction:** use current `main` or the `v0.1.2-installer.1` source tag. The original `v0.1.2` source tag selected v0.1.1 images by mistake and is preserved unchanged. The corrected installer reads the release from `manifests/components.json` and uses the already-published v0.1.2 images; no image rebuild is needed. For an existing checkout, switch to the corrected source and rerun `./scripts/install.sh`.
+**Historical v0.1.2 installer note:** the original `v0.1.2` source tag selected v0.1.1 images by mistake and is preserved unchanged. `v0.1.2-installer.1` corrected that release. Current `main` reads the release from `manifests/components.json` and selects v0.1.3; update the checkout and rerun `./scripts/install.sh`.
 
 
 ### 2. Start a small text model
