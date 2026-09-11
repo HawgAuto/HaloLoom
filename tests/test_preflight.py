@@ -63,7 +63,7 @@ def test_assess_fails_closed_on_busy_kfd_unless_explicitly_allowed() -> None:
 
 def test_render_env_contains_no_secret_fields() -> None:
     text = preflight.render_env(_probe())
-    assert "HALOLOOM_VERSION=v0.1.1" in text
+    assert f"HALOLOOM_VERSION={preflight.release_version()}" in text
     assert "HOST_UID=1000" in text
     assert "VIDEO_GID=44" in text
     assert "RENDER_GID=992" in text

@@ -53,6 +53,9 @@ unset HSA_OVERRIDE_GFX_VERSION
 
 To choose a CLI explicitly, use `./scripts/install.sh --agent codex` (or `claude` / `hermes`). Add `--include-aiter` only if you need the optional tools image. No host `pip install` is performed.
 
+**v0.1.2 installer correction:** use current `main` or the `v0.1.2-installer.1` source tag. The original `v0.1.2` source tag selected v0.1.1 images by mistake and is preserved unchanged. The corrected installer reads the release from `manifests/components.json` and uses the already-published v0.1.2 images; no image rebuild is needed. For an existing checkout, switch to the corrected source and rerun `./scripts/install.sh`.
+
+
 ### 2. Start a small text model
 
 This example uses Qwen3.5-0.8B with a short context and an explicit KV-cache budget, avoiding vLLM's percentage-based memory sizing on shared-memory hardware:

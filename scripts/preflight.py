@@ -73,11 +73,24 @@ def assess(probe: dict[str, Any], *, allow_busy: bool) -> dict[str, Any]:
     }
 
 
+def release_version() -> str:
+    """Use this checkout's release manifest, never a stale installer default."""
+    manifest = Path(__file__).resolve().parents[1] / "manifests" / "components.json"
+    data = json.loads(manifest.read_text(encoding="utf-8"))
+    version = data.get("release") if isinstance(data, dict) else None
+    number = r"(?:0|[1-9][0-9]*)"
+    if not isinstance(version, str) or not re.fullmatch(
+        rf"v{number}\.{number}\.{number}(?:-rc{number})?", version
+    ):
+        raise ValueError("components manifest release must be vX.Y.Z or vX.Y.Z-rcN")
+    return version
+
+
 def render_env(probe: dict[str, Any]) -> str:
     home = str(probe["home"])
     cwd = str(probe["cwd"])
     values = {
-        "HALOLOOM_VERSION": "v0.1.1",
+        "HALOLOOM_VERSION": release_version(),
         "HOST_UID": int(probe["uid"]),
         "HOST_GID": int(probe["gid"]),
         "VIDEO_GID": int(probe["video_gid"]),
@@ -210,8 +223,14 @@ def main() -> int:
     probe = live_probe()
     report = assess(probe, allow_busy=args.allow_busy)
     if args.write_env and report["passed"]:
-        args.write_env.write_text(render_env(probe), encoding="utf-8")
-        report["env_file"] = str(args.write_env.resolve())
+        try:
+            env_text = render_env(probe)
+        except (OSError, ValueError) as error:
+            report["passed"] = False
+            report["errors"].append(f"cannot resolve release configuration: {error}")
+        else:
+            args.write_env.write_text(env_text, encoding="utf-8")
+            report["env_file"] = str(args.write_env.resolve())
     if args.json:
         print(json.dumps(report, indent=2, sort_keys=True))
     else:
