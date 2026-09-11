@@ -1,0 +1,259 @@
+{
+  "schema": "haloloom.release-runtime-qualification.v1",
+  "release": "v0.1.2",
+  "recorded_utc": "2026-09-11T14:06:07.585097+00:00",
+  "source_pins": [
+    {
+      "repository": "HawgAuto/GEAK",
+      "ref": "refs/heads/release/haloloom-v0.1.2",
+      "commit": "f94682cb51f22c5e0fd71c61915e0d355c7734cd",
+      "url": "https://github.com/HawgAuto/GEAK/tree/f94682cb51f22c5e0fd71c61915e0d355c7734cd",
+      "visibility": "public",
+      "verified": true,
+      "utc": "2026-09-11T13:37:43.595020+00:00"
+    },
+    {
+      "repository": "hstolte11-collab/Hyperloom",
+      "ref": "refs/heads/release/haloloom-v0.1.2",
+      "commit": "bb64a30177e8aa80a1a54d5c64f3b1a0d97078b5",
+      "url": "https://github.com/hstolte11-collab/Hyperloom/tree/bb64a30177e8aa80a1a54d5c64f3b1a0d97078b5",
+      "visibility": "public",
+      "verified": true,
+      "utc": "2026-09-11T13:37:52.062168+00:00"
+    },
+    {
+      "repository": "hstolte11-collab/Quark",
+      "ref": "refs/heads/release/haloloom-v0.1.2",
+      "commit": "de3edd8c7c2725ce10d9e2b8b74fc96071b1d012",
+      "url": "https://github.com/hstolte11-collab/Quark/tree/de3edd8c7c2725ce10d9e2b8b74fc96071b1d012",
+      "visibility": "public",
+      "verified": true,
+      "utc": "2026-09-11T13:37:58.438348+00:00"
+    },
+    {
+      "repository": "hstolte11-collab/intellikit",
+      "ref": "refs/heads/release/haloloom-v0.1.2",
+      "commit": "08b82a834a54f910e4061f11a6d81eb451f70f4c",
+      "url": "https://github.com/hstolte11-collab/intellikit/tree/08b82a834a54f910e4061f11a6d81eb451f70f4c",
+      "visibility": "public",
+      "verified": true,
+      "utc": "2026-09-11T13:39:57.335493+00:00"
+    }
+  ],
+  "build_input_sha256": "6f247ee481392ac31aac3c00de64edd670f402275c4016344c04aa97631fab8b",
+  "native_geak": {
+    "model": "gpt-6-astra",
+    "completed_turns": 9,
+    "replayed_turns": 6,
+    "failed_turns": 0,
+    "result_sha256": "a3420da9c1b3a6e29af4bca050319082877d42327ea0c6eca0c53488bcd44bba"
+  },
+  "parent": {
+    "phase": "CLOSE",
+    "stop_reason": "conc_sweep_done",
+    "close_sequence_done": true,
+    "sweep_summary": {
+      "best_conc": 4,
+      "best_speedup": 1.1704,
+      "failed_pairs": 0,
+      "mean_speedup": 1.169,
+      "median_speedup": 1.1696,
+      "successful_pairs": 3
+    },
+    "client_concurrency_values": [
+      4,
+      2,
+      1
+    ],
+    "engine_max_num_seqs": 1,
+    "metric_scope": "aggregate output throughput and client queue concurrency; not pure decode or batched engine capacity"
+  },
+  "serving": {
+    "image": "sha256:3f80b2e086010a8d5c3c89ed236318f38a2ad3549170799765e29844e3800139",
+    "models_match": true,
+    "response_id": "chatcmpl-86439392e6acd1be",
+    "content": "READY",
+    "usage": {
+      "prompt_tokens": 26,
+      "total_tokens": 28,
+      "completion_tokens": 2,
+      "prompt_tokens_details": null
+    },
+    "sse_content": "READY",
+    "sse_done": true,
+    "native_engagement_and_bitwise_parity": true,
+    "status": "PASS",
+    "kfd_owners": ""
+  },
+  "installed_image_checks": [
+    {
+      "image": "vllm",
+      "image_id": "sha256:3f80b2e086010a8d5c3c89ed236318f38a2ad3549170799765e29844e3800139",
+      "check": "ecosystem",
+      "exit_code": 0
+    },
+    {
+      "image": "vllm",
+      "image_id": "sha256:3f80b2e086010a8d5c3c89ed236318f38a2ad3549170799765e29844e3800139",
+      "check": "native-cli",
+      "exit_code": 0
+    },
+    {
+      "image": "vllm",
+      "image_id": "sha256:3f80b2e086010a8d5c3c89ed236318f38a2ad3549170799765e29844e3800139",
+      "check": "evaluator",
+      "exit_code": 0
+    },
+    {
+      "image": "vllm",
+      "image_id": "sha256:3f80b2e086010a8d5c3c89ed236318f38a2ad3549170799765e29844e3800139",
+      "check": "hip",
+      "exit_code": 0
+    },
+    {
+      "image": "vllm",
+      "image_id": "sha256:3f80b2e086010a8d5c3c89ed236318f38a2ad3549170799765e29844e3800139",
+      "check": "triton",
+      "exit_code": 0
+    },
+    {
+      "image": "sglang",
+      "image_id": "sha256:4c0a6d4326320638963797f0e7eb85455d8885dcf72877d7f6324f0a5363e623",
+      "check": "ecosystem",
+      "exit_code": 0
+    },
+    {
+      "image": "sglang",
+      "image_id": "sha256:4c0a6d4326320638963797f0e7eb85455d8885dcf72877d7f6324f0a5363e623",
+      "check": "native-cli",
+      "exit_code": 0
+    },
+    {
+      "image": "sglang",
+      "image_id": "sha256:4c0a6d4326320638963797f0e7eb85455d8885dcf72877d7f6324f0a5363e623",
+      "check": "evaluator",
+      "exit_code": 0
+    },
+    {
+      "image": "sglang",
+      "image_id": "sha256:4c0a6d4326320638963797f0e7eb85455d8885dcf72877d7f6324f0a5363e623",
+      "check": "hip",
+      "exit_code": 0
+    },
+    {
+      "image": "sglang",
+      "image_id": "sha256:4c0a6d4326320638963797f0e7eb85455d8885dcf72877d7f6324f0a5363e623",
+      "check": "triton",
+      "exit_code": 0
+    },
+    {
+      "image": "quark",
+      "image_id": "sha256:8c7553658267495a0d2b4d0279c9d23f9a71a50297947d1d0fd40a18547f7942",
+      "check": "ecosystem",
+      "exit_code": 0
+    },
+    {
+      "image": "quark",
+      "image_id": "sha256:8c7553658267495a0d2b4d0279c9d23f9a71a50297947d1d0fd40a18547f7942",
+      "check": "native-cli",
+      "exit_code": 0
+    },
+    {
+      "image": "quark",
+      "image_id": "sha256:8c7553658267495a0d2b4d0279c9d23f9a71a50297947d1d0fd40a18547f7942",
+      "check": "evaluator",
+      "exit_code": 0
+    },
+    {
+      "image": "quark",
+      "image_id": "sha256:8c7553658267495a0d2b4d0279c9d23f9a71a50297947d1d0fd40a18547f7942",
+      "check": "hip",
+      "exit_code": 0
+    },
+    {
+      "image": "quark",
+      "image_id": "sha256:8c7553658267495a0d2b4d0279c9d23f9a71a50297947d1d0fd40a18547f7942",
+      "check": "triton",
+      "exit_code": 0
+    },
+    {
+      "image": "aiter-tools",
+      "image_id": "sha256:a66c94bdbb877205fa125788be1e1d7ae5b03bd1e18b3c846298ddc97af3850c",
+      "check": "hip",
+      "exit_code": 0
+    },
+    {
+      "image": "aiter-tools",
+      "image_id": "sha256:a66c94bdbb877205fa125788be1e1d7ae5b03bd1e18b3c846298ddc97af3850c",
+      "check": "triton",
+      "exit_code": 0
+    }
+  ],
+  "limitations": [
+    "A post-optimization advisory TraceLens candidate review raised CodexSessionUnavailableError. Its unreviewed candidates are not part of the accepted serving configuration.",
+    "The inherited sealed functional-target matrix is historical evidence; current runtime registry identity is recorded separately.",
+    "No new full-model accuracy/GSM8K score is claimed by this release.",
+    "Optional AITER attention and sampling retain their prior unqualified boundaries."
+  ],
+  "production_activated": false,
+  "model_weights_published": false,
+  "published_images": [
+    {
+      "name": "vllm",
+      "reference": "ghcr.io/hawgauto/haloloom-vllm-full-gfx1151:v0.1.2",
+      "pinned_reference": "ghcr.io/hawgauto/haloloom-vllm-full-gfx1151@sha256:3f80b2e086010a8d5c3c89ed236318f38a2ad3549170799765e29844e3800139",
+      "local_reference": "haloloom-vllm-full-gfx1151:v0.1.2-qualified-local-5",
+      "local_image_id": "sha256:3f80b2e086010a8d5c3c89ed236318f38a2ad3549170799765e29844e3800139",
+      "size_bytes": 8326258607,
+      "digest": "sha256:3f80b2e086010a8d5c3c89ed236318f38a2ad3549170799765e29844e3800139",
+      "media_type": "application/vnd.oci.image.index.v1+json",
+      "amd64_manifest_digest": "sha256:b1db56419d13ea698f019b5f32e555604adf60acf6255757eb9f4aa2de581db2",
+      "config_digest": "sha256:194674574e756b9c01676369717fe0735cd2fa4b6a99984bb238a84f737bc449",
+      "anonymous_readback": "PASS_INDEX_AMD64_CONFIG_EXACT_ROOTFS_AND_CONFIG",
+      "utc": "2026-09-11T13:45:21.981880+00:00"
+    },
+    {
+      "name": "sglang",
+      "reference": "ghcr.io/hawgauto/haloloom-sglang-full-gfx1151:v0.1.2",
+      "pinned_reference": "ghcr.io/hawgauto/haloloom-sglang-full-gfx1151@sha256:4c0a6d4326320638963797f0e7eb85455d8885dcf72877d7f6324f0a5363e623",
+      "local_reference": "haloloom-sglang-full-gfx1151:v0.1.2-qualified-local-5",
+      "local_image_id": "sha256:4c0a6d4326320638963797f0e7eb85455d8885dcf72877d7f6324f0a5363e623",
+      "size_bytes": 8346565149,
+      "digest": "sha256:4c0a6d4326320638963797f0e7eb85455d8885dcf72877d7f6324f0a5363e623",
+      "media_type": "application/vnd.oci.image.index.v1+json",
+      "amd64_manifest_digest": "sha256:2bc7cc671d5060bfecdd2d38f7cbc962c9727a843a80da6d16856ee910783753",
+      "config_digest": "sha256:4d994c0358376496003bdff8685c9ca93d542e177311338a95724fcece7c94ef",
+      "anonymous_readback": "PASS_INDEX_AMD64_CONFIG_EXACT_ROOTFS_AND_CONFIG",
+      "utc": "2026-09-11T13:54:00.920414+00:00"
+    },
+    {
+      "name": "quark",
+      "reference": "ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151:v0.1.2",
+      "pinned_reference": "ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151@sha256:8c7553658267495a0d2b4d0279c9d23f9a71a50297947d1d0fd40a18547f7942",
+      "local_reference": "haloloom-quark-rocm10-gfx1151:v0.1.2-qualified-local-5",
+      "local_image_id": "sha256:8c7553658267495a0d2b4d0279c9d23f9a71a50297947d1d0fd40a18547f7942",
+      "size_bytes": 11706121000,
+      "digest": "sha256:8c7553658267495a0d2b4d0279c9d23f9a71a50297947d1d0fd40a18547f7942",
+      "media_type": "application/vnd.oci.image.index.v1+json",
+      "amd64_manifest_digest": "sha256:486f83ae356492cda22c293d23eeeb275076287e5aef3c57ad5399fc04fcdbc5",
+      "config_digest": "sha256:44cdfbf28a18c0f2da1ae87b34263635d863806dfc71d42665e8b9187f23a0bf",
+      "anonymous_readback": "PASS_INDEX_AMD64_CONFIG_EXACT_ROOTFS_AND_CONFIG",
+      "utc": "2026-09-11T14:02:55.966200+00:00"
+    },
+    {
+      "name": "aiter-tools",
+      "reference": "ghcr.io/hawgauto/haloloom-aiter-tools-full-gfx1151:v0.1.2",
+      "pinned_reference": "ghcr.io/hawgauto/haloloom-aiter-tools-full-gfx1151@sha256:a66c94bdbb877205fa125788be1e1d7ae5b03bd1e18b3c846298ddc97af3850c",
+      "local_reference": "haloloom-aiter-tools-full-gfx1151:v0.1.2-qualified-local-5",
+      "local_image_id": "sha256:a66c94bdbb877205fa125788be1e1d7ae5b03bd1e18b3c846298ddc97af3850c",
+      "size_bytes": 5796045091,
+      "digest": "sha256:a66c94bdbb877205fa125788be1e1d7ae5b03bd1e18b3c846298ddc97af3850c",
+      "media_type": "application/vnd.oci.image.index.v1+json",
+      "amd64_manifest_digest": "sha256:def2605ea8ebe7b4da5f3a612ef56debfa110815f3352b6c7a0c90044cbf83ef",
+      "config_digest": "sha256:bf78cd40de50776d00ed7cd2f3cee2ca13c9a900579ce53b8b984b0743a5f5cc",
+      "anonymous_readback": "PASS_INDEX_AMD64_CONFIG_EXACT_ROOTFS_AND_CONFIG",
+      "utc": "2026-09-11T14:02:58.774145+00:00"
+    }
+  ],
+  "registry_anonymous_readback": "PASS"
+}

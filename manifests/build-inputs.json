@@ -7,16 +7,16 @@
       "tree": "1a8ef1fb3c6479b4435730b316af2950bc102dd8"
     },
     "Hyperloom": {
-      "ref": "3a09039ec5f8f61da7393da0a7946148f67e2293",
-      "tree": "693e06927b2b6a3f9ff689edbb346b0d6bb22926"
+      "ref": "bb64a30177e8aa80a1a54d5c64f3b1a0d97078b5",
+      "tree": "1c4d07fb8f6177d98bc2acf303009fb1fea7220f"
     },
     "HaloLoom": {
-      "ref": "e698d17fff6dbd735c0b88e073c57e9ddee6bcb5",
-      "tree": "2e05125965fcbcb29d8de49228bd1f9d08207d95"
+      "ref": "50141eb069351eeb06ccc96d9c17cb215b9e1f2e",
+      "tree": "aaffbf04ad6264807a91be6e78e6a8a39615625c"
     }
   },
   "overlay_archive": {
-    "sha256": "115951eb258a44231ab94e1fc8e939c4d46b35dd0019be6b25c3dfea11785e91",
+    "sha256": "6f247ee481392ac31aac3c00de64edd670f402275c4016344c04aa97631fab8b",
     "filename": "haloloom-v0.1.2-build-inputs.tar.gz",
     "url": "https://github.com/HawgAuto/HaloLoom/releases/download/v0.1.2/haloloom-v0.1.2-build-inputs.tar.gz"
   },

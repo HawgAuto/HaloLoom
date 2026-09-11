@@ -187,7 +187,7 @@ def test_release_inventory_is_only_four_images_and_three_assets() -> None:
             "hyperloom_inference_optimizer-1.0.0-py3-none-any.whl"
         ),
         (
-            "115951eb258a44231ab94e1fc8e939c4d46b35dd0019be6b25c3dfea11785e91  "
+            "6f247ee481392ac31aac3c00de64edd670f402275c4016344c04aa97631fab8b  "
             "haloloom-v0.1.2-build-inputs.tar.gz"
         ),
     ]

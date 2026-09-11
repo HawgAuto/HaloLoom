@@ -3,7 +3,7 @@
     {
       "name": "SHA256SUMS",
       "source": "release/SHA256SUMS",
-      "sha256": "d054d016258e6d41d0d4eac0b7aaa2ea69b16733b28597e95136923f4f63fd17",
+      "sha256": "342594eadbba3f704135282ed94b0bb3c520773c9cb00647afe01d6067aa0353",
       "bytes": 221
     },
     {
@@ -15,8 +15,8 @@
     {
       "name": "haloloom-v0.1.2-build-inputs.tar.gz",
       "source": "dist/haloloom-v0.1.2-build-inputs.tar.gz",
-      "sha256": "115951eb258a44231ab94e1fc8e939c4d46b35dd0019be6b25c3dfea11785e91",
-      "bytes": 279258843
+      "sha256": "6f247ee481392ac31aac3c00de64edd670f402275c4016344c04aa97631fab8b",
+      "bytes": 279271660
     }
   ],
   "schema": "haloloom.release-assets.v1",
