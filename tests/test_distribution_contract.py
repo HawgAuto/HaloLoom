@@ -144,7 +144,7 @@ def test_component_manifest_has_complete_source_provenance() -> None:
     assert components["lowbit_kernel_pack"]["bundled_in_deferred_core"] is False
     assert (
         components["hyperloom"]["wheel_sha256"]
-        == "488de6d30e18d1b87062146918ec8e26a4504d9953c63263b68a853a4e655bcb"
+        == "4f49d5a7fd745c78fbf34e2f13d05379b45b5abfc7e0b1d4afefafc53a97c1eb"
     )
     for name in (
         "hyperloom",
@@ -183,7 +183,7 @@ def test_release_inventory_is_only_four_images_and_three_assets() -> None:
     sums = _text("release/SHA256SUMS").splitlines()
     assert sums == [
         (
-            "488de6d30e18d1b87062146918ec8e26a4504d9953c63263b68a853a4e655bcb  "
+            "4f49d5a7fd745c78fbf34e2f13d05379b45b5abfc7e0b1d4afefafc53a97c1eb  "
             "hyperloom_inference_optimizer-1.0.0-py3-none-any.whl"
         ),
         (

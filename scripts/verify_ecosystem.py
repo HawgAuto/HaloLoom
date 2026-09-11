@@ -12,7 +12,7 @@ from pathlib import Path
 
 COMPONENT_ROOT = Path("/opt/haloloom/components")
 EXPECTED_REFS = {
-    "Hyperloom": "06d126911680503b16b2580e486af3b5676d1f14",
+    "Hyperloom": "bb64a30177e8aa80a1a54d5c64f3b1a0d97078b5",
     "Magpie": "25681df93ba21a1a6b0bdd4151884f42eead1063",
     "TraceLens": "a59a9c165bb64c7c416fd7cf79149803d552e43c",
     "GEAK": "f94682cb51f22c5e0fd71c61915e0d355c7734cd",
