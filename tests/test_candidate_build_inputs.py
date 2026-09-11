@@ -205,5 +205,5 @@ def test_candidate_cli_through_unchanged_shell(tmp_path, monkeypatch):
     assert "HALOLOOM_CANDIDATE_BUILD_COMPLETE" in result.stdout
     assert (root / "dist/source-current/candidate-sources.json").is_file()
     commands = [json.loads(line) for line in log.read_text().splitlines()]
-    assert len(commands) == 12
+    assert len(commands) == 13
     assert all(c[:2] == ["image", "inspect"] for c in commands[:4])

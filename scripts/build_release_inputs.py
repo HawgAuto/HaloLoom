@@ -458,17 +458,31 @@ def prepare(manifest_path: Path, stage: Path, *, root: Path, max_bytes: int = DE
             shutil.rmtree(temporary)
 
 
+def package_quark_native(*, root: Path, tag: str) -> None:
+    """Finish a freshly built Quark image without changing its dependency pins."""
+    subprocess.run([
+        "docker", "build", "--network", "none", "--build-arg",
+        f"BASE_IMAGE={tag}", "-f", "docker/quark-native-extension/Dockerfile",
+        "-t", tag, ".",
+    ], cwd=root, check=True)
+
+
 def main(argv: list[str] | None = None) -> int:
     root = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=Path("manifests/build-inputs.json"))
     parser.add_argument("--archive", type=Path, help="absolute local archive path (required only for schema 2)")
     parser.add_argument("--max-unpacked-bytes", type=int, default=DEFAULT_MAX_BYTES)
+    parser.add_argument("--package-quark-native", action="store_true",
+                        help="finish the Quark output with its pinned native extension (used by build_images.sh)")
     args = parser.parse_args(argv)
     manifest_path = args.manifest if args.manifest.is_absolute() else root / args.manifest
     stage = root / "dist/source-current"
     try:
         prepare(manifest_path, stage, root=root, max_bytes=args.max_unpacked_bytes, archive=args.archive)
+        if args.package_quark_native:
+            data = load_manifest(manifest_path)
+            package_quark_native(root=root, tag=data["images"]["quark"]["local_tag"])
     except (InputError, subprocess.CalledProcessError, OSError) as error:
         print(f"ERROR: {error}", file=sys.stderr)
         return 1

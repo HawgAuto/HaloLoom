@@ -6,7 +6,31 @@ For normal use, run `./scripts/install.sh` from the repository root and follow t
 
 This guide is for users who want to reproduce the images, inspect their pinned sources, or understand the build configuration. It requires Docker, network access to the public bases and release assets, and enough local storage for those images and the build cache. It does not install host Python packages or alter existing inference services.
 
-## Rebuild from public inputs (v0.1.1)
+## Quark native kernel build
+
+The current `./scripts/build_images.sh` also compiles and packages Quark's native
+extension after building the source overlays. It uses Quark's installed source
+and build helpers with its own Python/Torch/ROCm versions, requires no GPU or
+network during compilation, and checks import as UID 1000 with JIT disabled.
+The separate serving Python environment is unchanged. Runtime quantization no
+longer needs to compile inside the installed package directory.
+
+`docker/quark-native-extension/Dockerfile` is the final build stage. Its standalone
+default is the immutable published Quark base; the full builder instead supplies
+its newly rebuilt local Quark image through `BASE_IMAGE`. The build rejects
+unexpected Quark/Torch versions instead of silently producing an unqualified ABI.
+
+The source-input archive stays immutable. The direct Python input builder retains
+its source-overlay-only interface; pass `--package-quark-native` to include the
+final native stage, or use the recommended shell entrypoint. A native-stage
+failure makes the full build fail. No image is pushed or activated by this step.
+
+Quantization and evaluation still require their actual datasets. For offline use,
+prepare the datasets in the same `HF_HOME` and `HF_DATASETS_CACHE` used by the
+workflow. A successful import is not proof of quantization, evaluation or model
+quality.
+
+## Source-overlay input protocol (historical v0.1.1)
 
 From a fresh checkout, run:
 
