@@ -3,22 +3,22 @@
     {
       "name": "SHA256SUMS",
       "source": "release/SHA256SUMS",
-      "sha256": "dcdec3d050889b27b40b98e54e09b4514392128549745a5e1dd9cdc654b7b957",
+      "sha256": "19c18781257f7f374833e14a86b3992f89e282789f99f9b73e4d350fc2526a9e",
       "bytes": 221
     },
     {
       "name": "hyperloom_inference_optimizer-1.0.0-py3-none-any.whl",
       "source": "dist/hyperloom_inference_optimizer-1.0.0-py3-none-any.whl",
-      "sha256": "b14177b4047f7566dc1165bcb0c00d7bfc008298b4dee7d6dca6ffdb07360f6a",
-      "bytes": 5518335
+      "sha256": "488de6d30e18d1b87062146918ec8e26a4504d9953c63263b68a853a4e655bcb",
+      "bytes": 5519135
     },
     {
-      "name": "haloloom-v0.1.1-build-inputs.tar.gz",
-      "source": "dist/haloloom-v0.1.1-build-inputs.tar.gz",
-      "sha256": "1829b58ae16459660e36e091f379131da7983f8d044a7f5fb6a48202d56a6ae5",
-      "bytes": 54043592
+      "name": "haloloom-v0.1.2-build-inputs.tar.gz",
+      "source": "dist/haloloom-v0.1.2-build-inputs.tar.gz",
+      "sha256": "115951eb258a44231ab94e1fc8e939c4d46b35dd0019be6b25c3dfea11785e91",
+      "bytes": 279258843
     }
   ],
   "schema": "haloloom.release-assets.v1",
-  "tag": "v0.1.1"
+  "tag": "v0.1.2"
 }

@@ -144,7 +144,7 @@ def test_component_manifest_has_complete_source_provenance() -> None:
     assert components["lowbit_kernel_pack"]["bundled_in_deferred_core"] is False
     assert (
         components["hyperloom"]["wheel_sha256"]
-        == "b14177b4047f7566dc1165bcb0c00d7bfc008298b4dee7d6dca6ffdb07360f6a"
+        == "488de6d30e18d1b87062146918ec8e26a4504d9953c63263b68a853a4e655bcb"
     )
     for name in (
         "hyperloom",
@@ -169,11 +169,11 @@ def test_release_inventory_is_only_four_images_and_three_assets() -> None:
         "aiter_tools",
     }
     release = json.loads(_text("manifests/release-assets.json"))
-    assert release["tag"] == "v0.1.1"
+    assert release["tag"] == "v0.1.2"
     assert [row["name"] for row in release["assets"]] == [
         "SHA256SUMS",
         "hyperloom_inference_optimizer-1.0.0-py3-none-any.whl",
-        "haloloom-v0.1.1-build-inputs.tar.gz",
+        "haloloom-v0.1.2-build-inputs.tar.gz",
     ]
     for row in release["assets"]:
         source = ROOT / row["source"]
@@ -183,12 +183,12 @@ def test_release_inventory_is_only_four_images_and_three_assets() -> None:
     sums = _text("release/SHA256SUMS").splitlines()
     assert sums == [
         (
-            "b14177b4047f7566dc1165bcb0c00d7bfc008298b4dee7d6dca6ffdb07360f6a  "
+            "488de6d30e18d1b87062146918ec8e26a4504d9953c63263b68a853a4e655bcb  "
             "hyperloom_inference_optimizer-1.0.0-py3-none-any.whl"
         ),
         (
-            "1829b58ae16459660e36e091f379131da7983f8d044a7f5fb6a48202d56a6ae5  "
-            "haloloom-v0.1.1-build-inputs.tar.gz"
+            "115951eb258a44231ab94e1fc8e939c4d46b35dd0019be6b25c3dfea11785e91  "
+            "haloloom-v0.1.2-build-inputs.tar.gz"
         ),
     ]
 

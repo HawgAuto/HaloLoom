@@ -8,8 +8,8 @@ import subprocess
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_REF = "3a09039ec5f8f61da7393da0a7946148f67e2293"
-WHEEL_SHA256 = "b14177b4047f7566dc1165bcb0c00d7bfc008298b4dee7d6dca6ffdb07360f6a"
+SOURCE_REF = "06d126911680503b16b2580e486af3b5676d1f14"
+WHEEL_SHA256 = "488de6d30e18d1b87062146918ec8e26a4504d9953c63263b68a853a4e655bcb"
 
 
 def test_public_default_build_manifest_is_complete():
@@ -17,8 +17,8 @@ def test_public_default_build_manifest_is_complete():
     manifest = build["load_manifest"](ROOT / "manifests/build-inputs.json")
     assert set(manifest["images"]) == {"vllm", "sglang", "quark", "aiter-tools"}
     assert manifest["overlay_archive"]["url"] == (
-        "https://github.com/HawgAuto/HaloLoom/releases/download/v0.1.1/"
-        "haloloom-v0.1.1-build-inputs.tar.gz"
+        "https://github.com/HawgAuto/HaloLoom/releases/download/v0.1.2/"
+        "haloloom-v0.1.2-build-inputs.tar.gz"
     )
 
 
@@ -49,7 +49,7 @@ def test_source_build_context_excludes_operator_and_campaign_state():
 def test_downloaded_archive_preserves_usable_bare_git_transport(tmp_path):
     archive = Path(os.environ.get(
         "HALOLOOM_BUILD_INPUTS_UNDER_TEST",
-        str(ROOT / "dist/haloloom-v0.1.1-build-inputs.tar.gz"),
+        str(ROOT / "dist/haloloom-v0.1.2-build-inputs.tar.gz"),
     ))
     if not archive.is_file():
         pytest.skip("release-asset gate; source-only clones need not contain dist")
