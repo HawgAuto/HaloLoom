@@ -51,5 +51,26 @@
     "patchelf_source_sha256": "1952b2a782ba576279c211ee942e341748fdb44997f704dd53def46cd055470b",
     "compilation_network": "none",
     "gpu_devices": false
+  },
+  "scoped_local_production_smoke": {
+    "status": "VERIFIED_SCOPED_PRODUCTION_INTEGRATION",
+    "source_commit": "1be012de338f67ba52b0007751fd0267b83b2490",
+    "image_local_id": "sha256:632e4a759554a179c0e488ca690a3e65e385e928d78f55e86a3916dfe8a2ea1b",
+    "raw_rows": 50842,
+    "request_owned_rows": 10128,
+    "out_of_scope_rows": 40714,
+    "completion_tokens": 2,
+    "shutdown_seconds": 4.121943679,
+    "container_exit_code": 0,
+    "queue_sync_warnings": 0,
+    "forced_cleanup": false,
+    "installed_clock_and_reducer_consumed": true,
+    "independent_raw_reconciliation": true,
+    "container_port_kfd_lease_cleanup": "PASS",
+    "unchanged_framework_files": 18323,
+    "general_serving_default_changed": false,
+    "optimizer_resumed": false,
+    "mtp_qualified": false,
+    "public_image_published": false
   }
 }
