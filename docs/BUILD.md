@@ -1,5 +1,9 @@
 # Building HaloLoom
 
+For the opt-in ROCProfiler SDK queue-accounting and request-clock repair, see
+[ROCPROFILER-SDK-REPAIR.md](ROCPROFILER-SDK-REPAIR.md). It does not change the
+released image pins or enable the optimizer.
+
 ## Use released images unless you need a rebuild
 
 For normal use, run `./scripts/install.sh` from the repository root and follow the [quickstart](../README.md#quickstart). The installer pulls the released images; you do not need to compile ROCm, vLLM, SGLang, or Quark on the host.

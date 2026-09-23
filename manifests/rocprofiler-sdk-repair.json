@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "scope": "opt-in SDK/Metrix profiling repair; not a general serving or optimizer release",
+  "source_repository": "https://github.com/ROCm/rocm-systems",
+  "source_commit": "6b0e43f341195e203754e08f850e437ff2fc09f9",
+  "patch": "patches/rocprofiler-sdk/mixed-aql-accounting.patch",
+  "patch_sha256": "9f23baca6a73d27b26809dafa9bfbd43ef5bd671c1564473feb36b4919f30a28",
+  "sdk_sha256": "9280eae676a8d3d135096a327a2524b2b50a9146b13d850c626e0d8e0e49b7b8",
+  "qualified_build_image_local_id": "sha256:f69bc865f857f8c08a999ac7a76549d1ef65857c818a9845af703c8d631bab9b",
+  "qualified_runtime_image_local_id": "sha256:d60eafc3d91d31860cc0ef4b53882ef1085b06712732ce34389f0e0c80921dfe",
+  "public_runtime_image_published": false,
+  "runtime_files": {
+    "profiling/rocprofiler-sdk/sdk_clock.py": "17d392d8acc0cd7f9e92534f7e826c803fca0e4ad0048640c3b75ef1a50c003a",
+    "profiling/rocprofiler-sdk/reduce_raw_counters.py": "c1fe449bc09cfc848d29c07cd5d8b68b3d94206e4aecb41942f56b4e3e8fe5e6"
+  },
+  "clock": "CLOCK_BOOTTIME",
+  "timestamp_api": "rocprofiler_get_timestamp",
+  "limits": {
+    "mtp_qualified": false,
+    "optimizer_ready": false,
+    "performance_qualified": false,
+    "general_serving_default_changed": false
+  }
+}

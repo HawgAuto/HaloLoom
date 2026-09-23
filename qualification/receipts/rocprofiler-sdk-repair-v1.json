@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "status": "QUALIFIED_SDK_AND_REQUEST_ATTRIBUTION_REPAIR",
+  "hardware": "AMD gfx1151",
+  "sdk_sha256": "9280eae676a8d3d135096a327a2524b2b50a9146b13d850c626e0d8e0e49b7b8",
+  "public_sdk_exports_preserved": 77,
+  "same_build_objects_compared": 278,
+  "different_objects": [
+    "queue.cpp.o"
+  ],
+  "unchanged_vllm_torch_files": 18323,
+  "stock_mixed_submission": {
+    "numerics": "PASS",
+    "counter_export": "PASS",
+    "queue_drain": "FAIL: residual pending1, two sync warnings"
+  },
+  "patched_control_and_mixed": {
+    "numerics": "PASS",
+    "counter_export": "PASS",
+    "queue_drain": "PASS"
+  },
+  "full_model_historical": {
+    "completion_tokens": 2,
+    "raw_rows": 51242,
+    "request_owned_rows": 10128,
+    "container_exit_code": 0,
+    "forced_cleanup": false,
+    "queue_sync_warnings": 0
+  },
+  "release_cpu_tests": {
+    "new_regressions_passed": 11,
+    "baseline_failures": 2,
+    "new_failures": 0,
+    "original_tests_modified": false
+  },
+  "claims": {
+    "profiling_repair": true,
+    "mtp": false,
+    "optimizer_ready": false,
+    "performance": false,
+    "general_serving_promotion": false,
+    "public_image_release": false
+  },
+  "review": "solo static/in-session review; no independent-review prefix",
+  "clean_public_compiler_rebuild": {
+    "status": "BYTE_IDENTICAL",
+    "base": "ghcr.io/hawgauto/haloloom-vllm-full-gfx1151@sha256:3f80b2e086010a8d5c3c89ed236318f38a2ad3549170799765e29844e3800139",
+    "sdk_sha256": "9280eae676a8d3d135096a327a2524b2b50a9146b13d850c626e0d8e0e49b7b8",
+    "sdk_bytes": 15578297,
+    "patchelf_version": "0.18.0",
+    "patchelf_source_sha256": "1952b2a782ba576279c211ee942e341748fdb44997f704dd53def46cd055470b",
+    "compilation_network": "none",
+    "gpu_devices": false
+  }
+}

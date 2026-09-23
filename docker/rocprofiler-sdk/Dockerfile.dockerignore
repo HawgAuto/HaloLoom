@@ -1,0 +1,9 @@
+**
+!dist/
+!dist/rocprofiler-sdk/
+!dist/rocprofiler-sdk/candidate.so
+!profiling/
+!profiling/rocprofiler-sdk/
+!profiling/rocprofiler-sdk/*.py
+!manifests/
+!manifests/rocprofiler-sdk-repair.json

@@ -1,0 +1,13 @@
+--- a/projects/rocprofiler-sdk/source/lib/rocprofiler-sdk/hsa/queue.cpp
++++ b/projects/rocprofiler-sdk/source/lib/rocprofiler-sdk/hsa/queue.cpp
+@@ -730,6 +730,10 @@
+                                        last_completion_signal,
+                                        new std::shared_ptr<info_session_t>(shared));
+         }
++        else
++        {
++            queue.async_complete();
++        }
+ 
+         // Command is only executed if GLOG_v=2 or higher, otherwise it is a no-op
+         ROCP_TRACE << fmt::format("QueueID {}: {}",
