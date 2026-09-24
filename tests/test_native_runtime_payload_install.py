@@ -40,6 +40,23 @@ def test_installs_and_verifies_with_exact_file_set(payload):
     assert (dest / "bin/codex").stat().st_mode & 0o111
 
 
+def test_install_completes_matching_predecessor_subset(payload):
+    root, runtime, spec, dest = payload
+    (dest / "bin").mkdir(parents=True)
+    (dest / "bin/codex").write_bytes((runtime / "bin/codex").read_bytes())
+    result = load().install_runtime(root, spec, dest)
+    assert result["files_verified"] == 2
+    assert (dest / "LICENSE").read_bytes() == (runtime / "LICENSE").read_bytes()
+
+
+def test_install_rejects_unexpected_predecessor_file(payload):
+    root, _, spec, dest = payload
+    dest.mkdir()
+    (dest / "auth.json").write_text("unit-test secret sentinel")
+    with pytest.raises(ValueError, match="unexpected files"):
+        load().install_runtime(root, spec, dest)
+
+
 def test_tampered_payload_never_installs(payload):
     root, runtime, spec, dest = payload
     (runtime / "bin/codex").write_text("modified")
