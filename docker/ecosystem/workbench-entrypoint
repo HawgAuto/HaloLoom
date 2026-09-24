@@ -66,9 +66,14 @@ case "$agent" in
     # Prefer an explicit image-runtime selection. Bare image use falls back
     # to the bundled, source-pinned CLI; an explicit host path remains usable.
     agent_bin="${HALOLOOM_CODEX_BIN_IMAGE:-${HALOLOOM_CODEX_BIN_HOST:-/opt/haloloom/codex-amd/bin/codex}}"
+    for selected in "${INFERENCE_OPTIMIZER_CODEX_BIN:-}" "${GEAK_CODEX_BIN:-}"; do
+      if [[ -n "$selected" && "$selected" != "$agent_bin" ]]; then
+        printf 'HaloLoom V2 forbids split Codex CLI selections: %s vs %s\n' "$selected" "$agent_bin" >&2
+        exit 2
+      fi
+    done
     export INFERENCE_OPTIMIZER_CODEX_BIN="${INFERENCE_OPTIMIZER_CODEX_BIN:-$agent_bin}"
-    # GEAK's locked native profile may retain its separately audited AMD CLI.
-    export GEAK_CODEX_BIN="${GEAK_CODEX_BIN:-$agent_bin}"
+    export GEAK_CODEX_BIN="$agent_bin"
     # Forge's native hooks protect driver/oracle files inside each lane. Keep
     # an explicit operator choice (the adapter rejects bypass with hooks), but
     # do not default Forge to the broader authoring role's outer-only boundary.

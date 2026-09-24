@@ -17,7 +17,14 @@ case "$agent" in
     ;;
   codex)
     agent_bin="${HALOLOOM_CODEX_BIN_IMAGE:-${HALOLOOM_CODEX_BIN_HOST:-/opt/haloloom/codex-amd/bin/codex}}"
+    for selected in "${INFERENCE_OPTIMIZER_CODEX_BIN:-}" "${GEAK_CODEX_BIN:-}"; do
+      if [[ -n "$selected" && "$selected" != "$agent_bin" ]]; then
+        echo "Quark forbids split Codex CLI selections" >&2
+        exit 2
+      fi
+    done
     export INFERENCE_OPTIMIZER_CODEX_BIN="${INFERENCE_OPTIMIZER_CODEX_BIN:-$agent_bin}"
+    export GEAK_CODEX_BIN="$agent_bin"
     if [[ -n "${INFERENCE_OPTIMIZER_CODEX_HOME:-}" ]]; then
       export GEAK_CODEX_HOME="$INFERENCE_OPTIMIZER_CODEX_HOME"
     fi
