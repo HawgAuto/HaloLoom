@@ -1,0 +1,14 @@
+# Image-specific loader closures for the complete runtime release.
+# Docker Compose automatically merges this file with compose.yaml.
+# Explicit -f/COMPOSE_FILE users must include both files; see docs/full-release-builds.md.
+# Keep the wheel SDK ahead of copied SDK libraries to avoid loading two COMGRs.
+services:
+  vllm:
+    environment:
+      LD_LIBRARY_PATH: /opt/venv/lib/python3.14/site-packages/_rocm_sdk_core/lib/host-math/lib:/opt/venv/lib/python3.14/site-packages/_rocm_sdk_core/lib:/opt/rocm/core-10.0/lib:/opt/rocm/core-10.0/lib/llvm/lib:/opt/venv/lib
+  quark:
+    environment:
+      LD_LIBRARY_PATH: /opt/venv/lib/python3.14/site-packages/_rocm_sdk_core/lib/host-math/lib:/opt/venv/lib/python3.14/site-packages/_rocm_sdk_core/lib:/opt/rocm/core-10.0/lib:/opt/rocm/core-10.0/lib/llvm/lib:/opt/venv/lib
+  sglang:
+    environment:
+      LD_LIBRARY_PATH: /opt/venv/lib/python3.14/site-packages/torch/lib:/opt/venv/lib/python3.14/site-packages/_rocm_sdk_core/lib:/opt/rocm/lib/host-math/lib:/opt/rocm/lib/llvm/lib:/opt/rocm/lib

@@ -29,6 +29,24 @@ or `--image sglang` to select a build. No accelerator devices are attached durin
 assembly. Source verification may also be run in a device-enabled container;
 it does not start inference or grant production authority.
 
+## Default Compose runtime configuration
+
+Normal `docker compose` commands, including the installer and serving helpers,
+automatically merge `compose.override.yaml` with `compose.yaml`. The override
+selects each full image's verified loader path; it leaves device access, user,
+entrypoint, profiling registration and other settings unchanged. The base file
+and its historical regression contracts are retained byte-for-byte.
+
+If you explicitly select Compose files, include the runtime override too:
+
+```bash
+docker compose -f compose.yaml -f compose.override.yaml config
+```
+
+Add any private overrides **after** those two files. Using the base file alone
+with the new runtimes can select a second COMGR library and abort during native
+imports. The vLLM/Quark and SGLang loader paths are intentionally different.
+
 ## Identity and runtime boundaries
 
 - The packet binds all five changed component commits, trees, wheel versions
