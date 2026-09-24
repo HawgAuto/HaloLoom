@@ -67,6 +67,21 @@ checks the complete file set, hashes, executable modes and actual CLI version.
 It rejects undeclared files, traversal and symlinks. These build-time checks are
 CPU-only and do not claim new GPU performance qualification.
 
+For the v0.1.4 successor, use the builder's `--package-native-successor` mode
+with the immutable v0.1.2 archive, official `codex_bundle` sidecars, the patched
+0.156.1 binary, and
+`codex-amd-source-rust-v0.156.1-ad99406.tar.gz`. The recipe validates
+`codex-cli 0.156.1`, replaces the complete native runtime and source trees,
+rewrites both native specifications and the enclosing file-hash map, and
+refuses a sidecar bundle that already contains `bin/codex`. The generated local
+artifact is 286,005,811 bytes with SHA-256
+`558c67761e7e22d34e41eeef799ae3cda74b8e7625463e9d349c4219c3bc5bf8`;
+its sole native `bin/codex` has SHA-256
+`89829c8520e5212397ebc4e34c49830355e8ee1ea588a5af3335c14f469cbe36`,
+and its source archive has SHA-256
+`54b8206d57dcf9f7868dc0320ce09e574e3e620c4cd4ce7e43188774dbff3129`.
+This is a local release input, not a published asset or an image qualification.
+
 The sandbox patch is scoped to AMD KFD/render devices. Installing it does not
 authorize exposing NVIDIA devices, relaxing general filesystem/network rules,
 or bypassing per-workload hooks. Runtime bytes must match the associated

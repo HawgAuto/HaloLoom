@@ -467,6 +467,139 @@ def package_quark_native(*, root: Path, tag: str) -> None:
     ], cwd=root, check=True)
 
 
+def _copy_runtime_bundle(bundle: Path, destination: Path) -> list[str]:
+    if not bundle.is_dir() or bundle.is_symlink():
+        raise InputError("native sidecar bundle must be a nonsymlink directory")
+    if (bundle / "bin/codex").exists():
+        raise InputError("native sidecar bundle must not contain duplicate codex executable")
+    executables: list[str] = []
+    for source in sorted(bundle.rglob("*")):
+        if source.is_symlink():
+            raise InputError(f"native sidecar bundle contains symlink: {source}")
+        relative = source.relative_to(bundle)
+        target = destination / relative
+        if source.is_dir():
+            target.mkdir(parents=True, exist_ok=True)
+        elif source.is_file():
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(source, target)
+            mode = source.stat().st_mode & 0o777
+            target.chmod(mode)
+            if mode & 0o111:
+                executables.append(relative.as_posix())
+        else:
+            raise InputError(f"native sidecar bundle contains unsupported file: {source}")
+    return executables
+
+
+def _write_reproducible_tar_gz(source: Path, output: Path) -> None:
+    output.parent.mkdir(parents=True, exist_ok=True)
+    if output.exists():
+        raise InputError(f"refusing to replace existing successor archive: {output}")
+    with output.open("xb") as raw, gzip.GzipFile(filename="", mode="wb", fileobj=raw, mtime=0) as zipped:
+        with tarfile.open(fileobj=zipped, mode="w|") as archive:
+            for path in sorted(source.rglob("*"), key=lambda item: item.relative_to(source).as_posix()):
+                relative = path.relative_to(source).as_posix()
+                info = archive.gettarinfo(str(path), relative)
+                info.uid = info.gid = 0
+                info.uname = info.gname = ""
+                info.mtime = 0
+                if path.is_file():
+                    with path.open("rb") as stream:
+                        archive.addfile(info, stream)
+                elif path.is_dir():
+                    archive.addfile(info)
+                else:
+                    raise InputError(f"successor staging contains unsupported file: {relative}")
+
+
+def package_native_successor(base_archive: Path, output: Path, *, bundle: Path,
+                             binary: Path, source_archive: Path, version: str,
+                             source_commit: str) -> dict[str, Any]:
+    """Replace the native source/runtime in a predecessor build-input archive."""
+    if not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", version):
+        raise InputError("native runtime version must be X.Y.Z")
+    if not re.fullmatch(r"[0-9a-f]{40}", source_commit):
+        raise InputError("native source commit must be a lowercase 40-character Git hash")
+    if not binary.is_file() or binary.is_symlink():
+        raise InputError("patched native binary must be a regular nonsymlink file")
+    if not source_archive.is_file() or source_archive.is_symlink():
+        raise InputError("native source archive must be a regular nonsymlink file")
+    if version not in source_archive.name or not source_archive.name.endswith(".tar.gz"):
+        raise InputError("native source archive filename must bind the runtime version")
+    check = subprocess.run([str(binary), "--version"], capture_output=True, text=True,
+                           timeout=30, check=False)
+    if check.returncode != 0 or check.stdout.strip() != f"codex-cli {version}":
+        raise InputError("patched native binary version does not match requested version")
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="haloloom-native-successor-", dir=output.parent) as temporary:
+        stage = Path(temporary) / "stage"
+        extract_successor_archive(base_archive, stage)
+        manifest_path = stage / "manifest.json"
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"),
+                                  object_pairs_hook=_reject_duplicate_keys)
+        except (OSError, UnicodeError, json.JSONDecodeError) as error:
+            raise InputError(f"cannot read predecessor payload manifest: {error}") from error
+
+        old_runtime = stage / "native-agent-runtime/codex-amd"
+        retained = {}
+        for name in ("LICENSE", "NOTICE"):
+            path = old_runtime / name
+            if path.is_file() and not path.is_symlink():
+                retained[name] = path.read_bytes()
+        shutil.rmtree(stage / "native-agent-runtime", ignore_errors=True)
+        shutil.rmtree(stage / "native-agent-source", ignore_errors=True)
+        runtime = stage / "native-agent-runtime/codex-amd"
+        runtime.mkdir(parents=True)
+        executables = _copy_runtime_bundle(bundle, runtime)
+        for name, contents in retained.items():
+            target = runtime / name
+            if not target.exists():
+                target.write_bytes(contents)
+                target.chmod(0o644)
+        entrypoint = runtime / "bin/codex"
+        entrypoint.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(binary, entrypoint)
+        entrypoint.chmod(0o755)
+        executables = sorted(set(executables) | {"bin/codex"})
+        files = {path.relative_to(runtime).as_posix(): _sha256(path)
+                 for path in sorted(runtime.rglob("*")) if path.is_file()}
+
+        source_dir = stage / "native-agent-source"
+        source_dir.mkdir()
+        source_target = source_dir / source_archive.name
+        shutil.copyfile(source_archive, source_target)
+        source_target.chmod(0o644)
+        manifest["native_agent_runtime"] = {
+            "entrypoint": "bin/codex", "executable_files": executables,
+            "files": files, "path": "native-agent-runtime/codex-amd",
+            "source_commit": source_commit, "version": version,
+        }
+        old_source = manifest.get("native_agent_source", {})
+        manifest["native_agent_source"] = {
+            "path": f"native-agent-source/{source_archive.name}",
+            "sha256": _sha256(source_target), "commit": source_commit,
+            "scope": old_source.get("scope", "complete matching Codex source and licenses"),
+        }
+        top_files = manifest.get("files")
+        if not isinstance(top_files, dict):
+            raise InputError("predecessor payload manifest files must be an object")
+        for name in list(top_files):
+            if name.startswith(("native-agent-runtime/", "native-agent-source/")):
+                del top_files[name]
+        for name, digest_value in files.items():
+            top_files[f"native-agent-runtime/codex-amd/{name}"] = digest_value
+        top_files[f"native-agent-source/{source_archive.name}"] = _sha256(source_target)
+        manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        _write_reproducible_tar_gz(stage, output)
+    return {"archive": str(output), "archive_sha256": _sha256(output),
+            "archive_bytes": output.stat().st_size,
+            "entrypoint_sha256": files["bin/codex"],
+            "source_sha256": _sha256(source_archive)}
+
+
 def main(argv: list[str] | None = None) -> int:
     root = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser(description=__doc__)
@@ -475,7 +608,33 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-unpacked-bytes", type=int, default=DEFAULT_MAX_BYTES)
     parser.add_argument("--package-quark-native", action="store_true",
                         help="finish the Quark output with its pinned native extension (used by build_images.sh)")
+    parser.add_argument("--package-native-successor", action="store_true",
+                        help="replace native runtime/source in a predecessor build-input archive")
+    parser.add_argument("--base-archive", type=Path)
+    parser.add_argument("--native-bundle", type=Path)
+    parser.add_argument("--native-binary", type=Path)
+    parser.add_argument("--native-source-archive", type=Path)
+    parser.add_argument("--native-version")
+    parser.add_argument("--native-source-commit")
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
+    if args.package_native_successor:
+        values = (args.base_archive, args.native_bundle, args.native_binary,
+                  args.native_source_archive, args.native_version,
+                  args.native_source_commit, args.output)
+        if any(value is None for value in values):
+            parser.error("native successor packaging requires all --base/native/output arguments")
+        try:
+            result = package_native_successor(
+                args.base_archive, args.output, bundle=args.native_bundle,
+                binary=args.native_binary, source_archive=args.native_source_archive,
+                version=args.native_version, source_commit=args.native_source_commit,
+            )
+        except (InputError, subprocess.CalledProcessError, OSError) as error:
+            print(f"ERROR: {error}", file=sys.stderr)
+            return 1
+        print(json.dumps(result, sort_keys=True))
+        return 0
     manifest_path = args.manifest if args.manifest.is_absolute() else root / args.manifest
     stage = root / "dist/source-current"
     try:

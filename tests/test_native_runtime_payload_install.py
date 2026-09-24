@@ -20,9 +20,9 @@ def payload(tmp_path):
     root = tmp_path / "payload"
     runtime = root / "native-agent-runtime/codex-amd"
     (runtime / "bin").mkdir(parents=True)
-    (runtime / "bin/codex").write_text("#!/bin/sh\nprintf 'codex-cli 0.153.4\n'\n")
+    (runtime / "bin/codex").write_text("#!/bin/sh\nprintf 'codex-cli 0.156.1\n'\n")
     (runtime / "LICENSE").write_text("Unit-test license fixture\n")
-    spec = {"path": "native-agent-runtime/codex-amd", "version": "0.153.4",
+    spec = {"path": "native-agent-runtime/codex-amd", "version": "0.156.1",
             "entrypoint": "bin/codex", "executable_files": ["bin/codex"],
             "source_commit": "1" * 40,
             "files": {str(p.relative_to(runtime)): hashlib.sha256(p.read_bytes()).hexdigest()
