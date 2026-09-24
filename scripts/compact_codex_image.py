@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -37,11 +38,15 @@ def dockerfile(source: str, old: dict, verify_ecosystem: bool, extra_labels: dic
         raise ValueError("Compaction cannot grant promotion authority")
     labels["haloloom.oci_compacted"] = "true"
     labels["haloloom.oci_compacted_from"] = old["Id"]
+    workdir = c.get("WorkingDir")
+    if workdir and not re.fullmatch(r"/[a-zA-Z0-9_./-]*", workdir):
+        raise ValueError("Unsafe working directory")
     lines = ["# syntax=docker/dockerfile:1.7", f"FROM {source} AS resolved", "USER root",
              "RUN set -eu; \\",
              "    rm -f /opt/haloloom/source-current/native-agent-source/codex-amd-source-rust-v0.153.4.tar.gz; \\",
              "    test \"$(/opt/haloloom/codex-amd/bin/codex --version)\" = 'codex-cli 0.156.1'; \\",
              "    test ! -e /opt/haloloom/source-current/native-agent-source/codex-amd-source-rust-v0.153.4.tar.gz"]
+
     if verify_ecosystem:
         lines[-1] += "; " + chr(92)  # append a command to the RUN directive
         lines.append("    /opt/venv/bin/python3 /opt/haloloom/verify_ecosystem.py")
@@ -59,9 +64,10 @@ def dockerfile(source: str, old: dict, verify_ecosystem: bool, extra_labels: dic
         lines.append(f"LABEL {key}={json.dumps(value)}")
     for port in sorted(c.get("ExposedPorts") or {}):
         lines.append(f"EXPOSE {port}")
-    for key in ("User", "WorkingDir"):
-        if c.get(key):
-            lines.append(f"{'WORKDIR' if key == 'WorkingDir' else 'USER'} {c[key]}")
+    if c.get("User"):
+        lines.append(f"USER {c['User']}")
+    # BuildKit emits a filesystem layer for non-root-path WORKDIR; restore
+    # its metadata using a one-instruction legacy build from the copied image.
     for key in ("Shell", "Entrypoint", "Cmd"):
         if c.get(key) is not None:
             lines.append(f"{key.upper()} {json.dumps(c[key])}")
@@ -85,6 +91,17 @@ def verify(source: dict, target: dict, extra_labels: dict[str, str]) -> None:
         raise RuntimeError("Compacted image label drift")
 
 
+def restore_workdir(staging: str, target: str, workdir: str) -> None:
+    # BuildKit adds a WORKDIR filesystem layer; Docker's legacy builder
+    # preserves the one-layer rootfs when that directory already exists.
+    # Unlike docker commit, this retains the inherited SHELL image config.
+    # Metadata-only stage: no network, pulls, or RUN instructions.
+    with tempfile.TemporaryDirectory(prefix="haloloom-workdir-") as tmp:
+        Path(tmp, "Dockerfile").write_text(f"FROM {image(staging)['Id']}\nWORKDIR {workdir}\n")
+        subprocess.run(["docker", "build", "--pull=false", "--network=none", "-t", target, tmp],
+                       check=True, env={**os.environ, "DOCKER_BUILDKIT": "0"})
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("source", help="Exact inspected local image tag")
@@ -96,6 +113,10 @@ def main() -> None:
     old = image(args.source)
     if subprocess.run(["docker", "image", "inspect", args.target], capture_output=True).returncode == 0:
         raise SystemExit("Refusing to overwrite an existing tag")
+    workdir = old["Config"].get("WorkingDir")
+    staging = args.target + "-workdir-pending" if workdir else args.target
+    if staging != args.target and subprocess.run(["docker", "image", "inspect", staging], capture_output=True).returncode == 0:
+        raise SystemExit("Refusing to overwrite an existing staging tag")
     if shutil.disk_usage("/").free < 2 * old["Size"]:
         raise SystemExit("Insufficient disk space for a new resolved image layer and workspace reserve")
     extra = dict(item.split("=", 1) for item in args.label)
@@ -104,17 +125,24 @@ def main() -> None:
         if args.recipe_out.exists():
             raise SystemExit("Refusing to overwrite an existing Dockerfile receipt")
         args.recipe_out.parent.mkdir(parents=True, exist_ok=True)
-        args.recipe_out.write_text(f"# pinned_source_image_id={old['Id']}\n" + recipe)
+        postbuild = f"# postbuild=DOCKER_BUILDKIT=0 docker build --network=none --pull=false (FROM staging image ID; WORKDIR {workdir}) -> {args.target}\n" if workdir else ""
+        args.recipe_out.write_text(f"# pinned_source_image_id={old['Id']}\n" + postbuild + recipe)
     with tempfile.TemporaryDirectory(prefix="haloloom-compact-") as tmp:
         Path(tmp, "Dockerfile").write_text(recipe)
         # Keep an exact recipe receipt outside this temporary context for a release packet.
         command = ["docker", "build", "--pull=false", "--network=none", "--progress=plain",
-                   "-t", args.target, tmp]
+                   "-t", staging, tmp]
         subprocess.run(command, check=True)
     if image(args.source)["Id"] != old["Id"]:
         raise RuntimeError("Source tag changed while compaction was running")
+    if workdir:
+        if len(image(staging)["RootFS"]["Layers"]) != 1:
+            raise RuntimeError("Staging image must have exactly one filesystem layer")
+        restore_workdir(staging, args.target, workdir)
     new = image(args.target)
     verify(old, new, extra)
+    if workdir:
+        subprocess.run(["docker", "image", "rm", staging], check=True)
     print(json.dumps({"source": old["Id"], "target": new["Id"], "tag": args.target,
                       "rootfs_layers": len(new["RootFS"]["Layers"]), "bytes": new["Size"]}, sort_keys=True))
 
