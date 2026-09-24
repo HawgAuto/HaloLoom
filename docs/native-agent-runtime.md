@@ -10,6 +10,31 @@
 > below records the previous coordinated-release runtime and is not an
 > instruction to re-install it into the V2 image.
 
+## V2 candidate source and one-CLI gate
+
+The [upstream 0.156.1 AMD patch](../patches/codex/amd-sandbox-rust-v0.156.1.patch.gz)
+(gzip SHA-256 `32a340d7d09eb0a50d52d4a0a08d8c4bebea76bd443fe807a5a1bb98c9c94ed8`;
+decompressed patch SHA-256 `beeddf249bcb6a16832c28f9b450c228cfd7ffa311122f6b77b6e5822415d24f`)
+applies to the exact upstream tag `rust-v0.156.1` at
+`b412ff32c417f855c2b2d1581b77058eed87c84b`. The local patched source
+commit is `ad994060e04547932f4a88fe21115916e4262f81`. Decompress with
+`gzip -dc`, pipe first to `git apply --check -` and then to `git apply -` in
+a clean upstream checkout; in `codex-rs/`, build
+`cargo build --locked --release -p codex-cli --bin codex`. Preserve the
+matching official 0.156.1 sidecars; install the patched main binary once.
+No credentials belong in build inputs.
+
+Inspect *all* executable `codex` files under `/opt`: the inherited Python
+`codex_cli_bin` SDK wheels can contain old 0.147.0 CLI executables in both the
+main and Quark-agent virtualenvs. Keep the importable SDK packages, but link
+those embedded entrypoints to the single patched main executable, and verify
+all realpaths and `--version` outputs. The Python package metadata still names
+its historical wheel version; it is not an installed-binary version check.
+Replacing paths in a derived image does **not** remove old bytes from its OCI
+lower layers. A clean source-bound release must rebuild or flatten those
+layers, update the source-current manifest and GEAK Git checkout, and pass the
+full GPU/quality and fresh-clone gates before publication or activation.
+
 The source-current payload includes the qualified native Codex CLI, its official
 sidecars, license/notice files, a file-hash manifest and source provenance. The
 patched CLI comes from `ff1c753381773e8c22e1739ab29709dc7589ba8c` (upstream `rust-v0.153.4`). The matching
