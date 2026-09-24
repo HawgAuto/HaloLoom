@@ -88,6 +88,10 @@ case "$agent" in
       rm -rf "$native_home"
       install -d -m 0700 "$native_home"
       install -m 0600 "$CODEX_HOME/auth.json" "$native_home/auth.json"
+      # GEAK's native CLI inherits CODEX_HOME directly (unlike the SDK route).
+      # Never leave it on the read-only operator auth mount after the copy.
+      export CODEX_HOME="$native_home"
+      export HYPERLOOM_CODEX_HOME="$native_home"
       export INFERENCE_OPTIMIZER_CODEX_AUTH_MODE=native_oauth
       export INFERENCE_OPTIMIZER_CODEX_HOME="$native_home"
       export GEAK_CODEX_HOME="$native_home"

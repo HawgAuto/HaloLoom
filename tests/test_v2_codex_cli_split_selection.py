@@ -55,3 +55,13 @@ def test_workbench_rejects_split_cli_env_and_accepts_one_amd_runtime(tmp_path):
     )
     assert rejected.returncode != 0
     assert "forbids split Codex CLI selections" in rejected.stderr
+
+
+def test_workbench_moves_direct_geak_cli_off_read_only_oauth_mount():
+    content = ENTRYPOINT.read_text(encoding="utf-8")
+    copy = content.index('install -m 0600 "$CODEX_HOME/auth.json" "$native_home/auth.json"')
+    direct = content.index('export CODEX_HOME="$native_home"', copy)
+    hyperloom = content.index('export HYPERLOOM_CODEX_HOME="$native_home"', direct)
+    sdk = content.index('export INFERENCE_OPTIMIZER_CODEX_HOME="$native_home"', hyperloom)
+    geak = content.index('export GEAK_CODEX_HOME="$native_home"', sdk)
+    assert copy < direct < hyperloom < sdk < geak
