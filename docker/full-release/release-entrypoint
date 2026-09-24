@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+case "${1:-}" in
+  verify) exec /opt/haloloom/workbench-entrypoint "$@" ;;
+esac
+case "${HALOLOOM_RELEASE_VARIANT:?release variant is required}" in
+  vllm|sglang) exec /opt/haloloom/workbench-entrypoint "$@" ;;
+  quark) exec /opt/haloloom/quark-entrypoint "$@" ;;
+  *) printf 'Unsupported HaloLoom release variant
+' >&2; exit 2 ;;
+esac
