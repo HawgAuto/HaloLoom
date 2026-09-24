@@ -77,8 +77,14 @@ def install_runtime(payload_root, spec, destination, *, verify_only=False):
             raise ValueError(f"runtime symlink in path: {path}")
     validate(source, files)
     if not verify_only:
-        if destination.exists() and file_set(destination) != set(files):
-            raise ValueError("installed runtime has an unexpected file set")
+        if destination.exists():
+            installed = file_set(destination)
+            unexpected = installed - set(files)
+            if unexpected:
+                raise ValueError(f"installed runtime has unexpected files: {sorted(unexpected)}")
+            for name in installed:
+                if digest(destination / safe_relative(name)) != files[name]:
+                    raise ValueError(f"installed runtime digest mismatch: {name}")
         destination.mkdir(parents=True, exist_ok=True)
         for name in files:
             target = destination / safe_relative(name)

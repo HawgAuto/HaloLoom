@@ -600,6 +600,136 @@ def package_native_successor(base_archive: Path, output: Path, *, bundle: Path,
             "source_sha256": _sha256(source_archive)}
 
 
+def _git(repo: Path, *args: str) -> str:
+    result = subprocess.run(["git", "-C", str(repo), *args], capture_output=True,
+                            text=True, timeout=120, check=False)
+    if result.returncode:
+        raise InputError(f"git {' '.join(args)} failed for {repo}: {result.stderr.strip()}")
+    return result.stdout.strip()
+
+
+def _validate_component_input(repo: Path, expected_ref: str, expected_tree: str,
+                              wheel: Path, wheel_prefix: str) -> None:
+    if any(not re.fullmatch(r"[0-9a-f]{40}", value)
+           for value in (expected_ref, expected_tree)):
+        raise InputError("component ref/tree must be lowercase 40-character Git hashes")
+    if not repo.is_dir() or repo.is_symlink():
+        raise InputError(f"component repository must be a nonsymlink directory: {repo}")
+    if _git(repo, "rev-parse", "HEAD") != expected_ref:
+        raise InputError(f"component checkout HEAD mismatch: {repo}")
+    if _git(repo, "rev-parse", "HEAD^{tree}") != expected_tree:
+        raise InputError(f"component checkout tree mismatch: {repo}")
+    if _git(repo, "status", "--porcelain", "--untracked-files=no"):
+        raise InputError(f"component checkout has tracked changes: {repo}")
+    if (not wheel.is_file() or wheel.is_symlink() or
+            not wheel.name.startswith(wheel_prefix) or not wheel.name.endswith(".whl")):
+        raise InputError(f"component wheel is not the expected regular wheel: {wheel}")
+
+
+def package_source_current_successor(
+    base_archive: Path, output: Path, *, apply_script: Path,
+    geak_repo: Path, geak_ref: str, geak_tree: str, geak_wheel: Path,
+    hyperloom_repo: Path, hyperloom_ref: str, hyperloom_tree: str,
+    hyperloom_wheel: Path,
+) -> dict[str, Any]:
+    """Replace GEAK/Hyperloom source-current inputs without touching native payloads."""
+    _validate_component_input(geak_repo, geak_ref, geak_tree, geak_wheel, "geak-")
+    _validate_component_input(hyperloom_repo, hyperloom_ref, hyperloom_tree,
+                              hyperloom_wheel, "hyperloom_inference_optimizer-")
+    if not apply_script.is_file() or apply_script.is_symlink():
+        raise InputError("source-current apply script must be a regular nonsymlink file")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="haloloom-source-current-successor-",
+                                     dir=output.parent) as temporary:
+        stage = Path(temporary) / "stage"
+        extract_successor_archive(base_archive, stage)
+        manifest_path = stage / "manifest.json"
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"),
+                                  object_pairs_hook=_reject_duplicate_keys)
+        except (OSError, UnicodeError, json.JSONDecodeError) as error:
+            raise InputError(f"cannot read predecessor payload manifest: {error}") from error
+        components = manifest.get("components")
+        files = manifest.get("files")
+        if not isinstance(components, dict) or not isinstance(files, dict):
+            raise InputError("predecessor components/files manifest entries must be objects")
+
+        inputs = {
+            "geak": (geak_repo, geak_ref, geak_tree, geak_wheel, "geak.bundle"),
+            "hyperloom": (hyperloom_repo, hyperloom_ref, hyperloom_tree,
+                          hyperloom_wheel, "hyperloom.bundle"),
+        }
+        for name, (repo, ref, tree, wheel, transport_name) in inputs.items():
+            old = components.get(name)
+            if not isinstance(old, dict) or not isinstance(old.get("path"), str):
+                raise InputError(f"predecessor component manifest is malformed: {name}")
+            for stale in (old.get("transport"), old.get("wheel")):
+                if isinstance(stale, str) and (stage / stale).exists():
+                    target = stage / stale
+                    shutil.rmtree(target) if target.is_dir() else target.unlink()
+            transport = stage / transport_name
+            subprocess.run(["git", "-C", str(repo), "bundle", "create", str(transport), "HEAD"],
+                           timeout=300, check=True)
+            heads = _git(repo, "bundle", "list-heads", str(transport)).splitlines()
+            if heads != [f"{ref} HEAD"]:
+                raise InputError(f"component bundle does not contain exactly the requested HEAD: {name}")
+            wheel_target = stage / wheel.name
+            if wheel_target.exists() and wheel_target != stage / old.get("wheel", ""):
+                raise InputError(f"refusing duplicate component wheel name: {wheel.name}")
+            shutil.copyfile(wheel, wheel_target)
+            wheel_target.chmod(0o644)
+            predecessor_ref = old.get("ref")
+            if not isinstance(predecessor_ref, str) or not re.fullmatch(r"[0-9a-f]{40}", predecessor_ref):
+                raise InputError(f"predecessor component ref is malformed: {name}")
+            components[name] = {
+                "base": predecessor_ref, "path": old["path"], "ref": ref,
+                "transport": transport_name, "tree": tree, "wheel": wheel.name,
+                "wheel_sha256": _sha256(wheel_target),
+            }
+
+        shutil.copyfile(apply_script, stage / "apply-and-verify.py")
+        (stage / "apply-and-verify.py").chmod(0o755)
+        runtime_installer = apply_script.parent / "install_native_agent_runtime.py"
+        if not runtime_installer.is_file() or runtime_installer.is_symlink():
+            raise InputError("source-current native runtime installer must be a regular nonsymlink file")
+        shutil.copyfile(runtime_installer, stage / "install-native-agent-runtime.py")
+        (stage / "install-native-agent-runtime.py").chmod(0o755)
+        stale_verifier = stage / "verify_ecosystem.py"
+        if stale_verifier.exists():
+            stale_verifier.unlink()
+
+        candidate_path = stage / "candidate-sources.json"
+        candidate = json.loads(candidate_path.read_text(encoding="utf-8"),
+                               object_pairs_hook=_reject_duplicate_keys)
+        candidate["GEAK"] = {"ref": geak_ref, "tree": geak_tree}
+        candidate["Hyperloom"] = {"ref": hyperloom_ref, "tree": hyperloom_tree}
+        candidate_path.write_text(json.dumps(candidate, indent=2, sort_keys=True) + "\n",
+                                  encoding="utf-8")
+
+        expected = {}
+        for relative in _git(hyperloom_repo, "ls-files").splitlines():
+            source = hyperloom_repo / relative
+            if source.is_file() and not source.is_symlink():
+                expected[relative] = _sha256(source)
+        (stage / "component-source-reference.json").write_text(json.dumps(
+            {"expected": expected, "ref": hyperloom_ref}, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8")
+
+        files.clear()
+        for path in sorted(stage.rglob("*")):
+            if path.is_file() and path != manifest_path:
+                files[path.relative_to(stage).as_posix()] = _sha256(path)
+        manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+                                 encoding="utf-8")
+        _write_reproducible_tar_gz(stage, output)
+    return {
+        "archive": str(output), "archive_sha256": _sha256(output),
+        "archive_bytes": output.stat().st_size,
+        "geak_ref": geak_ref, "geak_tree": geak_tree,
+        "hyperloom_ref": hyperloom_ref, "hyperloom_tree": hyperloom_tree,
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     root = Path(__file__).resolve().parents[1]
     parser = argparse.ArgumentParser(description=__doc__)
@@ -610,6 +740,8 @@ def main(argv: list[str] | None = None) -> int:
                         help="finish the Quark output with its pinned native extension (used by build_images.sh)")
     parser.add_argument("--package-native-successor", action="store_true",
                         help="replace native runtime/source in a predecessor build-input archive")
+    parser.add_argument("--package-source-current-successor", action="store_true",
+                        help="replace GEAK/Hyperloom source-current inputs in an archive")
     parser.add_argument("--base-archive", type=Path)
     parser.add_argument("--native-bundle", type=Path)
     parser.add_argument("--native-binary", type=Path)
@@ -617,7 +749,38 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--native-version")
     parser.add_argument("--native-source-commit")
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--source-current-apply", type=Path)
+    parser.add_argument("--geak-repo", type=Path)
+    parser.add_argument("--geak-ref")
+    parser.add_argument("--geak-tree")
+    parser.add_argument("--geak-wheel", type=Path)
+    parser.add_argument("--hyperloom-repo", type=Path)
+    parser.add_argument("--hyperloom-ref")
+    parser.add_argument("--hyperloom-tree")
+    parser.add_argument("--hyperloom-wheel", type=Path)
     args = parser.parse_args(argv)
+    if args.package_native_successor and args.package_source_current_successor:
+        parser.error("successor packaging modes are mutually exclusive")
+    if args.package_source_current_successor:
+        values = (args.base_archive, args.output, args.source_current_apply,
+                  args.geak_repo, args.geak_ref, args.geak_tree, args.geak_wheel,
+                  args.hyperloom_repo, args.hyperloom_ref, args.hyperloom_tree,
+                  args.hyperloom_wheel)
+        if any(value is None for value in values):
+            parser.error("source-current successor packaging requires all source-current arguments")
+        try:
+            result = package_source_current_successor(
+                args.base_archive, args.output, apply_script=args.source_current_apply,
+                geak_repo=args.geak_repo, geak_ref=args.geak_ref,
+                geak_tree=args.geak_tree, geak_wheel=args.geak_wheel,
+                hyperloom_repo=args.hyperloom_repo, hyperloom_ref=args.hyperloom_ref,
+                hyperloom_tree=args.hyperloom_tree, hyperloom_wheel=args.hyperloom_wheel,
+            )
+        except (InputError, subprocess.CalledProcessError, OSError) as error:
+            print(f"ERROR: {error}", file=sys.stderr)
+            return 1
+        print(json.dumps(result, sort_keys=True))
+        return 0
     if args.package_native_successor:
         values = (args.base_archive, args.native_bundle, args.native_binary,
                   args.native_source_archive, args.native_version,
