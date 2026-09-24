@@ -67,7 +67,8 @@ case "$agent" in
     # to the bundled, source-pinned CLI; an explicit host path remains usable.
     agent_bin="${HALOLOOM_CODEX_BIN_IMAGE:-${HALOLOOM_CODEX_BIN_HOST:-/opt/haloloom/codex-amd/bin/codex}}"
     export INFERENCE_OPTIMIZER_CODEX_BIN="${INFERENCE_OPTIMIZER_CODEX_BIN:-$agent_bin}"
-    export GEAK_CODEX_BIN="$agent_bin"
+    # GEAK's locked native profile may retain its separately audited AMD CLI.
+    export GEAK_CODEX_BIN="${GEAK_CODEX_BIN:-$agent_bin}"
     # Forge's native hooks protect driver/oracle files inside each lane. Keep
     # an explicit operator choice (the adapter rejects bypass with hooks), but
     # do not default Forge to the broader authoring role's outer-only boundary.
