@@ -1,5 +1,15 @@
 # Native agent runtime in source-current images
 
+> **V2 successor candidate:** The `rust-v0.156.1` unified Codex build ports the
+> scoped AMD device sandbox patch onto upstream 0.156.1. GEAK Astra, Sol roles,
+> and Quark select the **same** `/opt/haloloom/codex-amd/bin/codex`; the active
+> GEAK profile is `haloloom-v2-astra-upstream`. No image should retain the
+> historical 0.153.4 executable in either `/opt/haloloom/codex-amd` or
+> `/opt/haloloom/source-current/native-agent-runtime/codex-amd`. Release
+> packaging and a fresh GPU qualification are separate gates. The section
+> below records the previous coordinated-release runtime and is not an
+> instruction to re-install it into the V2 image.
+
 The source-current payload includes the qualified native Codex CLI, its official
 sidecars, license/notice files, a file-hash manifest and source provenance. The
 patched CLI comes from `ff1c753381773e8c22e1739ab29709dc7589ba8c` (upstream `rust-v0.153.4`). The matching
