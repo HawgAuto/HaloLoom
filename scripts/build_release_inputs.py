@@ -732,6 +732,22 @@ def package_source_current_successor(
 
 def main(argv: list[str] | None = None) -> int:
     root = Path(__file__).resolve().parents[1]
+    # Preserve all legacy entrypoints and packet semantics. Route the new full
+    # packet before the legacy parser rejects its prepare-only/image options.
+    raw_argv = list(sys.argv[1:] if argv is None else argv)
+    if not any(x in raw_argv for x in ('--package-native-successor', '--package-source-current-successor')):
+        peek = argparse.ArgumentParser(add_help=False)
+        peek.add_argument('--manifest', type=Path, default=root / 'manifests/build-inputs.json')
+        selection, _ = peek.parse_known_args(raw_argv)
+        selected = selection.manifest if selection.manifest.is_absolute() else root / selection.manifest
+        if selected.is_file():
+            try:
+                schema = json.loads(selected.read_text(), object_pairs_hook=_reject_duplicate_keys).get('schema_version')
+            except (ValueError, OSError):
+                schema = None  # Preserve the legacy parser's error handling.
+            if type(schema) is int and schema == 4:
+                from build_full_release_inputs import main as full_release_main
+                return full_release_main(raw_argv)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=Path("manifests/build-inputs.json"))
     parser.add_argument("--archive", type=Path, help="absolute local archive path (required only for schema 2)")

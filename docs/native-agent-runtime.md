@@ -80,7 +80,36 @@ its sole native `bin/codex` has SHA-256
 `89829c8520e5212397ebc4e34c49830355e8ee1ea588a5af3335c14f469cbe36`,
 and its source archive has SHA-256
 `54b8206d57dcf9f7868dc0320ce09e574e3e620c4cd4ce7e43188774dbff3129`.
-This is a local release input, not a published asset or an image qualification.
+This intermediate native-only archive is not the image input. The successor
+`--package-source-current-successor` recipe replaces GEAK and Hyperloom bundles,
+wheels, and exact source refs, and rewrites the payload hash map. Its final
+source-current archive is
+`haloloom-v0.1.4-source-current-cd1af945-942bf8e-v2.tar.gz` (328,627,858
+bytes; SHA-256 `a6358923d4aa22476b5d578122ecf8e6433fa68e44c644af8de054ede459d26b`).
+It binds GEAK `cd1af9459f00d3d785978852c2b3399e90d72853` (tree
+`7cf54b78f58449ecdaa8f0504adf0b5d7434fd1b`) and Hyperloom
+`942bf8e56e396cd1ad2592c9c61de970d6d1372a` (tree
+`c8e41882d3b77f85de7866d0ff8715ba022874d3`). The obsolete
+`verify_ecosystem.py` is intentionally *not* embedded in that archive: the
+successor image copies the revised verifier from
+`docker/native-v2-successor/verify_ecosystem.py` as a separately reviewable
+build input. Both repository commits and both wheel hashes must match the
+archive before using it. `candidate-sources.json` retains the ancestor
+HaloLoom source ref as payload lineage, not a claim that this follow-on
+candidate build has that exact source commit.
+
+The image recipe is `docker/native-v2-successor/Dockerfile` and takes the
+archive as a build-context file named `successor-build-inputs.tar.gz`, plus a
+BuildKit context `haloloom_source` pointing at this source tree. Pass the
+archive SHA-256 as `PAYLOAD_SHA256`; build without network or GPU access. The
+recipe installs and verifies source-current, then replaces the image verifier.
+Run `scripts/compact_codex_image.py` against each derived image: it constructs
+a fresh scratch-based OCI image with a single filesystem layer, retaining
+runtime metadata while removing predecessor executable/archive bytes from OCI
+layer history. Check every `/opt/**/codex` executable realpath, source-current
+manifest hashes, source checkout HEAD/tree, verifier, and registry digest after
+compaction. CPU-only source installation does not qualify native GPU workloads
+or grant promotion authority; leave existing production image tags unchanged.
 
 The sandbox patch is scoped to AMD KFD/render devices. Installing it does not
 authorize exposing NVIDIA devices, relaxing general filesystem/network rules,
