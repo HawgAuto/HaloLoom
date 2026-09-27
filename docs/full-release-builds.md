@@ -5,6 +5,30 @@ TraceLens/profiler changes, and GEAK/Hyperloom/Arbor and native-agent routing
 changes as one versioned source packet. The installer version changes only
 when the corresponding public image manifests have been verified.
 
+## Availability and loader-path scope
+
+This is a **build interface**, not an announcement that v0.1.4 images are
+published. The stable installer and `manifests/components.json` retain their
+last released image selection until registry readback succeeds. A source-fix
+branch or source commit does not change the image installed by that manifest.
+The examples below consume the manifest actually present in the checkout;
+they do not implicitly select an unpublished v0.1.4 packet.
+
+`docker/full-release/compose.runtime.yaml` preserves the full-runtime
+image-specific loader closures. It is intentionally **opt-in**, not a root
+`compose.override.yaml`: applying the Python 3.14 wheel-SDK paths automatically
+to older stable images would mix incompatible closures. After selecting and
+verifying matching full-runtime images, inspect the merged configuration:
+
+```bash
+docker compose -f compose.yaml -f docker/full-release/compose.runtime.yaml config
+```
+
+This overlay changes loader paths only, not image selection. Keep the wheel SDK
+before copied SDK libraries to avoid loading two COMGR implementations; vLLM /
+Quark and SGLang use different paths. Explicit private overrides follow this
+file. Do not use the overlay with a different interpreter or ROCm layout.
+
 ## Rebuild the release
 
 Use the checked-out release's actual manifest; do not substitute a local image
