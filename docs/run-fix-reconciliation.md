@@ -48,8 +48,16 @@ blank-line whitespace warning.
 
 The component reconciliation is ongoing. TraceLens's proposed successor is
 **held from publication** because the existing `xdit_hunyuanvideo` CSV reference
-test passes at its base and fails with the proposed attribution changes. The
-InferenceX/Magpie launcher deltas are still under ownership/source review.
+test passes at its base and fails with the proposed attribution changes.
+
+The [InferenceX launcher patch](../patches/inferencex/README.md) is now carried
+here against exact upstream source `3d5581562f643f9bdeb8410cd924e2c70906c966`.
+Parent replay on a fresh anonymous checkout reproduced the accepted launcher
+hash and the prepared patched tree; `bash -n` and all five included CPU tests
+passed. Four **client URLs**, not server bind flags, use loopback. The accepted
+profile/evaluator handling is preserved. There is no unrelated Magpie edit,
+new public InferenceX fork commit, or automatic stable-installer application.
+
 This checkpoint does not assert that all component forks, wheel archives,
 installed runtime files or image pins have been refreshed. In particular,
 GEAK's repaired `interface/` files require a source/runtime refresh, not just

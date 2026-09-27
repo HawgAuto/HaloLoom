@@ -1,0 +1,238 @@
+From 42877dadca04505ff3049693b1c8a5f124b8ab01 Mon Sep 17 00:00:00 2001
+From: TomPettyFlacko <267776105+hstolte11-collab@users.noreply.github.com>
+Date: Sat, 26 Sep 2026 20:25:18 -0500
+Subject: [PATCH] fix(benchmarks): use loopback for local clients
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Preserve accepted profiling and evaluator failure propagation while replacing only local client wildcard URLs. Server bind behavior remains unchanged.
+
+保留已验收的性能分析与评估器失败传播修复，同时仅替换本地客户端的通配地址 URL。服务器绑定行为保持不变。
+---
+ benchmarks/benchmark_lib.sh               | 35 +++++++---
+ tests/test_haloloom_benchmark_launcher.py | 82 +++++++++++++++++++++++
+ 2 files changed, 106 insertions(+), 11 deletions(-)
+ create mode 100644 tests/test_haloloom_benchmark_launcher.py
+
+diff --git a/benchmarks/benchmark_lib.sh b/benchmarks/benchmark_lib.sh
+index 68cd412..40d94c2 100644
+--- a/benchmarks/benchmark_lib.sh
++++ b/benchmarks/benchmark_lib.sh
+@@ -1,5 +1,8 @@
+ #!/usr/bin/env bash
+ 
++# Bind source location before callers change directories for artifacts.
++_INFERENCEX_BENCHMARK_LIB_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)" || return $?
++
+ # Shared benchmarking utilities for InferenceX
+ 
+ # Keep Python bytecode out of the mounted workspace. Benchmark jobs often run as
+@@ -461,7 +464,7 @@ wait_for_server_ready() {
+     fi
+ 
+     wait_for_ready \
+-        --endpoint "http://0.0.0.0:${port}/health" \
++        --endpoint "http://127.0.0.1:${port}/health" \
+         --log "$server_log" \
+         --pid "$server_pid" \
+         --sleep-interval "$sleep_interval"
+@@ -674,7 +677,7 @@ run_benchmark_serving() {
+             mkdir -p "$_prof_dir"
+         fi
+         profile_flag+=(--profile)
+-        num_prompts="$max_concurrency"
++        num_prompts="${NUM_PROMPTS:-$max_concurrency}"
+     fi
+ 
+     # Build benchmark command
+@@ -682,7 +685,7 @@ run_benchmark_serving() {
+         python3 "$workspace_dir/utils/bench_serving/benchmark_serving.py"
+         --model "$model"
+         --backend "$backend"
+-        --base-url "http://0.0.0.0:$port"
++        --base-url "http://127.0.0.1:$port"
+         --dataset-name random
+         --random-input-len "$input_len"
+         --random-output-len "$output_len"
+@@ -868,6 +871,12 @@ move_profile_trace_for_relay() {
+ # ------------------------------
+ 
+ _install_lm_eval_deps() {
++    # Immutable serving images install and qualify the client at build time.
++    # Validate the real API client; do not pip-install into an unprivileged run.
++    if [[ "${INFERENCEX_LM_EVAL_PREINSTALLED:-0}" == "1" ]]; then
++        python3 -c 'import importlib.metadata as m; import tenacity, requests, aiohttp; from lm_eval import evaluator; from lm_eval.api.registry import get_model; assert m.version("lm-eval") == "0.4.9.2"; assert get_model("local-chat-completions").__name__ == "LocalChatCompletion"'
++        return $?
++    fi
+     # torchvision causes circular imports in ATOM; TRT-LLM/SGLang need it at module level.
+     if [[ "${IMAGE:-}" == *atom* ]]; then
+         python3 -m pip uninstall -y torchvision 2>/dev/null || true
+@@ -887,13 +896,13 @@ _install_lm_eval_deps() {
+ }
+ 
+ _eval_patches_dir() {
+-    cd "$(dirname "${BASH_SOURCE[0]}")/../utils/evals/patches" && pwd
++    cd "${_INFERENCEX_BENCHMARK_LIB_DIR}/../utils/evals/patches" && pwd
+ }
+ 
+ _patch_lm_eval() {
+     local patch_dir
+     patch_dir="$(mktemp -d)"
+-    cp "$(_eval_patches_dir)/lm_eval_sitecustomize.py" "$patch_dir/sitecustomize.py"
++    cp "$(_eval_patches_dir)/lm_eval_sitecustomize.py" "$patch_dir/sitecustomize.py" || return $?
+     export PYTHONPATH="${patch_dir}${PYTHONPATH:+:${PYTHONPATH}}"
+ }
+ 
+@@ -988,6 +997,9 @@ run_lm_eval() {
+                 esac
+                 shift 2
+                 ;;
++            # HYPERLOOM_EVAL_CONCURRENCY_ARG: accept the redundant flag
++            # (concurrency also flows via EVAL_CONCURRENT_REQUESTS/CONC).
++            --concurrent-requests|--concurrent_requests) concurrent_requests="$2"; shift 2 ;;
+             *)
+                 echo "Unknown parameter: $1" >&2
+                 return 2
+@@ -997,7 +1009,7 @@ run_lm_eval() {
+ 
+     # Serving images may use a different WORKDIR.
+     local _repo_root
+-    _repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
++    _repo_root="$(cd "${_INFERENCEX_BENCHMARK_LIB_DIR}/.." && pwd)" || return $?
+     if [[ "$tasks_dir" == *.yaml && "$tasks_dir" != /* \
+           && ! -f "$tasks_dir" && -f "$_repo_root/$tasks_dir" ]]; then
+         echo "run_lm_eval: anchoring relative task '$tasks_dir' to repo root -> $_repo_root/$tasks_dir"
+@@ -1005,12 +1017,12 @@ run_lm_eval() {
+     fi
+ 
+     if [ "${INFERENCEX_LM_EVAL_RUNTIME_READY:-false}" != "true" ]; then
+-        _install_lm_eval_deps
+-        _patch_lm_eval
++        _install_lm_eval_deps || return $?
++        _patch_lm_eval || return $?
+         export INFERENCEX_LM_EVAL_RUNTIME_READY=true
+     fi
+ 
+-    local openai_server_base="http://0.0.0.0:${port}"
++    local openai_server_base="http://127.0.0.1:${port}"
+     local openai_chat_base="${openai_server_base}/v1/chat/completions"
+     export OPENAI_API_KEY=${OPENAI_API_KEY:-EMPTY}
+     MODEL_NAME=${MODEL_NAME:-$MODEL} # Prefer MODEL_NAME, else MODEL
+@@ -1025,6 +1037,7 @@ run_lm_eval() {
+ 
+     # Export for append_lm_eval_summary to pick up
+     export EVAL_RESULT_DIR="$results_dir"
++    echo "HYPERLOOM_EVAL_START" >&2
+     set -x
+     python3 -m lm_eval --model local-chat-completions --apply_chat_template \
+       ${include_path:+--include_path "$include_path"} \
+@@ -1307,7 +1320,7 @@ append_lm_eval_summary() {
+         while IFS= read -r -d '' jf; do
+             base=$(basename "$jf")
+             if [ "$base" != "meta_env.json" ]; then
+-                mv -f "$jf" ./ || echo "WARN: failed to move ${jf}" >&2
++                mv -f "$jf" "${RESULT_DIR:-.}/" || echo "WARN: failed to move ${jf}" >&2
+             fi
+         done < <(find "${out_dir}" -type f -name "*.json*" -print0 2>/dev/null)
+     fi
+@@ -1440,7 +1453,7 @@ d["model"] = {
+     "model_name": f"openai/{model_name}",
+     "cost_tracking": "ignore_errors",
+     "model_kwargs": {
+-        "api_base": f"http://0.0.0.0:{os.environ['SWEBENCH_AGENT_PORT']}/v1",
++        "api_base": f"http://127.0.0.1:{os.environ['SWEBENCH_AGENT_PORT']}/v1",
+         "api_key": "dummy",
+         "custom_llm_provider": "openai",
+         "temperature": 0.0,
+diff --git a/tests/test_haloloom_benchmark_launcher.py b/tests/test_haloloom_benchmark_launcher.py
+new file mode 100644
+index 0000000..efc2a7b
+--- /dev/null
++++ b/tests/test_haloloom_benchmark_launcher.py
+@@ -0,0 +1,82 @@
++from __future__ import annotations
++
++import hashlib
++import subprocess
++from pathlib import Path
++
++
++ROOT = Path(__file__).resolve().parents[1]
++LIB = ROOT / "benchmarks" / "benchmark_lib.sh"
++PINNED_UPSTREAM = "3d5581562f643f9bdeb8410cd924e2c70906c966"
++PINNED_SHA256 = "23dc5b2fcc2b66fb6f6afc509f7400da062f43f758d22f61881f73a3c441ce18"
++ACCEPTED_PRE_LOOPBACK_SHA256 = "2e9c3db3c292aec3e96718c776d26cdaf62606e3d03649b5310ac29e1e701100"
++ACCEPTED_SHA256 = "1f4760bfb903aac9eea639f098fcc41ea3b53849001c8d89a189d8084c6829b4"
++
++
++def _pinned_text() -> str:
++    result = subprocess.run(
++        ["git", "show", f"{PINNED_UPSTREAM}:benchmarks/benchmark_lib.sh"],
++        cwd=ROOT,
++        check=True,
++        capture_output=True,
++        text=True,
++    )
++    return result.stdout
++
++
++def test_exact_accepted_source_and_pinned_parent() -> None:
++    pinned = _pinned_text()
++    accepted = LIB.read_text()
++    assert hashlib.sha256(pinned.encode()).hexdigest() == PINNED_SHA256
++    assert hashlib.sha256(accepted.encode()).hexdigest() == ACCEPTED_SHA256
++
++
++def test_only_four_client_urls_changed_from_pre_loopback_authority() -> None:
++    accepted = LIB.read_text()
++    reconstructed = accepted.replace("http://127.0.0.1:", "http://0.0.0.0:")
++    assert accepted.count("http://127.0.0.1:") == 4
++    assert "http://0.0.0.0:" not in accepted
++    assert hashlib.sha256(reconstructed.encode()).hexdigest() == ACCEPTED_PRE_LOOPBACK_SHA256
++
++
++def test_server_bind_arguments_are_not_rewritten() -> None:
++    pinned_bind_lines = [line for line in _pinned_text().splitlines() if "--host" in line]
++    accepted_bind_lines = [line for line in LIB.read_text().splitlines() if "--host" in line]
++    assert accepted_bind_lines == pinned_bind_lines
++
++
++def test_health_helper_passes_loopback_endpoint() -> None:
++    command = r'''
++source "$1"
++wait_for_ready() { printf '%s\n' "$@"; }
++wait_for_server_ready --port 18238 --server-log /unused --server-pid 123
++'''
++    result = subprocess.run(
++        ["bash", "-c", command, "probe", str(LIB)],
++        cwd=ROOT,
++        check=True,
++        capture_output=True,
++        text=True,
++    )
++    assert "http://127.0.0.1:18238/health" in result.stdout
++
++
++def test_profile_eval_failures_propagate_and_paths_survive_chdir() -> None:
++    command = r'''
++source "$1"
++expected="$2/utils/evals/patches"
++cd /
++[[ "$(_eval_patches_dir)" == "$expected" ]]
++python3() { return 37; }
++export INFERENCEX_LM_EVAL_PREINSTALLED=1
++set +e
++_install_lm_eval_deps
++rc=$?
++set -e
++[[ "$rc" -eq 37 ]]
++'''
++    subprocess.run(
++        ["bash", "-e", "-c", command, "probe", str(LIB), str(ROOT)],
++        cwd=ROOT,
++        check=True,
++    )
+-- 
+2.43.0
+

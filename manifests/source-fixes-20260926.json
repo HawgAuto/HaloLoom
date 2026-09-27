@@ -78,9 +78,20 @@
       }
     }
   },
+  "portable_patches": {
+    "InferenceX_launcher": {
+      "manifest": "patches/inferencex/manifest.json",
+      "patch": "patches/inferencex/accepted-launcher-repairs.patch",
+      "patch_sha256": "a1938f70fc5c53603dd1fdf9d052b78741da21ce5afe69ae118ff5cbaac594ea",
+      "base_ref": "3d5581562f643f9bdeb8410cd924e2c70906c966",
+      "delivery": "portable_patch_not_public_component_commit",
+      "anonymous_base_and_patch_replay_verified": true,
+      "cpu_tests_passed": 5,
+      "automatically_applied_by_stable_installer": false
+    }
+  },
   "unresolved_publication_items": {
-    "TraceLens": "Proposed graph attribution/correlation changes held: existing xdit_hunyuanvideo CSV reference passes at base and fails at successor; correction required.",
-    "InferenceX_Magpie_launcher": "Accepted loopback-client and profile-failure launcher deltas are undergoing source-ownership reconciliation."
+    "TraceLens": "Proposed graph attribution/correlation changes held: existing xdit_hunyuanvideo CSV reference passes at base and fails at successor; correction required."
   },
   "limitations": [
     "Source tests do not establish GPU/model/performance qualification.",

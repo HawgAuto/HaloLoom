@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "delivery": "portable_patch_not_public_component_commit",
+  "repository": "https://github.com/SemiAnalysisAI/InferenceX",
+  "base_ref": "3d5581562f643f9bdeb8410cd924e2c70906c966",
+  "base_tree": "c8226f2352c27f3e7bfbe07133d44452d6d7ed54",
+  "local_preparation_commit": "42877dadca04505ff3049693b1c8a5f124b8ab01",
+  "local_preparation_commit_publicly_fetchable": false,
+  "patched_tree": "bf8c7484d0f3674dcbb6f2d9fbd44b9997bbd3c2",
+  "patch": "accepted-launcher-repairs.patch",
+  "patch_sha256": "a1938f70fc5c53603dd1fdf9d052b78741da21ce5afe69ae118ff5cbaac594ea",
+  "launcher": "benchmarks/benchmark_lib.sh",
+  "base_launcher_sha256": "23dc5b2fcc2b66fb6f6afc509f7400da062f43f758d22f61881f73a3c441ce18",
+  "accepted_pre_loopback_sha256": "2e9c3db3c292aec3e96718c776d26cdaf62606e3d03649b5310ac29e1e701100",
+  "accepted_launcher_sha256": "1f4760bfb903aac9eea639f098fcc41ea3b53849001c8d89a189d8084c6829b4",
+  "changed_files": [
+    "benchmarks/benchmark_lib.sh",
+    "tests/test_haloloom_benchmark_launcher.py"
+  ],
+  "client_url_replacements": 4,
+  "server_bind_arguments_changed": false,
+  "parent_verification": {
+    "anonymous_base_fetch": true,
+    "patch_apply_check": "PASS",
+    "patched_tree_matches_preparation": true,
+    "bash_syntax": "PASS",
+    "cpu_test_counts": {
+      "tests": 5,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0
+    },
+    "network_and_devices_during_tests": "none"
+  },
+  "automatically_applied_by_stable_installer": false,
+  "image_build": false,
+  "model_inference": false,
+  "upstream_pr_or_acceptance_claim": false
+}
