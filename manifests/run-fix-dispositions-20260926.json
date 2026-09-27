@@ -1,0 +1,667 @@
+{
+  "schema_version": 1,
+  "scope": "Disposition of all 50 historical debugging-ledger rows; supplementary source fixes listed separately",
+  "complete": true,
+  "source_publication_only": true,
+  "row_count": 50,
+  "classification_counts": {
+    "accepted_fix": 35,
+    "workaround": 6,
+    "hypothesis_open": 8,
+    "reverted_unadopted": 1
+  },
+  "delivery_counts": {
+    "published_source": 25,
+    "private_harness_retained_procedure_documented": 5,
+    "documented_operational_or_packaging_procedure": 8,
+    "already_public_source_preserved": 3,
+    "not_adopted_open_hypothesis": 8,
+    "excluded_rejected_candidate": 1
+  },
+  "rows": [
+    {
+      "id": "HLFP-001",
+      "title": "Native zero-hour unbounded objective",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-002",
+      "title": "Explicit OpenAI critic protocol with native OAuth",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-003",
+      "title": "Preserve explicit runtime library ordering",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-004",
+      "title": "Classify execution-infrastructure failures separately",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-005",
+      "title": "Reject empty/exhausted specialist output before integration",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-006",
+      "title": "Persist authoritative framework source root",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-007",
+      "title": "Exclude operational debris from harvested patches",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-008",
+      "title": "Detect Ray GCS with no active nodes",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-009",
+      "title": "Invalidate stale Ray drivers and safely restart local empty heads",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-010",
+      "title": "Honor explicit profiler stack disable",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/vllm",
+          "ref": "ab3c2dc13266e6f85fbdda8af95eaec11fb30bd8"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-011",
+      "title": "Release profiler state and traceback cycles after export",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/vllm",
+          "ref": "ab3c2dc13266e6f85fbdda8af95eaec11fb30bd8"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-012",
+      "title": "Validate profile controls from server-log intervals",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "private_harness_retained_procedure_documented",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/HaloLoom",
+          "ref": "a838f5ea57bdd4a4c422687b824df147e6181520",
+          "path": "docs/run-fix-reconciliation.md"
+        }
+      ],
+      "note": "Repeat-capture harness is operator-specific; ordered server-PID HTTP evidence rule is documented."
+    },
+    {
+      "id": "HLFP-013",
+      "title": "Bound detailed profile windows and monitor host-global GTT",
+      "historical_classification": "workaround",
+      "delivery_status": "documented_operational_or_packaging_procedure",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/HaloLoom",
+          "ref": "a838f5ea57bdd4a4c422687b824df147e6181520",
+          "path": "docs/run-fix-reconciliation.md"
+        }
+      ],
+      "note": "Bounded capture windows and host-global memory telemetry are operational controls, not proof of indefinite leak freedom."
+    },
+    {
+      "id": "HLFP-014",
+      "title": "Rank workload traces ahead of metadata sidecars",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        }
+      ],
+      "note": "Owner corrected to Hyperloom analysis adapter; all five accepted discovery helper ASTs match, with parent root-relative/sidecar ranking probe."
+    },
+    {
+      "id": "HLFP-015",
+      "title": "Export graph-attribution incompleteness as durable data",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        },
+        {
+          "repository": "https://github.com/HawgAuto/TraceLens",
+          "ref": "4b2da94eedad662ec594bf55554c38ed7bb6524f"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-016",
+      "title": "Conservative unique-correlation fallback",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        },
+        {
+          "repository": "https://github.com/HawgAuto/TraceLens",
+          "ref": "4b2da94eedad662ec594bf55554c38ed7bb6524f"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-017",
+      "title": "Do not globally gate source authoring on exact replay",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-018",
+      "title": "Refresh inherited reports at resume boundary",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-019",
+      "title": "Commit source-mirror changes before specialist worktrees",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/HaloLoom",
+          "ref": "a838f5ea57bdd4a4c422687b824df147e6181520",
+          "path": "docker/full-release/apply_and_verify.py"
+        }
+      ],
+      "note": "Source-bound assembly/verification code is published; new installed images are not claimed."
+    },
+    {
+      "id": "HLFP-020",
+      "title": "Fail closed on invalid roofline artifacts while preserving valid partial measurement",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-021",
+      "title": "Carry sealed TraceLens paths through GEAK handoff",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        },
+        {
+          "repository": "https://github.com/HawgAuto/GEAK",
+          "ref": "8c116e81ed4005a48afa156121f79cf8ea23c776"
+        }
+      ],
+      "note": "Explicit paths/types/existence/analysis-root coherence, not cryptographic content sealing."
+    },
+    {
+      "id": "HLFP-022",
+      "title": "Represent no deadline natively",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "private_harness_retained_procedure_documented",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/HaloLoom",
+          "ref": "a838f5ea57bdd4a4c422687b824df147e6181520",
+          "path": "docs/run-fix-reconciliation.md"
+        }
+      ],
+      "note": "No additional generic repository delta: no-deadline APIs already use None; readiness adapter remains private."
+    },
+    {
+      "id": "HLFP-023",
+      "title": "Retry terminal tasks with a fresh idempotency key",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        }
+      ],
+      "note": "Public baseline primitives preserved; no campaign-specific recovery controller copied."
+    },
+    {
+      "id": "HLFP-024",
+      "title": "One-shot resume entry with preserved budget floor",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "private_harness_retained_procedure_documented",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/HaloLoom",
+          "ref": "a838f5ea57bdd4a4c422687b824df147e6181520",
+          "path": "docs/run-fix-reconciliation.md"
+        }
+      ],
+      "note": "Saved-session one-shot entry/budget controller remains private; resumption rules are documented."
+    },
+    {
+      "id": "HLFP-025",
+      "title": "Require declarations for environment-gated rewrites",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Hyperloom",
+          "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae"
+        }
+      ],
+      "note": "Public baseline primitives preserved; no campaign-specific recovery controller copied."
+    },
+    {
+      "id": "HLFP-026",
+      "title": "Separate Codex local-serving sandbox permissions",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/codex",
+          "ref": "c693d79428b1c3f71fbc74bf16df88f369e3cf08"
+        },
+        {
+          "repository": "https://github.com/HawgAuto/GEAK",
+          "ref": "8c116e81ed4005a48afa156121f79cf8ea23c776"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-027",
+      "title": "Redirect AITER second cache root",
+      "historical_classification": "workaround",
+      "delivery_status": "documented_operational_or_packaging_procedure",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/HaloLoom",
+          "ref": "a838f5ea57bdd4a4c422687b824df147e6181520",
+          "path": "docs/run-fix-reconciliation.md"
+        }
+      ],
+      "note": "AITER cache-root workaround is documented and version/layout scoped; no generic AITER source delta."
+    },
+    {
+      "id": "HLFP-028",
+      "title": "Qwen4Exp interpreter dependency closure",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "documented_operational_or_packaging_procedure",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/HaloLoom",
+          "ref": "a838f5ea57bdd4a4c422687b824df147e6181520",
+          "path": "docs/run-fix-reconciliation.md"
+        }
+      ],
+      "note": "Quantizer/serving interpreter dependency isolation is documented; no new image dependency installation is claimed."
+    },
+    {
+      "id": "HLFP-029",
+      "title": "Qwen4Exp native template and conditional loader",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "already_public_source_preserved",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Quark",
+          "ref": "8b6d73c1f4a486c172cd208cd72ed6e651947c0c"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-030",
+      "title": "Preserve excluded original tensors in file-to-file export",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "already_public_source_preserved",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Quark",
+          "ref": "8b6d73c1f4a486c172cd208cd72ed6e651947c0c"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-031",
+      "title": "Retain role globs and truthful physical packing metadata",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "already_public_source_preserved",
+      "references": [
+        {
+          "repository": "https://github.com/hstolte11-collab/Quark",
+          "ref": "8b6d73c1f4a486c172cd208cd72ed6e651947c0c"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-032",
+      "title": "Native INT4 gfx1151 Quark consumer",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/vllm",
+          "ref": "ab3c2dc13266e6f85fbdda8af95eaec11fb30bd8"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-033",
+      "title": "Co-package producer and consumer runtimes without SDK leakage",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/HaloLoom",
+          "ref": "a838f5ea57bdd4a4c422687b824df147e6181520",
+          "path": "docker/full-release/apply_and_verify.py"
+        }
+      ],
+      "note": "Source-bound assembly/verification code is published; new installed images are not claimed."
+    },
+    {
+      "id": "HLFP-034",
+      "title": "Mixed ordinary/PLE shard explicit I/O",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/vllm",
+          "ref": "ab3c2dc13266e6f85fbdda8af95eaec11fb30bd8"
+        }
+      ]
+    },
+    {
+      "id": "HLFP-035",
+      "title": "Use evaluator native chat handler in previews",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "private_harness_retained_procedure_documented",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/HaloLoom",
+          "ref": "a838f5ea57bdd4a4c422687b824df147e6181520",
+          "path": "docs/run-fix-reconciliation.md"
+        }
+      ],
+      "note": "Private evaluator preview harness retained; native chat-handler/tokenizer rule is documented."
+    },
+    {
+      "id": "HLFP-036",
+      "title": "Short-lived external-token auth handoff",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "private_harness_retained_procedure_documented",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/HaloLoom",
+          "ref": "a838f5ea57bdd4a4c422687b824df147e6181520",
+          "path": "docs/run-fix-reconciliation.md"
+        }
+      ],
+      "note": "Account/profile-specific auth launcher retained privately; credential ownership/lifetime rules are documented."
+    },
+    {
+      "id": "HLFP-037",
+      "title": "Correct installed-source copy symlink handling",
+      "historical_classification": "workaround",
+      "delivery_status": "documented_operational_or_packaging_procedure",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/HaloLoom",
+          "ref": "a838f5ea57bdd4a4c422687b824df147e6181520",
+          "path": "docs/run-fix-reconciliation.md"
+        }
+      ],
+      "note": "Bounded in-tree symlink transport and escape rejection are in the source-bound builder and tests."
+    },
+    {
+      "id": "HLFP-038",
+      "title": "Use verified local tag as Docker FROM",
+      "historical_classification": "workaround",
+      "delivery_status": "documented_operational_or_packaging_procedure",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/HaloLoom",
+          "ref": "a838f5ea57bdd4a4c422687b824df147e6181520",
+          "path": "docs/run-fix-reconciliation.md"
+        }
+      ],
+      "note": "Local image tag/readback/no-pull procedure is documented; image IDs are not registry manifest digests."
+    },
+    {
+      "id": "HLFP-039",
+      "title": "Escalate build user only for installation",
+      "historical_classification": "workaround",
+      "delivery_status": "documented_operational_or_packaging_procedure",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/HaloLoom",
+          "ref": "a838f5ea57bdd4a4c422687b824df147e6181520",
+          "path": "docs/run-fix-reconciliation.md"
+        }
+      ],
+      "note": "Build-only root installation and non-root runtime boundaries are documented and preserved in the assembly recipe."
+    },
+    {
+      "id": "HLFP-040",
+      "title": "Preflight pidfd_open in exact interpreter",
+      "historical_classification": "workaround",
+      "delivery_status": "documented_operational_or_packaging_procedure",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/HaloLoom",
+          "ref": "a838f5ea57bdd4a4c422687b824df147e6181520",
+          "path": "docs/run-fix-reconciliation.md"
+        }
+      ],
+      "note": "Exact controller-interpreter pidfd capability check is documented."
+    },
+    {
+      "id": "HLFP-041",
+      "title": "Validate authoritative source identity before patchability",
+      "historical_classification": "hypothesis_open",
+      "delivery_status": "not_adopted_open_hypothesis",
+      "references": [],
+      "note": "Not represented as an accepted repair; no speculative implementation was promoted."
+    },
+    {
+      "id": "HLFP-042",
+      "title": "Merge graph sidecars by validated replay identity",
+      "historical_classification": "hypothesis_open",
+      "delivery_status": "not_adopted_open_hypothesis",
+      "references": [],
+      "note": "Not represented as an accepted repair; no speculative implementation was promoted."
+    },
+    {
+      "id": "HLFP-043",
+      "title": "Apply review decisions consistently across exports",
+      "historical_classification": "hypothesis_open",
+      "delivery_status": "not_adopted_open_hypothesis",
+      "references": [],
+      "note": "Not represented as an accepted repair; no speculative implementation was promoted."
+    },
+    {
+      "id": "HLFP-044",
+      "title": "Drain owning orchestration action, not nested PID",
+      "historical_classification": "hypothesis_open",
+      "delivery_status": "not_adopted_open_hypothesis",
+      "references": [],
+      "note": "Not represented as an accepted repair; no speculative implementation was promoted."
+    },
+    {
+      "id": "HLFP-045",
+      "title": "Correct framework-root diagnostics and stale candidate harvesting",
+      "historical_classification": "hypothesis_open",
+      "delivery_status": "not_adopted_open_hypothesis",
+      "references": [],
+      "note": "Not represented as an accepted repair; no speculative implementation was promoted."
+    },
+    {
+      "id": "HLFP-046",
+      "title": "Deduplicate profiler flags before launch",
+      "historical_classification": "hypothesis_open",
+      "delivery_status": "not_adopted_open_hypothesis",
+      "references": [],
+      "note": "Not represented as an accepted repair; no speculative implementation was promoted."
+    },
+    {
+      "id": "HLFP-047",
+      "title": "Native MTP/speculative QSA support",
+      "historical_classification": "hypothesis_open",
+      "delivery_status": "not_adopted_open_hypothesis",
+      "references": [],
+      "note": "Not represented as an accepted repair; no speculative implementation was promoted."
+    },
+    {
+      "id": "HLFP-048",
+      "title": "QSA no-FlashAttention fallback candidate",
+      "historical_classification": "reverted_unadopted",
+      "delivery_status": "excluded_rejected_candidate",
+      "references": [],
+      "note": "Rejected fallback was not revived or published as a repair."
+    },
+    {
+      "id": "HLFP-049",
+      "title": "AITER clean-cache amdhip64 link closure",
+      "historical_classification": "hypothesis_open",
+      "delivery_status": "not_adopted_open_hypothesis",
+      "references": [],
+      "note": "Not represented as an accepted repair; no speculative implementation was promoted."
+    },
+    {
+      "id": "HLFP-050",
+      "title": "Restore qualified MTP3 launch contract",
+      "historical_classification": "accepted_fix",
+      "delivery_status": "documented_operational_or_packaging_procedure",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/HaloLoom",
+          "ref": "a838f5ea57bdd4a4c422687b824df147e6181520",
+          "path": "docs/run-fix-reconciliation.md"
+        }
+      ],
+      "note": "Historical native graph/MTP launch contract is preserved as a scoped procedure, not universal defaults or new MTP qualification."
+    }
+  ],
+  "supplementary_fixes": [
+    {
+      "id": "MTP-METADATA-SCALAR-V3",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/vllm",
+          "ref": "ab3c2dc13266e6f85fbdda8af95eaec11fb30bd8"
+        }
+      ],
+      "scope": "One builtin-int normalization; no full-target MTP/GPU/performance claim."
+    },
+    {
+      "id": "QUARK-EXCLUDED-EMBEDDING-09bf3151",
+      "delivery_status": "published_source",
+      "references": [
+        {
+          "repository": "https://github.com/HawgAuto/vllm",
+          "ref": "ab3c2dc13266e6f85fbdda8af95eaec11fb30bd8"
+        }
+      ],
+      "scope": "Accepted excluded-embedding behavior adapted to current method-selection API."
+    },
+    {
+      "id": "INFERENCEX-MAGPIE-LAUNCHER",
+      "delivery_status": "published_portable_patch",
+      "manifest": "patches/inferencex/manifest.json",
+      "scope": "Pinned upstream patch; no unrelated Magpie edit, public InferenceX fork commit, or automatic installer activation."
+    }
+  ]
+}

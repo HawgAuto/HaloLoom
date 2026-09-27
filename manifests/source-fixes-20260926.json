@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "purpose": "Published source reconciliation checkpoints; not an installer or image manifest",
-  "source_reconciliation_complete": false,
+  "source_reconciliation_complete": true,
   "stable_release_manifests_unchanged": true,
   "image_release_published_by_this_task": false,
   "production_activation": false,
@@ -76,6 +76,24 @@
         "prior_source_and_four_regression_files_present": true,
         "fresh_runtime_tests": false
       }
+    },
+    "TraceLens": {
+      "repository": "https://github.com/HawgAuto/TraceLens",
+      "ref": "4b2da94eedad662ec594bf55554c38ed7bb6524f",
+      "tree": "8f6fc7177ee8723ce629165d4499d2669c6b0321",
+      "branch": "fix/run-reconciliation-20260926",
+      "anonymous_source_readback": true,
+      "clone_scope": "sparse: complete TraceLens package and all ten changed files; unchanged large public trace fixtures not redownloaded",
+      "changed_file_hashes_verified": 10,
+      "disposition": "newly_published_source",
+      "installed_runtime_updated_by_this_task": false,
+      "test_scope": {
+        "cpu_focused_and_reference_tests_passed": 17,
+        "parent_rerun": true,
+        "original_test_code_and_raw_traces_unchanged": true,
+        "reference_csvs_updated_for_proven_attribution_correction": 5,
+        "raw_event_timeline_delta_verified": true
+      }
     }
   },
   "portable_patches": {
@@ -90,13 +108,13 @@
       "automatically_applied_by_stable_installer": false
     }
   },
-  "unresolved_publication_items": {
-    "TraceLens": "Proposed graph attribution/correlation changes held: existing xdit_hunyuanvideo CSV reference passes at base and fails at successor; correction required."
-  },
+  "unresolved_publication_items": {},
   "limitations": [
     "Source tests do not establish GPU/model/performance qualification.",
     "GEAK interface/runtime repairs require source installation, not just its Python wheel.",
     "Codex source publication does not replace any installed host CLI or native executable.",
     "Explicit TraceLens path handoff checks path coherence, not cryptographic content sealing."
-  ]
+  ],
+  "completion_scope": "Reviewed reusable source fixes published or carried as pinned patches; every historical ledger row has an explicit delivery/exclusion. Not all open hypotheses are resolved and no images are rebuilt.",
+  "coverage_manifest": "manifests/run-fix-dispositions-20260926.json"
 }

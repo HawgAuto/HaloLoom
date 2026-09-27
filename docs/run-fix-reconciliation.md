@@ -46,9 +46,26 @@ tests were not changed. Source lint is not represented as complete: Ruff was
 unavailable, and a previously accepted new Ray regression retains one trailing
 blank-line whitespace warning.
 
-The component reconciliation is ongoing. TraceLens's proposed successor is
-**held from publication** because the existing `xdit_hunyuanvideo` CSV reference
-test passes at its base and fails with the proposed attribution changes.
+Source reconciliation is complete for the reviewed reusable fixes. The
+[50-entry disposition ledger](../manifests/run-fix-dispositions-20260926.json)
+accounts for every historical entry: 25 source-delivery entries, three
+already-public source entries, eight operational/packaging procedures, five
+private-harness entries whose general rules are documented, eight unadopted open
+hypotheses, and one excluded rejected candidate. Three supplementary source
+fixes are recorded separately. This is **not** a claim that every open issue was
+fixed or that private campaign/authentication tooling was published.
+
+[TraceLens `4b2da94eedad662ec594bf55554c38ed7bb6524f`](https://github.com/HawgAuto/TraceLens/commit/4b2da94eedad662ec594bf55554c38ed7bb6524f)
+includes conservative graph provenance and the unique-correlation fallback.
+The initial `xdit_hunyuanvideo` reference failure was traced to five previously
+unattributed `gpu_memset` events recovered by the intended fallback. Parent
+inspection matched their 9.528 microseconds of raw duration to the newly
+attributed timeline time within floating-point rounding. The raw trace time
+span and original test code were unchanged; **five affected reference CSVs were
+updated**, with an additive targeted regression. All 17 focused/reference tests
+passed in the bounded no-network/no-GPU parent rerun. Anonymous sparse readback
+verified the commit/tree, complete package and every changed file; unchanged
+large public traces were not downloaded again.
 
 The [InferenceX launcher patch](../patches/inferencex/README.md) is now carried
 here against exact upstream source `3d5581562f643f9bdeb8410cd924e2c70906c966`.
@@ -58,8 +75,8 @@ passed. Four **client URLs**, not server bind flags, use loopback. The accepted
 profile/evaluator handling is preserved. There is no unrelated Magpie edit,
 new public InferenceX fork commit, or automatic stable-installer application.
 
-This checkpoint does not assert that all component forks, wheel archives,
-installed runtime files or image pins have been refreshed. In particular,
+The source-delivery checkpoint does not assert that wheel archives, installed
+runtime files or image pins have been refreshed. In particular,
 GEAK's repaired `interface/` files require a source/runtime refresh, not just
 replacement of its Python package wheel.
 
