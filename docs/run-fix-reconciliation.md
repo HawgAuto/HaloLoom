@@ -6,6 +6,32 @@ installer update, a performance result, or permission to change a live job.**
 The stable image manifest stays unchanged until matching images are published
 and read back from the registry. See [complete source-bound builds](full-release-builds.md).
 
+## Published source checkpoints (not image releases)
+
+These paired source changes are available on `fix/run-reconciliation-20260926`:
+
+- [Hyperloom `b728b8fcb90ddd14fcdff576e9eb8011a801a1ae`](https://github.com/hstolte11-collab/Hyperloom/commit/b728b8fcb90ddd14fcdff576e9eb8011a801a1ae):
+  startup/loader and Ray recovery, source roots, attribution/report freshness,
+  failed-profile handling and the explicit GEAK artifact-path handoff.
+- [GEAK `8c116e81ed4005a48afa156121f79cf8ea23c776`](https://github.com/HawgAuto/GEAK/commit/8c116e81ed4005a48afa156121f79cf8ea23c776):
+  matching explicit input selection and the default-off, separately gated
+  local-serving worker/device contract for the audited Codex runtime.
+
+Parent reruns in a no-network, no-GPU container passed 55 Hyperloom Python tests,
+133 GEAK Python tests, 14 GEAK Node regressions and 84 GEAK runtime self-checks.
+Anonymous clean clones matched the published commit and tree identities. A
+synthetic path-contract test exercised the actual Hyperloom bundle builder into
+GEAK's mapper and prompt, including rejection of incomplete/removed artifacts.
+That test is not model inference or content-hash sealing. Original baseline
+tests were not changed. Source lint is not represented as complete: Ruff was
+unavailable, and a previously accepted new Ray regression retains one trailing
+blank-line whitespace warning.
+
+The component reconciliation is ongoing; this checkpoint does not assert that
+all component forks, wheel archives, installed runtime files or image pins have
+been refreshed. In particular, GEAK's repaired `interface/` files require a
+source/runtime refresh, not just replacement of its Python package wheel.
+
 ## Source and installed-runtime identity
 
 - Commit the reviewed framework source before creating specialist worktrees.
@@ -92,9 +118,12 @@ and read back from the registry. See [complete source-bound builds](full-release
 - Persist one continuation-entry receipt at actual entry, not during preparatory
   work. Preserve the saved budget and its rounding/floor semantics. Session IDs,
   frozen DBs and controller state remain private operator artifacts.
-- Pass sealed TraceLens artifacts and hashes explicitly across the GEAK handoff.
-  An explicit bundle that is missing, malformed, mixed-root or hash-mismatched
-  must fail closed, not fall back to discovery of a different directory.
+- Pass TraceLens artifact paths explicitly across the GEAK handoff. An explicit
+  bundle that is missing, malformed or mixed-root must fail closed, not fall back
+  to discovery of a different directory. The current generic handoff validates
+  keys, artifact types, existence and analysis-root coherence; it does **not**
+  cryptographically seal file contents. Preserve upstream artifact hashes in
+  separate provenance records rather than claiming this path contract checks them.
 - Failed profiling subprocesses require artifact validation. A genuine partial
   measurement and an empty or arbitrary-byte report are different outcomes.
 - Environment-gated rewrites must declare their switches so switch-off parity
