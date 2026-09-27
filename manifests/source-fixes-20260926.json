@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "purpose": "Published source reconciliation checkpoints; not an installer or image manifest",
+  "source_reconciliation_complete": false,
+  "stable_release_manifests_unchanged": true,
+  "image_release_published_by_this_task": false,
+  "production_activation": false,
+  "components": {
+    "Hyperloom": {
+      "repository": "https://github.com/hstolte11-collab/Hyperloom",
+      "ref": "b728b8fcb90ddd14fcdff576e9eb8011a801a1ae",
+      "tree": "d4558b74c576a4d772096f7712c76e179c7d66af",
+      "branch": "fix/run-reconciliation-20260926",
+      "anonymous_source_readback": true,
+      "disposition": "newly_published_source",
+      "installed_runtime_updated_by_this_task": false,
+      "test_scope": {
+        "cpu_pytest_passed": 55,
+        "parent_rerun": true,
+        "additional_synthetic_path_contract_checks": "passed"
+      }
+    },
+    "GEAK": {
+      "repository": "https://github.com/HawgAuto/GEAK",
+      "ref": "8c116e81ed4005a48afa156121f79cf8ea23c776",
+      "tree": "98c95abc21a70f5a5fd82698490f5bba27f196bb",
+      "branch": "fix/run-reconciliation-20260926",
+      "anonymous_source_readback": true,
+      "disposition": "newly_published_source",
+      "installed_runtime_updated_by_this_task": false,
+      "test_scope": {
+        "cpu_pytest_passed": 133,
+        "node_regressions_passed": 14,
+        "runtime_self_checks_passed": 84,
+        "parent_rerun": true
+      }
+    },
+    "Codex": {
+      "repository": "https://github.com/HawgAuto/codex",
+      "ref": "c693d79428b1c3f71fbc74bf16df88f369e3cf08",
+      "tree": "5a3c48dee94c609a2f01f6cc33e634aba2793b9e",
+      "branch": "fix/run-reconciliation-20260926",
+      "anonymous_source_readback": true,
+      "disposition": "newly_published_source",
+      "installed_runtime_updated_by_this_task": false,
+      "test_scope": {
+        "native_sandbox_tests_passed": 174,
+        "skipped": 0,
+        "parent_verified_diff_and_test_log_hash": true,
+        "parent_recompiled": false
+      }
+    },
+    "vllm": {
+      "repository": "https://github.com/HawgAuto/vllm",
+      "ref": "ab3c2dc13266e6f85fbdda8af95eaec11fb30bd8",
+      "tree": "b4eceff967b16dcc683881bcef2a00af591fdfbc",
+      "branch": "fix/run-reconciliation-20260926",
+      "anonymous_source_readback": true,
+      "disposition": "newly_published_source",
+      "installed_runtime_updated_by_this_task": false,
+      "test_scope": {
+        "cpu_source_ast_contract_tests_passed": 4,
+        "parent_rerun": true,
+        "model_inference": false
+      }
+    },
+    "Quark": {
+      "repository": "https://github.com/hstolte11-collab/Quark",
+      "ref": "8b6d73c1f4a486c172cd208cd72ed6e651947c0c",
+      "tree": "5cd98bfec84b65e21ab4eadc6e98d3b09966e5ff",
+      "branch": "release/haloloom-v0.1.4",
+      "anonymous_source_readback": true,
+      "disposition": "already_public_baseline",
+      "installed_runtime_updated_by_this_task": false,
+      "test_scope": {
+        "prior_source_and_four_regression_files_present": true,
+        "fresh_runtime_tests": false
+      }
+    }
+  },
+  "unresolved_publication_items": {
+    "TraceLens": "Proposed graph attribution/correlation changes held: existing xdit_hunyuanvideo CSV reference passes at base and fails at successor; correction required.",
+    "InferenceX_Magpie_launcher": "Accepted loopback-client and profile-failure launcher deltas are undergoing source-ownership reconciliation."
+  },
+  "limitations": [
+    "Source tests do not establish GPU/model/performance qualification.",
+    "GEAK interface/runtime repairs require source installation, not just its Python wheel.",
+    "Codex source publication does not replace any installed host CLI or native executable.",
+    "Explicit TraceLens path handoff checks path coherence, not cryptographic content sealing."
+  ]
+}

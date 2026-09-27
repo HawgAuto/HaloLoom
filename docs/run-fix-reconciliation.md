@@ -8,7 +8,10 @@ and read back from the registry. See [complete source-bound builds](full-release
 
 ## Published source checkpoints (not image releases)
 
-These paired source changes are available on `fix/run-reconciliation-20260926`:
+These source changes are available on `fix/run-reconciliation-20260926`.
+Exact commits, trees and verification scope are recorded separately in the
+[source checkpoint manifest](../manifests/source-fixes-20260926.json), which does
+not replace the stable installer/image manifest:
 
 - [Hyperloom `b728b8fcb90ddd14fcdff576e9eb8011a801a1ae`](https://github.com/hstolte11-collab/Hyperloom/commit/b728b8fcb90ddd14fcdff576e9eb8011a801a1ae):
   startup/loader and Ray recovery, source roots, attribution/report freshness,
@@ -16,6 +19,22 @@ These paired source changes are available on `fix/run-reconciliation-20260926`:
 - [GEAK `8c116e81ed4005a48afa156121f79cf8ea23c776`](https://github.com/HawgAuto/GEAK/commit/8c116e81ed4005a48afa156121f79cf8ea23c776):
   matching explicit input selection and the default-off, separately gated
   local-serving worker/device contract for the audited Codex runtime.
+
+- [Codex `c693d79428b1c3f71fbc74bf16df88f369e3cf08`](https://github.com/HawgAuto/codex/commit/c693d79428b1c3f71fbc74bf16df88f369e3cf08):
+  separately default-off local interface discovery, scoped to the proxy-routed,
+  explicit-local-IPC, zero-capability command context. The bounded offline native
+  sandbox test run passed 174 tests with none skipped; parent review verified
+  the exact source delta and hashed test log without repeating compilation.
+- [vLLM `ab3c2dc13266e6f85fbdda8af95eaec11fb30bd8`](https://github.com/HawgAuto/vllm/commit/ab3c2dc13266e6f85fbdda8af95eaec11fb30bd8):
+  explicit profiler stack control/lifecycle cleanup, native speculative token
+  metadata scalar normalization, and excluded Quark embedding preservation.
+  Four CPU **source/AST contract checks** passed again under parent execution;
+  these are not a model execution, leak-duration or GPU acceptance test.
+
+[Quark `8b6d73c1f4a486c172cd208cd72ed6e651947c0c`](https://github.com/hstolte11-collab/Quark/commit/8b6d73c1f4a486c172cd208cd72ed6e651947c0c)
+was already public on `release/haloloom-v0.1.4`. Its anonymous source/tree readback
+and four preservation regression files were verified; this did not rerun PTQ or
+publish another Quark commit.
 
 Parent reruns in a no-network, no-GPU container passed 55 Hyperloom Python tests,
 133 GEAK Python tests, 14 GEAK Node regressions and 84 GEAK runtime self-checks.
@@ -27,10 +46,14 @@ tests were not changed. Source lint is not represented as complete: Ruff was
 unavailable, and a previously accepted new Ray regression retains one trailing
 blank-line whitespace warning.
 
-The component reconciliation is ongoing; this checkpoint does not assert that
-all component forks, wheel archives, installed runtime files or image pins have
-been refreshed. In particular, GEAK's repaired `interface/` files require a
-source/runtime refresh, not just replacement of its Python package wheel.
+The component reconciliation is ongoing. TraceLens's proposed successor is
+**held from publication** because the existing `xdit_hunyuanvideo` CSV reference
+test passes at its base and fails with the proposed attribution changes. The
+InferenceX/Magpie launcher deltas are still under ownership/source review.
+This checkpoint does not assert that all component forks, wheel archives,
+installed runtime files or image pins have been refreshed. In particular,
+GEAK's repaired `interface/` files require a source/runtime refresh, not just
+replacement of its Python package wheel.
 
 ## Source and installed-runtime identity
 
