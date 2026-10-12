@@ -11,6 +11,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import tempfile
 import zipfile
 
 ROOT = Path('/opt/haloloom/source-current')
@@ -44,7 +45,15 @@ def checked_relative(root: Path, rel: str) -> Path:
 def verify_tree(root: Path, spec: dict) -> None:
     assert run(['git', '-c', f'safe.directory={root}', '-C', str(root), 'rev-parse', 'HEAD']) == spec['ref']
     assert run(['git', '-c', f'safe.directory={root}', '-C', str(root), 'rev-parse', 'HEAD^{tree}']) == spec['tree']
-    assert not run(['git', '-c', f'safe.directory={root}', '-C', str(root), 'diff', 'HEAD', '--name-only'])
+    # Git can refresh index extensions even with GIT_OPTIONAL_LOCKS=0.
+    # Check dirty state using a disposable index; never mutate the sealed packet.
+    with tempfile.TemporaryDirectory(prefix='haloloom-verify-index-') as directory:
+        index = Path(directory) / 'index'
+        shutil.copyfile(root / '.git' / 'index', index)
+        assert not run(['git', '-c', f'safe.directory={root}', '-C', str(root),
+                        'diff', 'HEAD', '--name-only'],
+                       env={**os.environ, 'GIT_OPTIONAL_LOCKS': '0',
+                            'GIT_INDEX_FILE': str(index)})
     for rel, expected in spec['files'].items():
         assert digest(checked_relative(root, rel)) == expected, (root, rel)
 
@@ -87,7 +96,7 @@ def main() -> None:
         assert os.geteuid() == 0, 'image installation requires root'
         assert not Path('/dev/kfd').exists() and not list(Path('/dev/dri').glob('renderD*')) and not list(Path('/dev').glob('nvidia[0-9]*')), 'no-device build required'
     m = json.loads((ROOT / 'manifest.json').read_text())
-    assert m['schema_version'] == 4 and m['release'] == 'v0.1.4'
+    assert m['schema_version'] == 4 and m['release'] in {'v0.1.4', 'v0.1.5'}
     assert set(m['components']) == set(TARGETS)
     for rel, expected in m['payload_files'].items():
         assert digest(checked_relative(ROOT, rel)) == expected, rel

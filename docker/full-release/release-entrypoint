@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 case "${1:-}" in
+  qwen38) shift; exec /opt/venv/bin/python3 -B /opt/haloloom/qwen38/launch.py "$@" ;;
   verify) exec /opt/haloloom/workbench-entrypoint "$@" ;;
 esac
 case "${HALOLOOM_RELEASE_VARIANT:?release variant is required}" in

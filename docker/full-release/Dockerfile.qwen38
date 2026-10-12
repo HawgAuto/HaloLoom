@@ -1,0 +1,48 @@
+# syntax=docker/dockerfile:1.7
+# A source-current combined workbench. This is a layered successor, not a
+# compacted image. The public pinned parent retains the separate Quark venv.
+# Build with --build-context release_packet=/path/to/verified/packet-v015.
+FROM ghcr.io/hawgauto/haloloom-quark-rocm10-gfx1151@sha256:b4bf033c34b9acfbf2eb548c80cb3686c0eab3049093c1ef9a46ff14339f5f3f
+ARG PACKET_MANIFEST_SHA256
+USER root
+RUN python3 -c "from pathlib import Path; import shutil; paths=[Path('/opt/haloloom/source-current'),Path('/opt/haloloom/codex-amd')]; [(p.unlink() if p.is_symlink() else shutil.rmtree(p)) for p in paths if p.exists() or p.is_symlink()]"
+COPY --from=release_packet / /opt/haloloom/source-current/
+COPY apply_inferencex.py bind_sdk_codex.py /opt/haloloom/
+ENV HALOLOOM_RELEASE_VARIANT=vllm \
+    HYPERLOOM_VLLM_TRACELENS_MANIFEST=/opt/haloloom/vllm-tracelens-install.json \
+    LD_LIBRARY_PATH=/opt/venv/lib/python3.14/site-packages/_rocm_sdk_core/lib/host-math/lib:/opt/venv/lib/python3.14/site-packages/_rocm_sdk_core/lib:/opt/rocm/core-10.0/lib:/opt/rocm/core-10.0/lib/llvm/lib:/opt/venv/lib
+RUN set -eu; \
+    test -n "${PACKET_MANIFEST_SHA256}"; \
+    printf '%s  %s\n' "${PACKET_MANIFEST_SHA256}" /opt/haloloom/source-current/manifest.json | sha256sum -c -; \
+    /opt/venv/bin/python -m pip install --no-cache-dir --no-index --no-deps --force-reinstall /opt/haloloom/source-current/payload-dependencies/*.whl; \
+    /opt/quark-venv/bin/python -m pip install --no-cache-dir --no-index --no-deps --force-reinstall /opt/haloloom/source-current/quantizer-dependencies/*.whl; \
+    /opt/venv/bin/python -B /opt/haloloom/source-current/apply_and_verify.py --variant vllm; \
+    /opt/venv/bin/python -B /opt/haloloom/bind_sdk_codex.py; \
+    /opt/venv/bin/python -B /opt/haloloom/apply_inferencex.py; \
+    cp /opt/haloloom/source-current/verify_ecosystem.py /opt/haloloom/verify_ecosystem.py; \
+    install -m 0755 /opt/haloloom/source-current/release-entrypoint /opt/haloloom/release-entrypoint; \
+    cp -a /opt/haloloom/source-current/sdk/profiling /opt/haloloom/profiling-full-release; \
+    mkdir -p /opt/haloloom/qwen38 /workspace; \
+    cp -a /opt/haloloom/framework-source/vllm/haloloom/qwen38/. /opt/haloloom/qwen38/; \
+    cp -a /opt/haloloom/qwen38/python/. /opt/venv/lib/python3.14/site-packages/; \
+    cp -a /opt/haloloom/qwen38/kernels/. /opt/venv/lib/python3.14/site-packages/; \
+    /opt/venv/bin/python -B /opt/haloloom/qwen38/validate.py; \
+    /opt/venv/bin/python -B /opt/haloloom/verify_ecosystem.py; \
+    chown -R 1000:1000 /opt/haloloom/source-current /opt/haloloom/qwen38 /workspace
+ENV HSA_ENABLE_SDMA=0 \
+    VLLM_TARGET_DEVICE=rocm \
+    PYTORCH_ROCM_ARCH=gfx1151 \
+    HYPERLOOM_GFX1151_LOWBIT_BRIDGE=0 \
+    HF_HUB_OFFLINE=1 \
+    TRANSFORMERS_OFFLINE=1 \
+    VLLM_NO_USAGE_STATS=1
+LABEL org.opencontainers.image.source="https://github.com/HawgAuto/HaloLoom" \
+      haloloom.vllm_source_ref="322c106f3409df1eeb29d2c14434b389b36c2b43" \
+      haloloom.release="v0.1.5" \
+      haloloom.packet_manifest_sha256="${PACKET_MANIFEST_SHA256}" \
+      haloloom.promotion_authority="false" \
+      haloloom.image_layout="layered-combined-workbench"
+USER 1000:1000
+WORKDIR /workspace
+EXPOSE 8000
+ENTRYPOINT ["/opt/haloloom/release-entrypoint"]
